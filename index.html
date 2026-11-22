@@ -1150,7 +1150,7 @@
                 <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫橋接設定
               </h2>
               <p class="text-xs font-bold text-slate-500 mt-1">
-                網站會使用預設的 GAS 網址讀取題庫和圖片。要修改雲端設定或上傳素材，請先輸入雲端管理金鑰。
+                填入 GAS 部署網址後：題庫與設定會自動同步到 Google Sheet；在後台上傳的 LOGO、吉祥物、MP3 會自動存進 Google Drive 素材資料夾，所有裝置開啟網頁時自動從 Drive 取用。
               </p>
             </div>
 
@@ -1162,9 +1162,6 @@
                   <i class="fa-solid fa-plug mr-1.5"></i>儲存並測試連線
                 </button>
               </div>
-              <label for="settingGasWriteKey" class="block text-sm font-black text-slate-700">雲端管理金鑰</label>
-              <input type="password" id="settingGasWriteKey" autocomplete="off" spellcheck="false" placeholder="Apps Script 專案設定 → 指令碼屬性 → ADMIN_WRITE_KEY" class="w-full px-4 py-3 rounded-xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-none text-sm" />
-              <p class="text-xs text-slate-500">填入後按「儲存並測試連線」。訪客遊玩時無須輸入。</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -1188,7 +1185,7 @@
             <div class="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h3 class="text-base font-black text-amber-400">Google Apps Script 後端橋接程式碼 (Code.gs)</h3>
-                <p class="text-xs text-slate-400">請在原 Google 試算表點選「擴充功能 → Apps Script」，貼上程式碼並執行 setup。再到「管理部署作業」更新原網址所屬的部署版本。</p>
+                <p class="text-xs text-slate-400">請在 Google 試算表點選「擴充功能 → Apps Script」，貼上以下完整程式碼，先執行一次 setup 授權，再部署為「網頁應用程式 (權限：所有人)」。</p>
               </div>
               <button onclick="GASConnector.copyGasCode()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-1.5">
                 <i class="fa-solid fa-copy"></i> 一鍵複製 Code.gs
@@ -1196,7 +1193,7 @@
             </div>
 
             <pre id="gasCodeBlock" class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-300 overflow-x-auto max-h-80 custom-scrollbar font-mono leading-relaxed">/**
- * 彰基智慧醫療大挑戰 - Google Apps Script 後端 v3.1
+ * 彰基智慧醫療大挑戰 - Google Apps Script 後端 v3
  *
  * 功能：
  *  1. 題庫 / 設定同步（Google 試算表：Questions、Config、Logs 三個工作表，自動建立）
@@ -1204,9 +1201,8 @@
  *  3. 素材代理讀取：網頁透過本程式讀取 Drive 檔案（不再受「連結直連被 Google 擋住」影響）
  *  4. 連線診斷（後台「診斷連線」按鈕使用）
  *
- * 【設定】從原本的 Google 試算表開啟 Apps Script，執行 setup，完成授權。
- * setup 會綁定原表、記錄 GAS 網址，並建立雲端管理金鑰。
- * 【部署】以「我」的身分執行。需要讓未登入的訪客遊玩時，存取權選「所有人」。
+ * 【第一次使用】編輯器上方函式選單選「setup」按「執行」，依畫面完成授權。
+ * 【部署】網頁應用程式以「我」的身分執行；存取權設為「所有人」。
  * 【修改程式後】部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。
  */
 
@@ -1215,12 +1211,7 @@
 const FOLDER_ID = '1q8Y_nNdExN9ACUehnkZePazBGneKlX8d';
 const FOLDER_NAME = '彰基智慧醫療大挑戰_素材';
 
-const VERSION = 'v3.1';
-const PUBLISHED_GAS_URL = 'https://script.google.com/macros/s/AKfycbxE-3EnLIM4vy12UJ_67S-o80Q2fcrlXHspF7Omi-U4smfreLicWels2b5k7yNHFOiFnA/exec';
-// 若原部署的 Apps Script 不在目標試算表內，填入正確試算表網址 /d/ 後的 ID。
-const TARGET_SHEET_ID = '';
-const ADMIN_WRITE_KEY = 'ADMIN_WRITE_KEY';
-const IMAGE_SLOTS = ['logo1Url', 'logo2Url', 'mascotHome', 'mascotIdle', 'mascotHappy', 'mascotSad'];
+const VERSION = 'v3.0';
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
 const Q_HEADERS = ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案'];
 const C_HEADERS = ['Key', 'Value'];
@@ -1229,27 +1220,11 @@ const L_HEADERS = ['時間', '總分', '答對題數', '挑戰結果'];
 /* ------------------------------------------------------------------ 入口 */
 
 function setup() {
+  const ss = getSS_();
+  ensureSheets_(ss);
   const folder = getFolder_();
-  const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
-  let ss;
-  try {
-    // 在編輯器內可以取得綁定的試算表。網頁應用程式一律用這個 ID 開啟。
-    ss = TARGET_SHEET_ID ? openDatabase_(TARGET_SHEET_ID) : (SpreadsheetApp.getActiveSpreadsheet() || getSS_());
-    ensureSheets_(ss);
-    const props = PropertiesService.getScriptProperties();
-    props.setProperty('SHEET_ID', ss.getId());
-    if (!props.getProperty(ADMIN_WRITE_KEY)) {
-      props.setProperty(ADMIN_WRITE_KEY, Utilities.getUuid() + Utilities.getUuid());
-    }
-    writeConfigEntries_(ss, { gasWebAppUrl: PUBLISHED_GAS_URL });
-    SpreadsheetApp.flush();
-  } finally {
-    lock.releaseLock();
-  }
   Logger.log('試算表：' + ss.getUrl());
   Logger.log('素材資料夾：' + folder.getUrl());
-  Logger.log('後台寫入金鑰：到 Apps Script「專案設定 → 指令碼屬性」查閱 ADMIN_WRITE_KEY');
 }
 
 function doGet(e) {
@@ -1271,11 +1246,8 @@ function doPost(e) {
     const action = payload.action;
 
     if (action === 'PING') {
+      PropertiesService.getScriptProperties().setProperty('LAST_PING', new Date().toISOString());
       return json_({ status: 'ok', version: VERSION, time: new Date().toISOString() });
-    }
-
-    if (['UPLOAD_ASSET', 'CHECK_DRIVE_WRITE', 'SYNC_UP'].includes(action)) {
-      requireWriteKey_(payload.writeKey);
     }
 
     if (action === 'UPLOAD_ASSET') {
@@ -1306,30 +1278,22 @@ function doPost(e) {
         qCount = rows.length;
       }
       if (payload.config &amp;&amp; typeof payload.config === 'object') {
-        const changes = Object.create(null);
+        // 與現有設定合併（保留你在試算表手動加的欄位）
+        const merged = readConfig_(ss);
         Object.keys(payload.config).forEach(function (k) {
-          if (['gasWebAppUrl', 'adminPasswordHash', 'writeKey', ADMIN_WRITE_KEY].includes(k)) return;
           const v = payload.config[k];
           const s = (v !== null &amp;&amp; typeof v === 'object') ? JSON.stringify(v) : str_(v);
-          if (s.length &gt;= 49000) throw new Error('設定「' + k + '」超過儲存格大小');
-          changes[k] = s;
+          if (s.length &lt; 49000) merged[k] = s;
         });
-        writeConfigEntries_(ss, changes);
-        cCount = Object.keys(changes).length;
+        const rows = Object.keys(merged).map(function (k) { return [k, merged[k]]; });
+        writeTable_(ss.getSheetByName('Config'), C_HEADERS, rows);
+        cCount = rows.length;
       }
-      SpreadsheetApp.flush();
       return json_({ status: 'ok', questions: qCount, config: cCount, sheetUrl: ss.getUrl() });
     }
 
     if (action === 'LOG_RESULT') {
-      const score = payload.score;
-      const correctCount = str_(payload.correctCount);
-      const outcome = str_(payload.outcome);
-      if (!Number.isSafeInteger(score) || score &lt; 0 || !/^\d{1,4}(?:\/\d{1,4})?$/.test(correctCount)
-          || !['CLEARED', 'ELIMINATED', 'WRONG', 'TIMEOUT'].includes(outcome)) {
-        throw new Error('成績紀錄格式不正確');
-      }
-      ss.getSheetByName('Logs').appendRow([new Date(), score, correctCount, outcome]);
+      ss.getSheetByName('Logs').appendRow([new Date(), payload.score, payload.correctCount, payload.outcome]);
       return json_({ status: 'ok' });
     }
 
@@ -1384,6 +1348,7 @@ function bridgeRequest(req) {
 
 function readAll_() {
   const ss = getSS_();
+  ensureSheets_(ss);
   const qRows = ss.getSheetByName('Questions').getDataRange().getValues();
   const questions = [];
   for (let i = 1; i &lt; qRows.length; i++) {
@@ -1402,36 +1367,16 @@ function readAll_() {
 
 function readConfig_(ss) {
   const rows = ss.getSheetByName('Config').getDataRange().getValues();
-  const cfg = Object.create(null);
+  const cfg = {};
   for (let i = 1; i &lt; rows.length; i++) {
-    const key = str_(rows[i][0]).trim();
-    if (key &amp;&amp; !['adminPasswordHash', 'writeKey', ADMIN_WRITE_KEY].includes(key)) {
-      cfg[key] = str_(rows[i][1]);
-    }
+    if (rows[i][0]) cfg[String(rows[i][0])] = String(rows[i][1] === null || rows[i][1] === undefined ? '' : rows[i][1]);
   }
   return cfg;
 }
 
-function writeConfigEntries_(ss, changes) {
-  const sheet = ss.getSheetByName('Config');
-  const rows = sheet.getDataRange().getValues();
-  Object.keys(changes).forEach(function (key) {
-    let found = false;
-    for (let i = 1; i &lt; rows.length; i++) {
-      if (str_(rows[i][0]).trim() === key) {
-        sheet.getRange(i + 1, 2).setNumberFormat('@').setValue(changes[key]);
-        found = true;
-      }
-    }
-    if (!found) {
-      sheet.getRange(sheet.getLastRow() + 1, 1, 1, 2).setNumberFormat('@').setValues([[key, changes[key]]]);
-    }
-  });
-}
-
 function pingInfo_() {
   const ss = getSS_();
-  const config = readConfig_(ss);
+  ensureSheets_(ss);
   const info = {
     status: 'ok',
     version: VERSION,
@@ -1440,8 +1385,7 @@ function pingInfo_() {
     questionRows: Math.max(0, ss.getSheetByName('Questions').getLastRow() - 1),
     configRows: Math.max(0, ss.getSheetByName('Config').getLastRow() - 1),
     logRows: Math.max(0, ss.getSheetByName('Logs').getLastRow() - 1),
-    gasWebAppUrl: config.gasWebAppUrl || '',
-    imageChecks: IMAGE_SLOTS.map(function (key) { return checkImage_(key, config[key]); })
+    lastPing: PropertiesService.getScriptProperties().getProperty('LAST_PING') || ''
   };
   try {
     const folder = getFolder_();
@@ -1455,29 +1399,6 @@ function pingInfo_() {
     info.driveError = errMsg_(err);
   }
   return info;
-}
-
-function checkImage_(key, value) {
-  const ref = str_(value).trim();
-  if (!ref) return { key: key, state: 'empty', message: 'Config 未設定圖片' };
-  const match = ref.match(/^gdrive:([\w-]{10,})$/)
-    || ref.match(/^https:\/\/drive\.google\.com\/file\/d\/([\w-]{10,})/)
-    || ref.match(/^https:\/\/(?:drive\.google\.com|drive\.usercontent\.google\.com)\/(?:open|uc|thumbnail|download)\?[^#]*?\bid=([\w-]{10,})/)
-    || ref.match(/^https:\/\/lh3\.googleusercontent\.com\/d\/([\w-]{10,})/);
-  if (!match) {
-    if (/^(https:\/\/|data:image\/)/i.test(ref)) {
-      return { key: key, state: 'external', message: '已有圖片網址，請在網頁上預覽' };
-    }
-    return { key: key, state: 'error', message: '圖片設定格式不正確' };
-  }
-  try {
-    const file = DriveApp.getFileById(match[1]);
-    validateAssetFile_(file);
-    if (!/^image\//.test(fixMime_(file.getMimeType(), file.getName()))) throw new Error('Drive 檔案不是圖片');
-    return { key: key, state: 'ok', message: file.getName() };
-  } catch (err) {
-    return { key: key, state: 'error', message: errMsg_(err) };
-  }
 }
 
 /* ------------------------------------------------------------------ Drive 素材 */
@@ -1516,9 +1437,12 @@ function uploadAsset_(payload) {
 }
 
 function readFile_(id) {
-  if (!/^[\w-]{10,}$/.test(str_(id))) throw new Error('缺少有效的 Drive 檔案 ID');
+  if (!id) throw new Error('缺少檔案 ID');
   const file = DriveApp.getFileById(id);
-  validateAssetFile_(file);
+  if (!isAllowedFile_(file)) {
+    throw new Error('此檔案不在素材資料夾內，且未開放「知道連結的任何人」，基於安全無法讀取');
+  }
+  if (file.getSize() &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
   const blob = file.getBlob();
   return {
     status: 'ok',
@@ -1527,17 +1451,6 @@ function readFile_(id) {
     mime: fixMime_(blob.getContentType(), file.getName()),
     data: Utilities.base64Encode(blob.getBytes())
   };
-}
-
-function validateAssetFile_(file) {
-  if (file.isTrashed()) throw new Error('檔案在 Drive 垃圾桶內');
-  if (!isAllowedFile_(file)) {
-    throw new Error('此檔案不在素材資料夾內，且未開放「知道連結的任何人」，基於安全無法讀取');
-  }
-  if (file.getSize() &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
-  if (!/^(image|audio)\//.test(fixMime_(file.getMimeType(), file.getName()))) {
-    throw new Error('只可讀取圖片或音訊素材');
-  }
 }
 
 function isAllowedFile_(file) {
@@ -1564,25 +1477,18 @@ function fixMime_(mime, name) {
 /* ------------------------------------------------------------------ 工具 */
 
 function getSS_() {
-  const id = PropertiesService.getScriptProperties().getProperty('SHEET_ID');
-  if (!id) throw new Error('尚未綁定資料庫，請從正確的 Google 試算表開啟 Apps Script 並執行 setup');
-  return openDatabase_(id);
-}
-
-function openDatabase_(id) {
-  try {
-    return SpreadsheetApp.openById(id);
-  } catch (err) {
-    throw new Error('無法開啟綁定的試算表，請確認部署帳號有編輯權限，再從正確的試算表執行 setup');
+  // 從試算表「擴充功能 → Apps Script」開啟的腳本：直接用綁定的試算表
+  let ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss) return ss;
+  // 獨立腳本（沒綁定試算表）：自動建立一份並記住
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('SHEET_ID');
+  if (id) {
+    try { return SpreadsheetApp.openById(id); } catch (err) {}
   }
-}
-
-function requireWriteKey_(given) {
-  const expected = PropertiesService.getScriptProperties().getProperty(ADMIN_WRITE_KEY);
-  if (!expected) throw new Error('請先在 Apps Script 執行 setup，建立雲端管理金鑰');
-  if (typeof given !== 'string' || given !== expected) {
-    throw new Error('請在後台「GAS 雲端設定」輸入正確的雲端管理金鑰');
-  }
+  ss = SpreadsheetApp.create('彰基智慧醫療大挑戰資料庫');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
 }
 
 function getFolder_() {
@@ -2059,7 +1965,7 @@ function json_(obj) {
         }
       },
 
-      saveSettings(settings, { autoSync = true } = {}) {
+      saveSettings(settings) {
         try {
           localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(settings));
         } catch (err) {
@@ -2067,7 +1973,7 @@ function json_(obj) {
           return false;
         }
         DualScreenSync.broadcastState();
-        if (autoSync) GASConnector.scheduleAutoPush('config');
+        GASConnector.scheduleAutoPush('config');
         return true;
       },
 
@@ -2192,26 +2098,23 @@ function json_(obj) {
         const file = event.target.files[0];
         event.target.value = '';
         if (!file) return;
-        const inputId = `settingLogo${slotNum}Url`;
+        const input = document.getElementById(`settingLogo${slotNum}Url`);
         if (GASConnector.isConfigured()) {
-          let id;
           try {
             UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
+            const id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(slotNum);
+            this.saveLogos();
+            UI.showToast(`✅ LOGO ${slotNum} 已上傳到 Drive 並自動套用`, 'success');
+            return;
           } catch (e) {
             UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
             return;
           }
-          const url = `gdrive:${id}`;
-          document.getElementById(inputId).value = url;
-          await GASConnector.saveBranding({ [`logo${slotNum}Url`]: url }, () => {
-            this.renderAll();
-            this.updatePreview(slotNum);
-          }, { uploaded: true });
-          return;
         }
         try {
-          document.getElementById(inputId).value = await fileToCompressedDataUrl(file, 700);
+          input.value = await fileToCompressedDataUrl(file, 700);
           this.updatePreview(slotNum);
           UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按儲存套用`, 'info');
         } catch (e) {
@@ -2220,15 +2123,16 @@ function json_(obj) {
       },
 
       saveLogos() {
-        const changes = {
-          logo1Url: document.getElementById('settingLogo1Url').value.trim(),
-          logo1Title: document.getElementById('settingLogo1Title').value.trim() || '彰基智慧醫療創新展館',
-          logo1Sub: document.getElementById('settingLogo1Sub').value.trim(),
-          logo2Url: document.getElementById('settingLogo2Url').value.trim(),
-          logo2Title: document.getElementById('settingLogo2Title').value.trim() || '智慧醫療科技嘉年華',
-          logo2Sub: document.getElementById('settingLogo2Sub').value.trim()
-        };
-        return GASConnector.saveBranding(changes, () => this.renderAll());
+        const s = StorageManager.getSettings();
+        s.logo1Url = document.getElementById('settingLogo1Url').value.trim();
+        s.logo1Title = document.getElementById('settingLogo1Title').value.trim() || '彰基智慧醫療創新展館';
+        s.logo1Sub = document.getElementById('settingLogo1Sub').value.trim();
+        s.logo2Url = document.getElementById('settingLogo2Url').value.trim();
+        s.logo2Title = document.getElementById('settingLogo2Title').value.trim() || '智慧醫療科技嘉年華';
+        s.logo2Sub = document.getElementById('settingLogo2Sub').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('雙主要 LOGO 已儲存並即時更新！', 'success');
       },
 
       resetDefaults() {
@@ -2363,26 +2267,23 @@ function json_(obj) {
         const file = event.target.files[0];
         event.target.value = '';
         if (!file) return;
-        const inputId = this.FIELDS[key].input;
+        const input = document.getElementById(this.FIELDS[key].input);
         if (GASConnector.isConfigured()) {
-          let id;
           try {
             UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
+            const id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(key);
+            this.saveUrls();
+            UI.showToast('✅ 吉祥物圖片已上傳到 Drive 並自動套用', 'success');
+            return;
           } catch (e) {
             UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
             return;
           }
-          const url = `gdrive:${id}`;
-          document.getElementById(inputId).value = url;
-          await GASConnector.saveBranding({ [`mascot${key}`]: url }, () => {
-            this.renderAll();
-            this.updatePreview(key);
-          }, { uploaded: true });
-          return;
         }
         try {
-          document.getElementById(inputId).value = await fileToCompressedDataUrl(file, 800);
+          input.value = await fileToCompressedDataUrl(file, 800);
           this.updatePreview(key);
           UI.showToast('圖片已載入（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
         } catch (e) {
@@ -2391,11 +2292,14 @@ function json_(obj) {
       },
 
       saveUrls() {
-        const changes = {};
-        for (const [key, field] of Object.entries(this.FIELDS)) {
-          changes[`mascot${key}`] = document.getElementById(field.input).value.trim();
-        }
-        return GASConnector.saveBranding(changes, () => this.renderAll());
+        const s = StorageManager.getSettings();
+        s.mascotHome = document.getElementById('settingMascotHome').value.trim();
+        s.mascotIdle = document.getElementById('settingMascotIdle').value.trim();
+        s.mascotHappy = document.getElementById('settingMascotHappy').value.trim();
+        s.mascotSad = document.getElementById('settingMascotSad').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('吉祥物圖片設定已儲存！', 'success');
       },
 
       resetToDefault() {
@@ -2785,19 +2689,12 @@ function json_(obj) {
       autoTimer: null,
       pendingParts: new Set(),
       lastStatus: null,
-      syncQueue: Promise.resolve(),
-      brandingRevision: 0,
 
-      defaultUrl: 'https://script.google.com/macros/s/AKfycbxE-3EnLIM4vy12UJ_67S-o80Q2fcrlXHspF7Omi-U4smfreLicWels2b5k7yNHFOiFnA/exec',
-      getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim() || this.defaultUrl; },
+      getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
       isConfigured() { return !!this.getUrl(); },
 
-      getWriteKey() {
-        try { return sessionStorage.getItem('cch_gas_write_key:' + this.getUrl()) || ''; }
-        catch (err) { return ''; }
-      },
-
-      // 用 GAS HTML Service iframe 和 google.script.run 交換跨網域回應。
+      // GAS 的 ContentService 不提供 GitHub Pages 可讀的跨網域回應。
+      // 用隱藏的 HTML Service iframe 和 google.script.run 交換結果。
       bridgeFrame: null,
       bridgeUrl: '',
       bridgeWindow: null,
@@ -2902,9 +2799,7 @@ function json_(obj) {
       },
 
       async postGas(payload) {
-        const protectedAction = ['UPLOAD_ASSET', 'SYNC_UP', 'CHECK_DRIVE_WRITE'].includes(payload.action);
-        const request = protectedAction ? { ...payload, writeKey: this.getWriteKey() } : payload;
-        const j = await this.bridgeCall({ method: 'POST', payload: request });
+        const j = await this.bridgeCall({ method: 'POST', payload });
         if (!j || j.status !== 'ok') throw new Error(j?.message || 'GAS 回傳錯誤');
         return j;
       },
@@ -2931,13 +2826,13 @@ function json_(obj) {
         return out;
       },
 
-      applyCloud(data, { applyConfig = true } = {}) {
+      applyCloud(data) {
         this.suppress = true;
         try {
           if (Array.isArray(data.questions) && data.questions.length > 0) {
             StorageManager.saveQuestions(data.questions);
           }
-          if (applyConfig && data.config && typeof data.config === 'object') {
+          if (data.config && typeof data.config === 'object') {
             const current = StorageManager.getSettings();
             const cloud = this.coerceConfig(data.config);
             StorageManager.saveSettings({
@@ -2956,13 +2851,14 @@ function json_(obj) {
 
       async syncOnBoot() {
         if (!this.isConfigured()) return;
-        const brandingRevision = this.brandingRevision;
-        const url = this.getUrl();
         try {
           const data = await this.getGas();
-          if (url !== this.getUrl()) return;
-          this.applyCloud(data, { applyConfig: brandingRevision === this.brandingRevision });
+          this.applyCloud(data);
           this.lastStatus = { ok: true, time: new Date() };
+          // 試算表還是空的：把本機題庫自動寫進去，初始化資料庫
+          if (!(data.questions || []).length && StorageManager.getQuestions().length) {
+            await this.pushToCloud('boot', ['questions', 'config']);
+          }
         } catch (err) {
           this.lastStatus = { ok: false, error: err.message };
           console.warn('GAS 開機同步失敗：', err.message);
@@ -2971,22 +2867,17 @@ function json_(obj) {
 
       saveUrlAndTest() {
         const url = document.getElementById('settingGasUrl').value.trim();
-        if (url && !/^https:\/\/script\.google\.com\/(?:a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/.test(url)) {
-          UI.showToast('請填入有效的 GAS 網頁應用程式 /exec 網址', 'error');
+        const s = StorageManager.getSettings();
+        s.gasWebAppUrl = url;
+        this.suppress = true;
+        StorageManager.saveSettings(s);
+        this.suppress = false;
+        AdminModule.refreshAllViews();
+
+        if (!url) {
+          UI.showToast('已清除 GAS 網址，切換為本機儲存模式', 'info');
           return;
         }
-        const key = document.getElementById('settingGasWriteKey').value.trim();
-        const s = StorageManager.getSettings();
-        s.gasWebAppUrl = url === this.defaultUrl ? '' : url;
-        if (!StorageManager.saveSettings(s, { autoSync: false })) return;
-        try {
-          const storageKey = 'cch_gas_write_key:' + this.getUrl();
-          if (key) sessionStorage.setItem(storageKey, key);
-          else sessionStorage.removeItem(storageKey);
-        } catch (err) {
-          UI.showToast('瀏覽器無法保存本次的雲端管理金鑰', 'error');
-        }
-        AdminModule.refreshAllViews();
         this.diagnose(true);
       },
 
@@ -3008,8 +2899,8 @@ function json_(obj) {
         }
       },
 
-      buildSafeConfig(skipped, settings = StorageManager.getSettings()) {
-        const cfg = { ...settings };
+      buildSafeConfig(skipped) {
+        const cfg = { ...StorageManager.getSettings() };
         delete cfg.adminPasswordHash;
         delete cfg.gasWebAppUrl;
         // blob: 只在本次瀏覽器有效、過大的 data: 超過試算表儲存格上限，都不送出
@@ -3029,55 +2920,6 @@ function json_(obj) {
         return cfg;
       },
 
-      sendSheetSync(payload) {
-        const url = this.getUrl();
-        const sync = this.syncQueue.then(() => {
-          if (url !== this.getUrl()) throw new Error('GAS 網址已變更，請重新儲存');
-          return this.postGas(payload);
-        });
-        this.syncQueue = sync.catch(() => {});
-        return sync;
-      },
-
-      async saveBranding(changes, render, { uploaded = false } = {}) {
-        this.brandingRevision++;
-        const settings = { ...StorageManager.getSettings(), ...changes };
-        const localSaved = StorageManager.saveSettings(settings, { autoSync: false });
-        if (localSaved) render();
-        if (!this.isConfigured()) {
-          if (localSaved) UI.showToast('圖片設定已儲存於本機', 'success');
-          return localSaved;
-        }
-
-        const skipped = [];
-        const config = this.buildSafeConfig(skipped, changes);
-        for (const key of Object.keys(config)) {
-          if (config[key].length >= 49000) {
-            delete config[key];
-            skipped.push(key);
-          }
-        }
-        try {
-          if (Object.keys(config).length) {
-            UI.showToast('正在將圖片設定寫入 Google Sheet…', 'info');
-            const result = await this.sendSheetSync({ action: 'SYNC_UP', config });
-            if (!Number.isInteger(result.config) || result.config < 1) {
-              throw new Error('GAS 未確認設定已寫入');
-            }
-          }
-          if (skipped.length) {
-            UI.showToast('部分素材是本機檔或超過儲存格大小，請使用 Drive 上傳或貼上 Drive 連結', 'error');
-            return false;
-          }
-          UI.showToast(uploaded ? '圖片已存入 Drive，網站設定已同步至 Google Sheet' : '圖片設定已同步至 Google Sheet', 'success');
-          return true;
-        } catch (err) {
-          const prefix = uploaded ? '圖片已存入 Drive，但網站設定未確認同步' : '圖片設定同步失敗';
-          UI.showToast(`${prefix}：${err.message}。請在後台再按一次儲存`, 'error');
-          return false;
-        }
-      },
-
       // mode: 'manual'（按鈕）| 'auto'（後台修改後自動）| 'boot'（開機初始化，不跳提示）
       async pushToCloud(mode = 'manual', parts = ['questions', 'config']) {
         if (!this.isConfigured()) {
@@ -3090,7 +2932,7 @@ function json_(obj) {
           const skipped = [];
           if (parts.includes('questions')) payload.questions = StorageManager.getQuestions();
           if (parts.includes('config')) payload.config = this.buildSafeConfig(skipped);
-          const r = await this.sendSheetSync(payload);
+          const r = await this.postGas(payload);
           this.lastStatus = { ok: true, time: new Date() };
           if (mode === 'manual') {
             UI.showToast(`✅ 已寫入 Google Sheet（題庫 ${r.questions ?? '—'} 題）${skipped.length ? `；${skipped.length} 個本機暫存素材未同步` : ''}`, 'success');
@@ -3191,17 +3033,6 @@ function json_(obj) {
             info = r;
             add(true, `已連上 GAS（程式版本 ${r.version}）`);
             add(true, `試算表：${r.sheetName}`, `題庫 ${r.questionRows} 題｜設定 ${r.configRows} 筆｜成績 ${r.logRows} 筆`, r.sheetUrl);
-            if (Array.isArray(r.imageChecks)) {
-              add(r.gasWebAppUrl === url ? true : 'warn', 'Config 的 GAS 網址',
-                r.gasWebAppUrl === url ? '和網站目前使用的網址相同' :
-                  '缺少網址或與網站設定不同，請核對原部署並重新執行 setup。');
-              for (const image of r.imageChecks) {
-                add(image.state === 'ok' ? true : image.state === 'error' ? false : 'warn',
-                  `圖片欄位 ${image.key}`, image.message);
-              }
-            } else {
-              add('warn', '目前部署尚未提供圖片欄位診斷', '請將原部署更新到 Code.gs v3.1');
-            }
             if (r.driveError) {
               add(false, 'Drive 素材資料夾無法使用', this.explainError(r.driveError));
             } else {
@@ -3214,15 +3045,13 @@ function json_(obj) {
 
         if (info) {
           render(true);
-          if (this.getWriteKey()) {
-            try {
-              const driveTest = await this.postGas({ action: 'CHECK_DRIVE_WRITE' });
-              add(true, 'Drive 資料夾寫入測試成功', '測試檔已移至垃圾桶', driveTest.folderUrl);
-            } catch (err) {
-              add(false, 'Drive 寫入測試失敗', this.explainError(err.message));
-            }
-          } else {
-            add('warn', '尚未測試 Drive 寫入', '輸入雲端管理金鑰後可測試');
+          try {
+            await this.postGas({ action: 'PING' });
+            add(true, 'GAS 寫入測試成功');
+            const driveTest = await this.postGas({ action: 'CHECK_DRIVE_WRITE' });
+            add(true, 'Drive 資料夾寫入測試成功', '測試檔已移至垃圾桶', driveTest.folderUrl);
+          } catch (err) {
+            add(false, 'GAS 或 Drive 寫入測試失敗', this.explainError(err.message));
           }
           const local = StorageManager.getQuestions().length;
           add(info.questionRows > 0 ? true : 'warn',
@@ -3231,7 +3060,10 @@ function json_(obj) {
         }
         render();
 
-        if (autoSync && info) await this.pullFromCloud();
+        if (autoSync && info) {
+          if (info.questionRows > 0) await this.pullFromCloud();
+          else if (StorageManager.getQuestions().length) await this.pushToCloud('manual');
+        }
       },
 
       copyGasCode() {
@@ -4134,7 +3966,7 @@ function json_(obj) {
         document.getElementById('statTotalQuestions').textContent = questions.length;
         document.getElementById('statDrawCount').textContent = `${settings.questionsPerGame} 題驟死制`;
         document.getElementById('statTimeLimit').textContent = `${settings.timePerQuestion} 秒`;
-        document.getElementById('statGasStatus').textContent = GASConnector.isConfigured()
+        document.getElementById('statGasStatus').textContent = settings.gasWebAppUrl
           ? '已綁定 GAS 雲端試算表'
           : '本機儲存模式';
 
@@ -4162,8 +3994,7 @@ function json_(obj) {
         document.getElementById('settingTimePerQuestion').value = settings.timePerQuestion;
         document.getElementById('settingControlMode').value = settings.controlMode;
         document.getElementById('settingDisplayRole').value = DualScreenSync.role;
-        document.getElementById('settingGasUrl').value = GASConnector.getUrl();
-        document.getElementById('settingGasWriteKey').value = GASConnector.getWriteKey();
+        document.getElementById('settingGasUrl').value = settings.gasWebAppUrl || '';
 
         const lastDrawn = StorageManager.getLastDrawnRecord();
         document.getElementById('lastDrawnRecordLabel').textContent = lastDrawn ? lastDrawn.timestamp : '尚未進行遊戲';
