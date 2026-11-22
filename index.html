@@ -1175,7 +1175,7 @@
               </button>
             </div>
             <button onclick="GASConnector.diagnose(false)" class="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 text-slate-800 font-black text-sm flex items-center justify-center gap-2 transition">
-              <i class="fa-solid fa-stethoscope text-slate-500"></i> 診斷連線（檢查為什麼沒有資料 / 素材連不上）
+              <i class="fa-solid fa-stethoscope text-slate-500"></i> 診斷連線與 Drive 寫入（會建立並清除一個測試檔）
             </button>
             <div id="gasDiagResult" class="hidden bg-white border-2 border-slate-200 rounded-2xl px-4 py-2"></div>
           </div>
@@ -1193,7 +1193,7 @@
             </div>
 
             <pre id="gasCodeBlock" class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-300 overflow-x-auto max-h-80 custom-scrollbar font-mono leading-relaxed">/**
- * 彰基智慧醫療大挑戰 (Smart Medical Challenge) - Google Apps Script 後端 v2
+ * 彰基智慧醫療大挑戰 - Google Apps Script 後端 v3
  *
  * 功能：
  *  1. 題庫 / 設定同步（Google 試算表：Questions、Config、Logs 三個工作表，自動建立）
@@ -1202,6 +1202,7 @@
  *  4. 連線診斷（後台「診斷連線」按鈕使用）
  *
  * 【第一次使用】編輯器上方函式選單選「setup」按「執行」，依畫面完成授權。
+ * 【部署】網頁應用程式以「我」的身分執行；存取權設為「所有人」。
  * 【修改程式後】部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。
  */
 
@@ -1210,7 +1211,7 @@
 const FOLDER_ID = '1q8Y_nNdExN9ACUehnkZePazBGneKlX8d';
 const FOLDER_NAME = '彰基智慧醫療大挑戰_素材';
 
-const VERSION = 'v2.0';
+const VERSION = 'v3.0';
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
 const Q_HEADERS = ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案'];
 const C_HEADERS = ['Key', 'Value'];
@@ -1229,6 +1230,7 @@ function setup() {
 function doGet(e) {
   try {
     const p = (e &amp;&amp; e.parameter) || {};
+    if (p.action === 'bridge') return bridgePage_(p);
     if (p.action === 'ping') return json_(pingInfo_());
     if (p.action === 'file') return json_(readFile_(p.id));
     return json_(readAll_());
@@ -1250,6 +1252,14 @@ function doPost(e) {
 
     if (action === 'UPLOAD_ASSET') {
       return json_(uploadAsset_(payload));
+    }
+
+    if (action === 'CHECK_DRIVE_WRITE') {
+      const folder = getFolder_();
+      const testFile = folder.createFile('upload_check_' + Date.now() + '.txt', 'write-check', MimeType.PLAIN_TEXT);
+      const id = testFile.getId();
+      testFile.setTrashed(true);
+      return json_({ status: 'ok', folderUrl: folder.getUrl(), testFileId: id });
     }
 
     lock = LockService.getScriptLock();
@@ -1293,6 +1303,45 @@ function doPost(e) {
   } finally {
     if (lock) { try { lock.releaseLock(); } catch (x) {} }
   }
+}
+
+/* GitHub Pages 跨網域通訊：GAS HTML Service 在內嵌頁用 google.script.run
+   取得真正的回應，再用 postMessage 回傳。不可把任意網頁傳來的 token 當密鑰。 */
+function bridgePage_(p) {
+  const origin = String(p.origin || '');
+  const channel = String(p.channel || '');
+  if (!/^https:\/\/[^\s/?#]+(?::\d+)?$/.test(origin) || !/^[a-zA-Z0-9_-]{16,100}$/.test(channel)) {
+    throw new Error('橋接來源或通道格式不正確');
+  }
+  const safe = function (v) { return JSON.stringify(v).replace(/&lt;/g, '\\u003c'); };
+  const html = '&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;/head&gt;&lt;body&gt;' +
+    '&lt;script&gt;"use strict";const origin=' + safe(origin) + ',channel=' + safe(channel) + ';' +
+    'function send(value){window.top.postMessage(Object.assign({smcBridge:channel},value),origin)}' +
+    'window.addEventListener("message",function(e){' +
+    'if(e.source!==window.top||e.origin!==origin||!e.data||e.data.smcBridge!==channel||e.data.type!=="request")return;' +
+    'var id=e.data.id;' +
+    'google.script.run.withSuccessHandler(function(r){send({type:"response",id:id,result:r})})' +
+    '.withFailureHandler(function(err){send({type:"response",id:id,error:String(err&amp;&amp;err.message||err)})})' +
+    '.bridgeRequest(e.data.request);' +
+    '});send({type:"ready"});&lt;\/script&gt;&lt;/body&gt;&lt;/html&gt;';
+  return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function bridgeRequest(req) {
+  if (!req || typeof req !== 'object') throw new Error('要求格式錯誤');
+  if (req.method === 'GET') {
+    const allowed = { ping: true, file: true, all: true };
+    if (!allowed[req.action]) throw new Error('不支援的讀取操作');
+    const output = doGet({ parameter: { action: req.action, id: req.id || '' } });
+    return JSON.parse(output.getContent());
+  }
+  if (req.method === 'POST') {
+    const allowed = { PING: true, UPLOAD_ASSET: true, SYNC_UP: true, LOG_RESULT: true, CHECK_DRIVE_WRITE: true };
+    if (!allowed[req.payload &amp;&amp; req.payload.action]) throw new Error('不支援的寫入操作');
+    const output = doPost({ postData: { contents: JSON.stringify(req.payload) } });
+    return JSON.parse(output.getContent());
+  }
+  throw new Error('不支援的要求');
 }
 
 /* ------------------------------------------------------------------ 讀取 */
@@ -1369,6 +1418,7 @@ function uploadAsset_(payload) {
 
   const folder = getFolder_();
   const file = folder.createFile(blob);
+  if (!isAllowedFile_(file)) throw new Error('建立檔案後未能驗證素材資料夾');
   let shared = true;
   try {
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -1490,7 +1540,8 @@ function errMsg_(err) { return String((err &amp;&amp; err.message) || err); }
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}</pre>
+}
+</pre>
           </div>
         </div>
       </div>
@@ -2058,13 +2109,14 @@ function json_(obj) {
             UI.showToast(`✅ LOGO ${slotNum} 已上傳到 Drive 並自動套用`, 'success');
             return;
           } catch (e) {
-            UI.showToast(`Drive 上傳失敗（${e.message}），改存本機`, 'error');
+            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
+            return;
           }
         }
         try {
           input.value = await fileToCompressedDataUrl(file, 700);
           this.updatePreview(slotNum);
-          UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後會自動上傳 Drive）。請按儲存套用`, 'info');
+          UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按儲存套用`, 'info');
         } catch (e) {
           UI.showToast(e.message, 'error');
         }
@@ -2226,13 +2278,14 @@ function json_(obj) {
             UI.showToast('✅ 吉祥物圖片已上傳到 Drive 並自動套用', 'success');
             return;
           } catch (e) {
-            UI.showToast(`Drive 上傳失敗（${e.message}），改存本機`, 'error');
+            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
+            return;
           }
         }
         try {
           input.value = await fileToCompressedDataUrl(file, 800);
           this.updatePreview(key);
-          UI.showToast('圖片已載入（僅存本機；連接 GAS 後會自動上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
+          UI.showToast('圖片已載入（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
         } catch (e) {
           UI.showToast(e.message, 'error');
         }
@@ -2567,7 +2620,8 @@ function json_(obj) {
             UI.showToast('✅ 音訊已上傳到 Drive 並自動套用', 'success');
             return;
           } catch (e) {
-            UI.showToast(`Drive 上傳失敗（${e.message}），改為本次暫存`, 'error');
+            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
+            return;
           }
         }
         input.value = URL.createObjectURL(file);
@@ -2639,38 +2693,114 @@ function json_(obj) {
       getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
       isConfigured() { return !!this.getUrl(); },
 
-      // 讀取 GAS 回應並確認是 JSON（不是 Google 的登入頁 / 錯誤頁）
-      async fetchJson(url, options) {
-        const res = await fetch(url, options);
-        const text = await res.text();
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          const isHtml = /<html|<!doctype/i.test(text);
-          throw new Error(isHtml
-            ? 'GAS 回傳的是網頁而不是資料（通常是部署權限沒設成「所有人」，或程式執行出錯）'
-            : 'GAS 回傳格式不正確');
+      // GAS 的 ContentService 不提供 GitHub Pages 可讀的跨網域回應。
+      // 用隱藏的 HTML Service iframe 和 google.script.run 交換結果。
+      bridgeFrame: null,
+      bridgeUrl: '',
+      bridgeWindow: null,
+      bridgeOrigin: '',
+      bridgeChannel: '',
+      bridgeReady: null,
+      bridgePending: new Map(),
+      bridgeSequence: 0,
+      bridgeListenerInstalled: false,
+
+      receiveBridgeMessage(event) {
+        const msg = event.data;
+        if (!msg || msg.smcBridge !== this.bridgeChannel ||
+            !/^https:\/\/(?:[a-z0-9-]+\.)*(?:googleusercontent\.com|google\.com)$/i.test(event.origin)) return;
+        if (msg.type === 'ready' && !this.bridgeWindow) {
+          this.bridgeWindow = event.source;
+          this.bridgeOrigin = event.origin;
+          if (this.bridgeReady && this.bridgeReady.resolve) this.bridgeReady.resolve();
+          return;
+        }
+        if (event.source !== this.bridgeWindow || event.origin !== this.bridgeOrigin) return;
+        if (msg.type === 'response') {
+          const pending = this.bridgePending.get(msg.id);
+          if (!pending) return;
+          this.bridgePending.delete(msg.id);
+          clearTimeout(pending.timer);
+          if (msg.error) pending.reject(new Error(msg.error));
+          else pending.resolve(msg.result);
         }
       },
 
-      async getGas(params = '') {
+      async ensureBridge() {
         const url = this.getUrl();
-        if (!url) throw new Error('尚未設定 GAS 網址');
-        const j = await this.fetchJson(url + (params ? (url.includes('?') ? '&' : '?') + params : ''));
-        if (j.status !== 'ok') throw new Error(j.message || 'GAS 回傳錯誤');
+        if (!/^https:\/\/script\.google\.com\/(?:a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/.test(url)) {
+          throw new Error('請填入有效的 GAS Web App /exec 網址');
+        }
+        if (this.bridgeReady && this.bridgeUrl === url) return this.bridgeReady.promise;
+        if (!this.bridgeListenerInstalled) {
+          window.addEventListener('message', event => this.receiveBridgeMessage(event));
+          this.bridgeListenerInstalled = true;
+        }
+        if (this.bridgeFrame) this.bridgeFrame.remove();
+        for (const pending of this.bridgePending.values()) {
+          clearTimeout(pending.timer);
+          pending.reject(new Error('GAS 網址已變更，請重新操作'));
+        }
+        this.bridgePending.clear();
+        this.bridgeWindow = null;
+        this.bridgeOrigin = '';
+        this.bridgeUrl = url;
+        this.bridgeChannel = (crypto.randomUUID ? crypto.randomUUID() :
+          Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+        const frame = document.createElement('iframe');
+        frame.title = 'Google Apps Script 雲端橋接';
+        frame.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
+        this.bridgeFrame = frame;
+        const ready = {};
+        ready.promise = new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error('GAS 橋接逾時：請確認已部署新版、執行身分為「我」、存取權為「所有人」')), 30000);
+          ready.resolve = () => { clearTimeout(timer); resolve(); };
+          frame.onerror = () => { clearTimeout(timer); reject(new Error('無法載入 GAS 橋接頁')); };
+        });
+        this.bridgeReady = ready;
+        document.body.appendChild(frame);
+        frame.src = url + '?action=bridge&origin=' + encodeURIComponent(location.origin) +
+          '&channel=' + encodeURIComponent(this.bridgeChannel);
+        try { await ready.promise; }
+        catch (err) {
+          if (this.bridgeFrame === frame) {
+            frame.remove();
+            this.bridgeFrame = null;
+            this.bridgeReady = null;
+          }
+          throw err;
+        }
+      },
+
+      async bridgeCall(request) {
+        await this.ensureBridge();
+        const id = ++this.bridgeSequence;
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            this.bridgePending.delete(id);
+            reject(new Error('GAS 執行逾時，請到 Apps Script「執行項目」檢查錯誤'));
+          }, 90000);
+          this.bridgePending.set(id, { resolve, reject, timer });
+          try {
+            this.bridgeWindow.postMessage({ smcBridge: this.bridgeChannel, type: 'request', id, request }, this.bridgeOrigin);
+          } catch (err) {
+            clearTimeout(timer);
+            this.bridgePending.delete(id);
+            reject(err);
+          }
+        });
+      },
+
+      async getGas(params = '') {
+        const p = new URLSearchParams(params);
+        const j = await this.bridgeCall({ method: 'GET', action: p.get('action') || 'all', id: p.get('id') || '' });
+        if (!j || j.status !== 'ok') throw new Error(j?.message || 'GAS 回傳錯誤');
         return j;
       },
 
-      // 以 text/plain 送出（不觸發 CORS 預檢），並讀取真正的回應，讓成功 / 失敗都看得見
       async postGas(payload) {
-        const url = this.getUrl();
-        if (!url) throw new Error('尚未設定 GAS 網址');
-        const j = await this.fetchJson(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        if (j.status !== 'ok') throw new Error(j.message || 'GAS 回傳錯誤');
+        const j = await this.bridgeCall({ method: 'POST', payload });
+        if (!j || j.status !== 'ok') throw new Error(j?.message || 'GAS 回傳錯誤');
         return j;
       },
 
@@ -2894,7 +3024,7 @@ function json_(obj) {
         render(true);
 
         try {
-          const r = await this.fetchJson(url + (url.includes('?') ? '&' : '?') + 'action=ping');
+          const r = await this.getGas('action=ping');
           if (r.status !== 'ok') {
             add(false, 'GAS 程式執行出錯', this.explainError(r.message));
           } else if (!r.version) {
@@ -2917,9 +3047,11 @@ function json_(obj) {
           render(true);
           try {
             await this.postGas({ action: 'PING' });
-            add(true, '寫入測試成功（網頁 → GAS）');
+            add(true, 'GAS 寫入測試成功');
+            const driveTest = await this.postGas({ action: 'CHECK_DRIVE_WRITE' });
+            add(true, 'Drive 資料夾寫入測試成功', '測試檔已移至垃圾桶', driveTest.folderUrl);
           } catch (err) {
-            add(false, '寫入測試失敗', this.explainError(err.message));
+            add(false, 'GAS 或 Drive 寫入測試失敗', this.explainError(err.message));
           }
           const local = StorageManager.getQuestions().length;
           add(info.questionRows > 0 ? true : 'warn',
