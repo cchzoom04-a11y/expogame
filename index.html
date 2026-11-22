@@ -1,0 +1,3516 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>彰基智慧醫療大挑戰 | Smart Medical Challenge</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@600;700;800;900&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- SheetJS (XLSX) for Excel Import / Export -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', '"Inter"', 'sans-serif'],
+            display: ['"Fredoka"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            medBlue: { DEFAULT: '#0284C7', light: '#38BDF8', dark: '#0369A1' },
+            medTeal: { DEFAULT: '#0D9488', light: '#2DD4BF', dark: '#115E59' },
+            medOrange: { DEFAULT: '#F97316', light: '#FB923C', dark: '#C2410C' },
+            medYellow: { DEFAULT: '#EAB308', light: '#FACC15', dark: '#A16207' },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    input, textarea, select {
+      user-select: text;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans TC', 'Inter', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #e0f7fa 0%, #e0f2fe 45%, #f0fdf4 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    body.game-viewport-lock {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* 3D 卡通立體按鈕系統 */
+    .btn-3d {
+      position: relative;
+      border-radius: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      transition: transform 0.14s var(--ease-bounce), box-shadow 0.14s var(--ease-bounce), filter 0.15s ease;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .btn-3d:active:not(:disabled) {
+      transform: translateY(6px) scale(0.98);
+    }
+    .btn-3d:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-3d-blue {
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+      color: #ffffff;
+      border: 3px solid #bae6fd;
+      box-shadow: 0 8px 0 #0369A1, 0 14px 24px rgba(2, 132, 199, 0.35);
+    }
+    .btn-3d-blue:active:not(:disabled) {
+      box-shadow: 0 2px 0 #0369A1, 0 6px 12px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-3d-teal {
+      background: linear-gradient(180deg, #2DD4BF 0%, #0D9488 100%);
+      color: #ffffff;
+      border: 3px solid #99f6e4;
+      box-shadow: 0 8px 0 #115E59, 0 14px 24px rgba(13, 148, 136, 0.35);
+    }
+    .btn-3d-teal:active:not(:disabled) {
+      box-shadow: 0 2px 0 #115E59, 0 6px 12px rgba(13, 148, 136, 0.3);
+    }
+
+    .btn-3d-orange {
+      background: linear-gradient(180deg, #FB923C 0%, #F97316 100%);
+      color: #ffffff;
+      border: 3px solid #fed7aa;
+      box-shadow: 0 8px 0 #C2410C, 0 14px 24px rgba(249, 115, 22, 0.38);
+    }
+    .btn-3d-orange:active:not(:disabled) {
+      box-shadow: 0 2px 0 #C2410C, 0 6px 12px rgba(249, 115, 22, 0.3);
+    }
+
+    /* 3D 遊戲舞台卡片 */
+    .stage-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      border-radius: 2rem;
+      border: 4px solid #ffffff;
+      box-shadow:
+        0 12px 0 rgba(2, 132, 199, 0.14),
+        0 24px 48px rgba(15, 23, 42, 0.12),
+        inset 0 2px 8px rgba(255, 255, 255, 0.9);
+    }
+
+    /* 選項作答結果樣式 */
+    .option-correct {
+      background: linear-gradient(180deg, #4ADE80 0%, #16A34A 100%) !important;
+      border-color: #bbf7d0 !important;
+      box-shadow: 0 8px 0 #15803D, 0 0 32px rgba(34, 197, 94, 0.7) !important;
+      transform: scale(1.03);
+      z-index: 10;
+    }
+    .option-wrong {
+      background: linear-gradient(180deg, #F87171 0%, #DC2626 100%) !important;
+      border-color: #fecaca !important;
+      box-shadow: 0 8px 0 #991B1B !important;
+      opacity: 0.95;
+    }
+    .option-dimmed {
+      opacity: 0.42;
+      filter: grayscale(35%);
+    }
+
+    /* 動畫 Keyframes */
+    @keyframes mascotIdleFloat {
+      0%, 100% { transform: translateY(0px) scale(1, 1); }
+      50% { transform: translateY(-10px) scale(1.02, 0.98); }
+    }
+    @keyframes mascotHappyJump {
+      0% { transform: translateY(0) scale(1) rotate(0deg); }
+      30% { transform: translateY(-28px) scale(1.16) rotate(-6deg); }
+      60% { transform: translateY(-18px) scale(1.14) rotate(6deg); }
+      80% { transform: translateY(-6px) scale(1.05) rotate(-2deg); }
+      100% { transform: translateY(0) scale(1) rotate(0deg); }
+    }
+    @keyframes mascotSadShake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      20% { transform: translateX(-12px) rotate(-5deg); }
+      40% { transform: translateX(12px) rotate(5deg); }
+      60% { transform: translateX(-9px) rotate(-3deg); }
+      80% { transform: translateX(9px) rotate(3deg); }
+    }
+    @keyframes screenShake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-8px, 4px); }
+      40% { transform: translate(8px, -4px); }
+      60% { transform: translate(-6px, -3px); }
+      80% { transform: translate(6px, 3px); }
+    }
+    @keyframes questionEntrance {
+      0% { opacity: 0; transform: translateY(28px) scale(0.94); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes comboPop {
+      0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+      60% { transform: scale(1.18) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes pulseUrgent {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    @keyframes floatUpFade {
+      0% { opacity: 1; transform: translateY(0) scale(0.9); }
+      100% { opacity: 0; transform: translateY(-55px) scale(1.25); }
+    }
+    @keyframes titleShine {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .anim-mascot-idle { animation: mascotIdleFloat 2.8s ease-in-out infinite; }
+    .anim-mascot-happy { animation: mascotHappyJump 0.85s var(--ease-bounce) forwards; }
+    .anim-mascot-sad { animation: mascotSadShake 0.65s ease-in-out forwards; }
+    .anim-screen-shake { animation: screenShake 0.45s ease-in-out; }
+    .anim-question-in { animation: questionEntrance 0.48s var(--ease-bounce) forwards; }
+    .anim-combo-pop { animation: comboPop 0.45s var(--ease-bounce) forwards; }
+    .anim-pulse-urgent { animation: pulseUrgent 0.55s ease-in-out infinite; }
+    .anim-score-float { animation: floatUpFade 1.1s ease-out forwards; }
+
+    .gradient-title-text {
+      background: linear-gradient(90deg, #0284C7, #0D9488, #F97316, #0284C7);
+      background-size: 250% 250%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleShine 6s ease infinite;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 999px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 999px; }
+
+    /* ===== v3 新增樣式 ===== */
+    .float-badge{position:absolute;width:clamp(44px,7.5vh,84px);height:clamp(44px,7.5vh,84px);border-radius:9999px;background:#fff;
+      box-shadow:0 8px 20px rgba(2,132,199,.25);display:flex;align-items:center;justify-content:center;
+      font-size:clamp(1.2rem,3.6vh,2.5rem);animation:floatIcon 3.6s ease-in-out infinite;border:3px solid #e0f2fe;z-index:5}
+    @keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+
+    /* 答案按鈕：加大，長輩友善 */
+    .opt-btn{min-height:clamp(92px,15.5vh,176px);padding:clamp(.8rem,2vh,1.6rem) clamp(1rem,2.2vw,2.2rem);
+      gap:clamp(.9rem,1.8vw,1.8rem);border-radius:1.8rem;width:100%;text-align:left;justify-content:flex-start}
+    .opt-letter{width:clamp(52px,9vh,96px);height:clamp(52px,9vh,96px);border-radius:1.2rem;background:rgba(255,255,255,.25);
+      border:3px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;
+      font-family:'Fredoka','Noto Sans TC',sans-serif;font-weight:900;font-size:clamp(1.8rem,5vh,3.4rem);flex-shrink:0;
+      box-shadow:inset 0 2px 6px rgba(0,0,0,.12)}
+    .opt-text{font-weight:900;line-height:1.3;font-size:clamp(1.35rem,2.6vw,2.7rem);word-break:break-word}
+    .option-correct{animation:correctPulse .55s ease-in-out 3}
+    @keyframes correctPulse{0%,100%{transform:scale(1.03)}50%{transform:scale(1.09)}}
+
+    /* 倒數最後 5 秒：放大 + 震動 */
+    .timer-urgent{border-color:#fb7185 !important;background:#fff1f2 !important;
+      box-shadow:0 0 0 10px rgba(244,63,94,.22),0 0 60px rgba(244,63,94,.6) !important}
+    @keyframes timerPanic{
+      0%,100%{transform:scale(1.32) translate(0,0) rotate(0deg)}
+      12%{transform:scale(1.44) translate(-5px,3px) rotate(-3deg)}
+      25%{transform:scale(1.30) translate(6px,-4px) rotate(3deg)}
+      37%{transform:scale(1.46) translate(-6px,-2px) rotate(-2deg)}
+      50%{transform:scale(1.32) translate(5px,4px) rotate(2deg)}
+      62%{transform:scale(1.48) translate(-4px,-4px) rotate(-3deg)}
+      75%{transform:scale(1.30) translate(6px,2px) rotate(3deg)}
+      87%{transform:scale(1.44) translate(-5px,-3px) rotate(-2deg)}}
+    .anim-timer-panic{animation:timerPanic .5s linear infinite;z-index:20}
+    @keyframes numTick{0%{transform:scale(1.5)}100%{transform:scale(1)}}
+    .anim-num-tick{animation:numTick .35s ease-out}
+
+    /* 垂直關卡進度條 */
+    .rail-marker{position:absolute;left:50%;transform:translate(-50%,50%);width:clamp(34px,5.2vh,52px);height:clamp(34px,5.2vh,52px);
+      border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:900;
+      font-size:clamp(1rem,2.6vh,1.6rem);z-index:2;transition:all .4s var(--ease-bounce)}
+    .rail-marker.done{background:#10b981;color:#fff;border:3px solid #a7f3d0}
+    .rail-marker.current{background:#f97316;color:#fff;border:4px solid #fed7aa;box-shadow:0 0 0 6px rgba(249,115,22,.25);animation:pulseUrgent 1s ease-in-out infinite}
+    .rail-marker.todo{background:#fff;color:#94a3b8;border:3px solid #cbd5e1}
+
+    /* 答對慶祝 */
+    .celebrate-sun{position:absolute;width:150vmin;height:150vmin;border-radius:50%;opacity:0;
+      background:repeating-conic-gradient(from 0deg,rgba(250,204,21,.65) 0 9deg,rgba(255,255,255,0) 9deg 18deg);
+      -webkit-mask-image:radial-gradient(circle,#000 8%,transparent 68%);mask-image:radial-gradient(circle,#000 8%,transparent 68%)}
+    .celebrate-ring{position:absolute;width:40vmin;height:40vmin;border-radius:50%;border:12px solid rgba(250,204,21,.85);opacity:0}
+    .celebrate-text{position:relative;font-family:'Fredoka','Noto Sans TC',sans-serif;font-weight:900;white-space:nowrap;color:#fff9c4;
+      text-shadow:0 5px 0 #f97316,0 10px 0 #c2410c,0 18px 28px rgba(0,0,0,.35);opacity:0}
+    .celebrate-run .celebrate-sun{animation:sunSpin 7s linear infinite,fadeIn .35s ease-out forwards}
+    .celebrate-run.celebrate-out .celebrate-sun{animation:sunSpin 7s linear infinite,fadeOut .4s ease-in forwards}
+    .celebrate-run .celebrate-ring{animation:ringExpand .9s ease-out forwards}
+    .celebrate-run .celebrate-text{animation:praisePop .75s var(--ease-bounce) forwards}
+    .celebrate-run.celebrate-out .celebrate-text{animation:praiseOut .4s ease-in forwards}
+    @keyframes sunSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes fadeOut{from{opacity:1}to{opacity:0}}
+    @keyframes ringExpand{0%{transform:scale(.2);opacity:.95}100%{transform:scale(2.4);opacity:0}}
+    @keyframes praisePop{0%{transform:scale(0) rotate(-14deg);opacity:0}45%{transform:scale(1.35) rotate(6deg);opacity:1}
+      65%{transform:scale(.92) rotate(-3deg);opacity:1}82%{transform:scale(1.08) rotate(1deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+    @keyframes praiseOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.25) translateY(-40px)}}
+    .sparkle-pop{position:absolute;left:50%;top:50%;pointer-events:none;z-index:25;animation:sparkleFly 1.1s ease-out forwards}
+    @keyframes sparkleFly{
+      0%{transform:translate(-50%,-50%) scale(0);opacity:0}
+      30%{opacity:1;transform:translate(calc(-50% + var(--dx)*.5),calc(-50% + var(--dy)*.5)) scale(1.3)}
+      100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) - 30px)) scale(.4) rotate(180deg);opacity:0}}
+
+    /* ===== v4 ===== */
+    .logo-free img{filter:drop-shadow(0 4px 10px rgba(15,23,42,.18))}
+    .title-line2{display:flex;font-size:1.45em;line-height:1.1;gap:.04em;margin-top:.05em}
+    .title-char{display:inline-block;background:linear-gradient(180deg,#FDE047 0%,#F97316 55%,#EF4444 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 .05em 0 #9a3412) drop-shadow(0 .1em .12em rgba(0,0,0,.22));
+      animation:charBounce 1.9s ease-in-out infinite;transform-origin:50% 85%}
+    .title-char:nth-child(2){animation-delay:.18s}
+    .title-char:nth-child(3){animation-delay:.36s}
+    @keyframes charBounce{0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}25%{transform:translateY(-.14em) rotate(3deg) scale(1.1)}50%{transform:translateY(0) rotate(-2deg) scale(1)}}
+    .title-spark{position:absolute;font-size:.42em;animation:twinkle 1.8s ease-in-out infinite;pointer-events:none}
+    @keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.45}50%{transform:scale(1.25) rotate(25deg);opacity:1}}
+  </style>
+</head>
+<body class="game-viewport-lock">
+
+  <!-- 動態醫療科技嘉年華背景 Canvas -->
+  <canvas id="bgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- 全螢幕煙火與紙花粒子特效 Canvas -->
+  <canvas id="fxCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-40"></canvas>
+
+  <!-- 答對慶祝大字動畫 -->
+  <div id="celebrateOverlay" class="fixed inset-0 z-[35] pointer-events-none hidden items-center justify-center overflow-hidden">
+    <div class="celebrate-sun"></div>
+    <div class="celebrate-ring"></div>
+    <div class="celebrate-ring" style="animation-delay:.25s"></div>
+    <div id="celebrateText" class="celebrate-text"></div>
+  </div>
+
+  <!-- 暫停畫面 -->
+  <div id="pauseOverlay" class="fixed inset-0 z-[45] hidden items-center justify-center bg-slate-900/75 backdrop-blur-md p-4">
+    <div class="stage-card w-full max-w-2xl p-8 sm:p-12 text-center">
+      <div class="w-24 h-24 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center text-5xl mx-auto mb-4"><i class="fa-solid fa-pause"></i></div>
+      <h2 class="text-4xl sm:text-5xl font-black text-slate-800 mb-2">挑戰暫停中</h2>
+      <p class="text-lg sm:text-xl font-bold text-slate-500 mb-8">時間已停止，準備好了就按「繼續挑戰」</p>
+      <div class="flex flex-col gap-4">
+        <button onclick="GameEngine.resumeGame()" class="btn-3d btn-3d-orange w-full py-6 text-3xl sm:text-4xl"><i class="fa-solid fa-play"></i><span>繼續挑戰</span></button>
+        <button onclick="GameEngine.confirmQuit()" class="btn-3d btn-3d-blue w-full py-4 text-xl sm:text-2xl"><i class="fa-solid fa-house"></i><span>結束本次挑戰・返回首頁</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全域訊息提示 Toast (僅在後台或系統操作使用) -->
+  <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- 自訂確認對話框 Modal -->
+  <div id="confirmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="stage-card max-w-md w-full p-6 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 id="confirmTitle" class="text-2xl font-black text-slate-800 mb-2">確認操作</h3>
+      <p id="confirmMessage" class="text-slate-600 font-medium mb-6">確定要執行此動作嗎？</p>
+      <div class="flex gap-3 justify-center">
+        <button id="confirmCancelBtn" class="px-5 py-3 rounded-xl font-bold bg-slate-200 hover:bg-slate-300 text-slate-700 transition">取消</button>
+        <button id="confirmOkBtn" class="btn-3d btn-3d-orange px-6 py-3 text-base">確定執行</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       右下角低調「設定」齒輪按鈕 (全遊戲頁面常駐，點擊輸入密碼進入後台)
+       ========================================================================== -->
+  <button id="cornerSettingsTrigger" onclick="AdminModule.openLogin()" aria-label="設定"
+    class="fixed bottom-4 right-4 z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200 hover:rotate-90">
+    <i class="fa-solid fa-gear"></i>
+  </button>
+
+  <!-- ==========================================================================
+       主應用程式容器 (App Shell)
+       ========================================================================== -->
+  <div id="appRoot" class="relative z-10 w-full h-full flex flex-col">
+
+    <!-- ========================================================================
+         1. 首頁 (HOME SCREEN)：雙 LOGO 置中放大、Q 版人物放大
+         ======================================================================== -->
+    <section id="screenHome" class="w-full h-full flex flex-col justify-between gap-2 p-4 sm:p-6 lg:p-8 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
+      <header class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 shrink-0">
+        <div id="homeLogo1Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
+        <div class="hidden sm:block w-1.5 h-14 lg:h-20 rounded-full bg-gradient-to-b from-sky-300 to-teal-300"></div>
+        <div id="homeLogo2Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
+      </header>
+
+      <main class="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-20 py-2">
+        <!-- 超大 Q 版吉祥物 -->
+        <div class="relative flex items-center justify-center shrink-0" style="width:clamp(260px,56vh,720px);height:clamp(260px,56vh,720px);max-width:90vw">
+          <div class="absolute inset-[-8%] rounded-full bg-gradient-to-br from-sky-300/45 via-teal-200/35 to-amber-200/45 blur-2xl"></div>
+          <span class="float-badge" style="top:2%;left:-4%;color:#0284C7"><i class="fa-solid fa-stethoscope"></i></span>
+          <span class="float-badge" style="top:8%;right:-4%;color:#EF4444;animation-delay:.6s"><i class="fa-solid fa-heart-pulse"></i></span>
+          <span class="float-badge" style="bottom:12%;left:-6%;color:#0D9488;animation-delay:1.2s"><i class="fa-solid fa-dna"></i></span>
+          <span class="float-badge" style="bottom:6%;right:-3%;color:#F97316;animation-delay:1.8s"><i class="fa-solid fa-robot"></i></span>
+          <div class="absolute -bottom-1 w-3/4 h-10 rounded-full bg-sky-500/25 blur-md"></div>
+          <div class="relative w-full h-full anim-mascot-idle">
+            <div id="homeMascotContainer" class="w-full h-full flex items-center justify-center drop-shadow-2xl"></div>
+          </div>
+        </div>
+
+        <!-- 標題與開始按鈕 -->
+        <div class="text-center lg:text-left max-w-3xl flex flex-col items-center lg:items-start">
+          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+            SMART MEDICAL CHALLENGE
+          </div>
+          <h1 class="relative w-fit font-black tracking-tight leading-none mb-9" style="font-size:clamp(2.6rem,5.6vw,6.5rem)">
+            <span class="gradient-title-text block leading-tight pb-1">彰基智慧醫療</span>
+            <span class="title-line2 justify-center lg:justify-start" aria-label="大挑戰"><span class="title-char">大</span><span class="title-char">挑</span><span class="title-char">戰</span></span>
+            <span class="title-spark" style="top:48%;right:4%">✨</span>
+            <span class="title-spark" style="top:78%;right:15%;animation-delay:.6s">⭐</span>
+            <span class="title-spark" style="top:-6%;left:-3%;animation-delay:1.1s">✨</span>
+          </h1>
+          <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange rounded-[2rem] w-full sm:w-auto group" style="padding:clamp(1.1rem,3vh,2.4rem) clamp(2.5rem,6vw,6rem);font-size:clamp(1.8rem,3.8vw,3.8rem)">
+            <i class="fa-solid fa-play text-amber-200 group-hover:scale-125 transition-transform"></i>
+            <span>開始挑戰</span>
+          </button>
+        </div>
+      </main>
+      <div class="h-2 shrink-0"></div>
+    </section>
+
+    <!-- ========================================================================
+         2. 遊戲答題舞台：題目在上、答案置中、右側垂直進度條
+         ======================================================================== -->
+    <section id="screenGame" class="hidden w-full h-full flex-row gap-3 sm:gap-5 p-3 sm:p-5 lg:p-6 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
+      <!-- 左側主區 -->
+      <div class="flex-1 min-w-0 min-h-0 flex flex-col gap-3 sm:gap-4">
+        <!-- 左上：雙 LOGO（放大） + 連擊徽章 -->
+        <header class="flex items-center justify-between gap-3 shrink-0">
+          <div class="flex items-center gap-3 sm:gap-6 bg-white/90 backdrop-blur-md px-4 sm:px-7 py-2 sm:py-3 rounded-3xl shadow-md border-2 border-white">
+            <div id="gameLogo1Container" class="flex items-center"></div>
+            <div class="w-0.5 h-10 sm:h-14 bg-slate-200"></div>
+            <div id="gameLogo2Container" class="flex items-center"></div>
+          </div>
+          <div class="flex items-center gap-3 sm:gap-4">
+            <div id="hudComboBadge" class="hidden px-5 sm:px-8 py-2 sm:py-3 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-display font-black text-xl sm:text-3xl shadow-lg border-2 border-yellow-200 items-center gap-2">
+              <i class="fa-solid fa-fire text-yellow-200"></i>
+              <span id="hudComboText">COMBO x2</span>
+            </div>
+            <button id="pauseBtn" onclick="GameEngine.pauseGame()" aria-label="暫停" class="btn-3d btn-3d-blue" style="padding:clamp(.6rem,1.6vh,1.1rem) clamp(1.1rem,2vw,2rem);font-size:clamp(1.1rem,2.4vh,1.9rem)">
+              <i class="fa-solid fa-pause"></i><span>暫停</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- 題目（最上方） -->
+        <div id="questionCard" class="stage-card shrink-0 w-full px-6 py-5 sm:px-10 sm:py-7 lg:px-14 lg:py-8 flex flex-col justify-center relative overflow-hidden">
+          <h2 id="questionText" class="font-black text-slate-800 leading-snug tracking-tight text-center" style="font-size:clamp(1.6rem,3vw,3.3rem)">
+            題目載入中...
+          </h2>
+          <div id="comboCelebrationBanner" class="hidden mt-4 py-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-display font-black text-center text-xl sm:text-3xl shadow-lg anim-combo-pop">
+            🔥 SUPER COMBO！
+          </div>
+        </div>
+
+        <!-- 中央舞台：吉祥物（左）｜ A B C 答案（置中）｜ 倒數計時（右） -->
+        <main id="gameStageMain" class="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-[1fr_minmax(0,2.3fr)_1fr] gap-4 lg:gap-8 items-center">
+          <!-- 吉祥物 -->
+          <div class="relative col-start-1 row-start-1 flex items-center justify-center">
+            <div id="feedbackBanner" class="hidden absolute -top-4 sm:-top-6 whitespace-nowrap px-5 py-2 rounded-2xl font-black text-xl sm:text-3xl shadow-lg border-2 z-20 anim-combo-pop">
+              答對了！
+            </div>
+            <div id="gameMascotWrapper" class="flex items-center justify-center anim-mascot-idle" style="width:clamp(170px,38vh,460px);height:clamp(170px,38vh,460px);max-width:100%">
+              <div id="gameMascotContainer" class="w-full h-full flex items-center justify-center drop-shadow-xl"></div>
+            </div>
+          </div>
+
+          <!-- 答案 A / B / C -->
+          <div id="optionsContainer" class="col-span-2 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-start-1 flex flex-col gap-3 sm:gap-5 w-full">
+            <button id="optionBtnA" onclick="GameEngine.submitAnswer('A')" class="btn-3d btn-3d-blue opt-btn">
+              <span class="opt-letter">A</span>
+              <span id="optionTextA" class="opt-text">選項 A</span>
+            </button>
+            <button id="optionBtnB" onclick="GameEngine.submitAnswer('B')" class="btn-3d btn-3d-teal opt-btn">
+              <span class="opt-letter">B</span>
+              <span id="optionTextB" class="opt-text">選項 B</span>
+            </button>
+            <button id="optionBtnC" onclick="GameEngine.submitAnswer('C')" class="btn-3d btn-3d-orange opt-btn">
+              <span class="opt-letter">C</span>
+              <span id="optionTextC" class="opt-text">選項 C</span>
+            </button>
+          </div>
+
+          <!-- 倒數計時器（放大；最後 5 秒縮放震動） -->
+          <div class="col-start-2 row-start-1 lg:col-start-3 flex items-center justify-center">
+            <div id="timerWrapper" class="relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100" style="width:clamp(140px,28vh,310px);height:clamp(140px,28vh,310px)">
+              <svg class="w-full h-full -rotate-90 transform p-2" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" stroke-width="11" />
+                <circle id="timerCircleProgress" cx="60" cy="60" r="52" fill="none" stroke="#0284C7" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.72" stroke-dashoffset="0" class="transition-all duration-200" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="font-black text-slate-400" style="font-size:clamp(.85rem,2.2vh,1.5rem)">TIME</span>
+                <span id="timerNumberText" class="font-display font-black text-slate-800 leading-none" style="font-size:clamp(3.4rem,11vh,8rem)">15</span>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- 最右側：垂直關卡進度條 -->
+      <aside id="progressRail" class="shrink-0 w-[92px] sm:w-[116px] lg:w-[136px] flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
+        <div class="font-black text-slate-700 text-center leading-tight" style="font-size:clamp(.95rem,2.2vh,1.4rem)">關卡進度</div>
+        <div class="font-display font-black text-sky-600 leading-none text-center" style="font-size:clamp(1.6rem,4.5vh,3rem)">
+          <span id="hudQuestionCurrent">1</span><span class="text-slate-400" style="font-size:.6em"> / <span id="hudQuestionTotal">3</span></span>
+        </div>
+        <div class="relative flex-1 min-h-[140px] w-11 sm:w-14">
+          <div class="absolute inset-0 bg-slate-200 rounded-full shadow-inner overflow-hidden">
+            <div id="hudProgressBar" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sky-400 via-teal-400 to-emerald-400 rounded-full transition-all duration-700" style="height:33.3%"></div>
+          </div>
+          <div id="hudProgressSteps" class="absolute inset-0"></div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ========================================================================
+         3. 成績結算舞台 (RESULT STAGE - 過關慶祝 & 驟死淘汰換下一位)
+         ======================================================================== -->
+    <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto">
+      <div class="stage-card w-full p-6 sm:p-10 text-center relative overflow-hidden">
+        <!-- 獎盃 / 狀態圖示與星級 -->
+        <div class="flex flex-col items-center justify-center mb-4">
+          <div id="resultStarsRow" class="flex items-center gap-3 text-3xl sm:text-5xl text-amber-400 mb-2 drop-shadow">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star text-4xl sm:text-6xl -mt-3"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div id="resultTrophyBox" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-amber-300 to-orange-500 text-white flex items-center justify-center text-4xl sm:text-5xl shadow-xl border-4 border-amber-100 anim-mascot-idle">
+            <i id="resultTrophyIcon" class="fa-solid fa-trophy"></i>
+          </div>
+        </div>
+
+        <h2 id="resultRankTitle" class="text-3xl sm:text-5xl font-black gradient-title-text mb-2">
+          醫療智慧大師
+        </h2>
+        <p id="resultRankSubtitle" class="text-slate-600 font-bold text-base sm:text-xl mb-6">
+          恭喜連續答對 3 題全數過關！
+        </p>
+
+        <!-- 精簡數據儀表板（已移除最終總分） -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+          <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
+            <div class="text-xs sm:text-sm font-black text-emerald-600">過關題數</div>
+            <div id="resultCorrectCount" class="font-display font-black text-3xl sm:text-5xl text-emerald-700 mt-1">0 / 3</div>
+          </div>
+          <div class="bg-teal-50 p-4 rounded-2xl border-2 border-teal-200">
+            <div class="text-xs sm:text-sm font-black text-teal-600">正確率</div>
+            <div id="resultAccuracy" class="font-display font-black text-3xl sm:text-5xl text-teal-700 mt-1">0%</div>
+          </div>
+          <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200">
+            <div class="text-xs sm:text-sm font-black text-amber-600">最高連擊</div>
+            <div id="resultMaxCombo" class="font-display font-black text-3xl sm:text-5xl text-amber-700 mt-1">0</div>
+          </div>
+        </div>
+
+        <!-- 換下一位 / 重新挑戰按鈕 -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange px-9 py-4 text-xl sm:text-2xl w-full sm:w-auto">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>換下一位挑戰</span>
+          </button>
+          <button onclick="GameEngine.goToHome()" class="btn-3d btn-3d-blue px-8 py-4 text-lg sm:text-xl w-full sm:w-auto">
+            <i class="fa-solid fa-house"></i>
+            <span>返回首頁</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         4. 管理後台密碼驗證彈窗 (不顯示任何密碼提示)
+         ======================================================================== -->
+    <section id="adminLoginModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-md z-50 items-center justify-center p-4">
+      <div class="stage-card max-w-md w-full p-7">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-slate-800 text-amber-400 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-black text-slate-800">管理員登入</h3>
+              <p class="text-xs font-bold text-slate-500">請輸入管理通行密碼</p>
+            </div>
+          </div>
+          <button onclick="AdminModule.closeLogin()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form onsubmit="AdminModule.handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <input type="password" id="adminPasswordInput" placeholder="請輸入密碼" autocomplete="off"
+              class="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 focus:border-sky-500 focus:outline-none font-bold text-lg text-slate-800 text-center tracking-widest" required />
+          </div>
+          <div id="adminLoginError" class="hidden text-xs font-bold text-rose-600 bg-rose-50 px-3 py-2 rounded-lg text-center">
+            密碼驗證失敗
+          </div>
+          <button type="submit" class="btn-3d btn-3d-blue w-full py-3.5 text-lg">
+            <i class="fa-solid fa-right-to-bracket"></i> 進入後台
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         5. 全功能管理後台 (ADMIN BACKOFFICE SCREEN)
+         ======================================================================== -->
+    <section id="screenAdmin" class="hidden w-full min-h-screen bg-slate-100 text-slate-800 flex-col">
+      <!-- 後台頂部導覽列 -->
+      <header class="bg-slate-900 text-white px-4 sm:px-8 py-4 shadow-lg sticky top-0 z-30 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl font-black">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-black">彰基智慧醫療大挑戰 · 系統管理後台</h1>
+            <p class="text-xs text-slate-400">GitHub Pages + GAS 雲端資料庫 · 雙 LOGO · MP3 音效替換 · 三題驟死制</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="AdminModule.logoutAndReturn()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm flex items-center gap-2 shadow transition">
+            <i class="fa-solid fa-gamepad"></i> 儲存並返回遊戲畫面
+          </button>
+        </div>
+      </header>
+
+      <!-- 後台主內容區 -->
+      <div class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <!-- 統計儀表板 -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="text-xs font-black text-slate-400">目前題庫總數</div>
+            <div id="statTotalQuestions" class="text-3xl font-display font-black text-sky-600 mt-1">12</div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="text-xs font-black text-slate-400">挑戰賽制</div>
+            <div id="statDrawCount" class="text-xl font-display font-black text-rose-600 mt-2">3 題驟死制</div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="text-xs font-black text-slate-400">單題倒數秒數</div>
+            <div id="statTimeLimit" class="text-3xl font-display font-black text-orange-500 mt-1">15 秒</div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="text-xs font-black text-slate-400">GAS 雲端連線狀態</div>
+            <div id="statGasStatus" class="text-sm font-black text-slate-600 mt-2.5">本機模式 (未綁定 GAS)</div>
+          </div>
+        </div>
+
+        <!-- 5 大管理分頁頁籤 -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-3">
+          <button onclick="AdminModule.switchTab('questions')" id="tabBtnQuestions" class="px-4 py-2.5 rounded-xl font-black text-sm bg-sky-600 text-white shadow">
+            <i class="fa-solid fa-database mr-1.5"></i>1. 題庫管理 & Excel
+          </button>
+          <button onclick="AdminModule.switchTab('branding')" id="tabBtnBranding" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
+            <i class="fa-solid fa-image mr-1.5 text-teal-600"></i>2. 雙 LOGO 與吉祥物
+          </button>
+          <button onclick="AdminModule.switchTab('audio')" id="tabBtnAudio" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
+            <i class="fa-solid fa-music mr-1.5 text-orange-500"></i>3. MP3 音樂與倒數音效
+          </button>
+          <button onclick="AdminModule.switchTab('rules')" id="tabBtnRules" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
+            <i class="fa-solid fa-sliders mr-1.5 text-indigo-600"></i>4. 遊戲規則與備份
+          </button>
+          <button onclick="AdminModule.switchTab('gas')" id="tabBtnGas" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
+            <i class="fa-brands fa-google-drive mr-1.5 text-emerald-600"></i>5. GAS 雲端資料庫串接
+          </button>
+        </div>
+
+        <!-- ==================================================================
+             TAB 1: 題庫管理 & Excel 匯入匯出
+             ================================================================== -->
+        <div id="adminTabQuestions" class="space-y-6">
+          <!-- 新增 / 編輯題目表單 -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 id="questionFormTitle" class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-circle-plus text-sky-600"></i> 新增智慧醫療題目
+            </h2>
+            <form id="questionEditorForm" onsubmit="AdminModule.saveQuestionForm(event)" class="space-y-4">
+              <input type="hidden" id="editQuestionId" value="" />
+              <div>
+                <label class="block text-xs font-black text-slate-600 mb-1">題目內容 *</label>
+                <input type="text" id="inputQText" placeholder="輸入題目..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 focus:outline-none font-bold" required />
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-black text-sky-700 mb-1">A 選項 *</label>
+                  <input type="text" id="inputOptA" placeholder="輸入 A 選項" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-teal-700 mb-1">B 選項 *</label>
+                  <input type="text" id="inputOptB" placeholder="輸入 B 選項" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-orange-700 mb-1">C 選項 *</label>
+                  <input type="text" id="inputOptC" placeholder="輸入 C 選項" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold" required />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <div class="flex items-center gap-4">
+                  <span class="text-xs font-black text-slate-600">正確答案：</span>
+                  <label class="inline-flex items-center gap-1.5 font-black text-sky-700 cursor-pointer">
+                    <input type="radio" name="correctAnsRadio" value="A" checked class="w-4 h-4 accent-sky-600"> 選項 A
+                  </label>
+                  <label class="inline-flex items-center gap-1.5 font-black text-teal-700 cursor-pointer">
+                    <input type="radio" name="correctAnsRadio" value="B" class="w-4 h-4 accent-teal-600"> 選項 B
+                  </label>
+                  <label class="inline-flex items-center gap-1.5 font-black text-orange-700 cursor-pointer">
+                    <input type="radio" name="correctAnsRadio" value="C" class="w-4 h-4 accent-orange-600"> 選項 C
+                  </label>
+                </div>
+                <div class="flex gap-2">
+                  <button type="button" id="cancelEditBtn" onclick="AdminModule.resetQuestionForm()" class="hidden px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 font-bold text-sm text-slate-700">
+                    取消編輯
+                  </button>
+                  <button type="submit" class="px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-sm shadow">
+                    <i class="fa-solid fa-floppy-disk mr-1.5"></i>儲存題目
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Excel 批次匯入 / 匯出區塊 -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+              <div>
+                <h3 class="text-base font-black text-slate-800">Excel 批次匯入與匯出 (.xlsx / .xls)</h3>
+                <p class="text-xs font-bold text-slate-500">欄位順序：題目 ｜ A 選項 ｜ B 選項 ｜ C 選項 ｜ 正確答案(A/B/C)</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="ExcelManager.downloadTemplate()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300">
+                  <i class="fa-solid fa-file-arrow-down mr-1 text-sky-600"></i>下載範例檔
+                </button>
+                <button onclick="ExcelManager.exportCurrentBank()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow">
+                  <i class="fa-solid fa-file-export mr-1"></i>匯出 Excel
+                </button>
+                <label class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow cursor-pointer">
+                  <i class="fa-solid fa-file-import mr-1"></i>選擇 Excel 匯入
+                  <input type="file" accept=".xlsx,.xls" onchange="ExcelManager.handleFileUpload(event)" class="hidden" />
+                </label>
+              </div>
+            </div>
+
+            <!-- 匯入解析預覽區 -->
+            <div id="excelPreviewContainer" class="hidden mt-4 space-y-3 border-t border-slate-200 pt-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <span class="px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-black text-xs">驗證通過：<span id="excelValidCount">0</span> 筆</span>
+                  <span class="px-3 py-1 rounded-lg bg-rose-100 text-rose-800 font-black text-xs">異常略過：<span id="excelErrorCount">0</span> 筆</span>
+                </div>
+                <button id="confirmExcelImportBtn" onclick="ExcelManager.commitImport()" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow">
+                  確認合併匯入有效題目
+                </button>
+              </div>
+              <div id="excelErrorLogBox" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs font-bold text-rose-700 space-y-1 max-h-32 overflow-y-auto"></div>
+              <div class="overflow-x-auto max-h-56 border border-slate-200 rounded-xl">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-100 font-black text-slate-700">
+                    <tr><th class="p-2">列</th><th class="p-2">題目</th><th class="p-2">A</th><th class="p-2">B</th><th class="p-2">C</th><th class="p-2">正解</th></tr>
+                  </thead>
+                  <tbody id="excelValidPreviewBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 題庫列表與搜尋 -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <h3 class="text-lg font-black text-slate-800">現有題庫列表</h3>
+              <div class="relative w-full sm:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="adminSearchInput" oninput="AdminModule.renderQuestionList()" placeholder="搜尋題目或選項..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none" />
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 mb-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-sm font-black text-slate-600">已選取 <span id="bulkSelectedCount" class="text-rose-600">0</span> 題</span>
+              <button id="bulkDeleteBtn" onclick="AdminModule.deleteSelected()" disabled class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm opacity-40 cursor-not-allowed">
+                <i class="fa-solid fa-trash-can mr-1.5"></i>刪除選取
+              </button>
+              <button onclick="AdminModule.clearAllQuestions()" class="px-4 py-2 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border-2 border-rose-300 font-black text-sm ml-auto">
+                <i class="fa-solid fa-broom mr-1.5"></i>一鍵清空全部題庫
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-600 font-black border-b border-slate-200">
+                    <th class="p-3 w-12"><input type="checkbox" id="selectAllQuestions" onchange="AdminModule.toggleSelectAll(this.checked)" class="w-5 h-5 accent-rose-600 cursor-pointer" title="全選目前列表" /></th>
+                    <th class="p-3 w-12">#</th>
+                    <th class="p-3">題目內容</th>
+                    <th class="p-3">選項 (A / B / C)</th>
+                    <th class="p-3 w-16 text-center">正解</th>
+                    <th class="p-3 w-32 text-center">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminQuestionTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 2: 雙主要 LOGO 與 Q 版吉祥物設定
+             ================================================================== -->
+        <div id="adminTabBranding" class="hidden space-y-6">
+          <!-- 雙主要 LOGO 設定 -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <h2 class="text-lg font-black text-slate-800">雙主要 LOGO 任意替換設定</h2>
+                <p class="text-xs font-bold text-slate-500">支援一般圖片網址、Google Drive 圖片分享連結（自動轉直連）或直接上傳本機圖片檔</p>
+              </div>
+              <button onclick="LogoManager.resetDefaults()" class="text-xs font-black text-sky-600 hover:underline">恢復預設雙 LOGO</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- LOGO 1 -->
+              <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-black text-sky-800 text-base">主要 LOGO 1（首頁置中偏左 / 挑戰頁左上角）</span>
+                  <label class="px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="LogoManager.handleImageUpload(event, 1)" class="hidden" />
+                  </label>
+                </div>
+                <div class="h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2" id="adminPreviewLogo1"></div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">圖片網址 (留空則使用預設圖示與文字)</label>
+                  <input type="text" id="settingLogo1Url" oninput="LogoManager.updatePreview(1)" placeholder="貼上圖片網址或 Google Drive 分享連結..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">主標題文字 (無圖時顯示)</label>
+                    <input type="text" id="settingLogo1Title" oninput="LogoManager.updatePreview(1)" value="彰基智慧醫療創新展館" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">副標題文字</label>
+                    <input type="text" id="settingLogo1Sub" oninput="LogoManager.updatePreview(1)" value="CHANGHUA CHRISTIAN HOSPITAL" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- LOGO 2 -->
+              <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-black text-teal-800 text-base">主要 LOGO 2（首頁置中偏右 / 挑戰頁左上角）</span>
+                  <label class="px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="LogoManager.handleImageUpload(event, 2)" class="hidden" />
+                  </label>
+                </div>
+                <div class="h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2" id="adminPreviewLogo2"></div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1">圖片網址 (留空則使用預設圖示與文字)</label>
+                  <input type="text" id="settingLogo2Url" oninput="LogoManager.updatePreview(2)" placeholder="貼上圖片網址或 Google Drive 分享連結..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">主標題文字 (無圖時顯示)</label>
+                    <input type="text" id="settingLogo2Title" oninput="LogoManager.updatePreview(2)" value="智慧醫療科技嘉年華" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">副標題文字</label>
+                    <input type="text" id="settingLogo2Sub" oninput="LogoManager.updatePreview(2)" value="AI & DIGITAL HEALTH EXPO" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="LogoManager.saveLogos()" class="btn-3d btn-3d-blue px-8 py-3 text-base">
+              <i class="fa-solid fa-floppy-disk"></i> 儲存並套用雙 LOGO 設定
+            </button>
+          </div>
+
+          <!-- Q 版吉祥物三態圖片設定 -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 class="text-lg font-black text-slate-800">Q 版 3D 醫療吉祥物圖片設定</h3>
+              <button onclick="MascotManager.resetToDefault()" class="text-xs font-black text-sky-600 hover:underline">恢復預設 3D 吉祥物</button>
+            </div>
+            <p class="text-xs font-bold text-slate-500">每個位置都可以「貼上雲端連結」或「直接上傳圖片」（上傳的圖片會自動壓縮並存在本機瀏覽器；若要多台設備共用，請改用 Google Drive 連結）。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-xs font-bold">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-black text-indigo-800 text-sm">首頁人物圖片</span>
+                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Home')" class="hidden" />
+                  </label>
+                </div>
+                <div id="adminPreviewMascotHome" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
+                <input type="text" id="settingMascotHome" oninput="MascotManager.updatePreview('Home')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <p class="text-[11px] text-slate-400">只在首頁顯示；留空則沿用「遊戲待機圖片」</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-black text-sky-800 text-sm">遊戲待機圖片</span>
+                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Idle')" class="hidden" />
+                  </label>
+                </div>
+                <div id="adminPreviewMascotIdle" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
+                <input type="text" id="settingMascotIdle" oninput="MascotManager.updatePreview('Idle')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <p class="text-[11px] text-slate-400">進入遊戲後才出現的待機人物</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-black text-emerald-800 text-sm">答對開心圖片</span>
+                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Happy')" class="hidden" />
+                  </label>
+                </div>
+                <div id="adminPreviewMascotHappy" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
+                <input type="text" id="settingMascotHappy" oninput="MascotManager.updatePreview('Happy')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <p class="text-[11px] text-slate-400">答對時顯示</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-black text-orange-800 text-sm">答錯鼓勵圖片</span>
+                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-800 font-black text-xs cursor-pointer">
+                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                    <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Sad')" class="hidden" />
+                  </label>
+                </div>
+                <div id="adminPreviewMascotSad" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
+                <input type="text" id="settingMascotSad" oninput="MascotManager.updatePreview('Sad')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <p class="text-[11px] text-slate-400">答錯或時間到時顯示</p>
+              </div>
+            </div>
+            <button onclick="MascotManager.saveUrls()" class="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-sm shadow">
+              儲存吉祥物圖片設定
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 3: MP3 音樂與倒數音效替換管理
+             ================================================================== -->
+        <div id="adminTabAudio" class="hidden space-y-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <h2 class="text-lg font-black text-slate-800">MP3 音樂與音效替換中心（支援 Google Drive 音訊連結）</h2>
+                <p class="text-xs font-bold text-slate-500 mt-1">
+                  可貼上任何 MP3/WAV 網址、Google Drive 分享連結（系統自動轉換直連），或上傳本機 MP3 測試；留空則自動使用內建 Web Audio 合成音效。
+                </p>
+              </div>
+              <div class="flex items-center gap-3">
+                <button onclick="SoundEngine.toggleMute()" id="adminMuteBtn" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-black text-xs">
+                  <i class="fa-solid fa-volume-high mr-1"></i>靜音開關切換
+                </button>
+                <button onclick="SoundEngine.resetAllCustomAudio()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs border border-slate-300">
+                  全部恢復內建音效
+                </button>
+              </div>
+            </div>
+
+            <!-- 音量控制滑桿 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+              <div>
+                <div class="flex justify-between text-sm font-black text-slate-700 mb-1">
+                  <span>背景音樂音量 (BGM)</span>
+                  <span id="bgmVolLabel">50%</span>
+                </div>
+                <input type="range" id="bgmVolumeSlider" min="0" max="100" value="50" oninput="SoundEngine.setBgmVolume(this.value)" class="w-full accent-sky-600 cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between text-sm font-black text-slate-700 mb-1">
+                  <span>互動與倒數音效音量 (SFX)</span>
+                  <span id="sfxVolLabel">85%</span>
+                </div>
+                <input type="range" id="sfxVolumeSlider" min="0" max="100" value="85" oninput="SoundEngine.setSfxVolume(this.value)" class="w-full accent-orange-500 cursor-pointer" />
+              </div>
+            </div>
+
+            <!-- 8 大獨立可替換音訊槽位列表 -->
+            <div id="audioSlotsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- 由 SoundEngine.renderAdminSlots() 動態生成 -->
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+              <button onclick="SoundEngine.stopAllPreview()" class="px-5 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 font-black text-sm text-slate-700">
+                <i class="fa-solid fa-stop mr-1.5"></i>停止試聽
+              </button>
+              <button onclick="SoundEngine.saveCustomAudioUrls()" class="btn-3d btn-3d-orange px-8 py-3 text-base">
+                <i class="fa-solid fa-floppy-disk"></i> 儲存所有音樂與音效設定
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 4: 遊戲規則、展場雙機模式與資料備份
+             ================================================================== -->
+        <div id="adminTabRules" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+              <h3 class="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">三題驟死賽制與操作設定</h3>
+
+              <div>
+                <label class="block text-sm font-black text-slate-700 mb-1">每場挑戰題數（預設 3 題驟死制，錯一題即淘汰）</label>
+                <input type="number" id="settingQuestionCount" min="1" max="50" value="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-black text-lg text-rose-600" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-black text-slate-700 mb-1">每題倒數計時秒數 (預設 15 秒)</label>
+                <input type="number" id="settingTimePerQuestion" min="5" max="120" value="15" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-black text-lg text-orange-600" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-black text-slate-700 mb-1">作答操作模式</label>
+                <select id="settingControlMode" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-800">
+                  <option value="HYBRID">全能雙模（滑鼠 / iPad 觸控 + A/B/C 鍵盤皆可用）</option>
+                  <option value="TOUCH_ONLY">僅滑鼠與 iPad 觸控點擊</option>
+                  <option value="KEYBOARD_ONLY">僅實體鍵盤 / 搶答器 (A / B / C 鍵)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-black text-slate-700 mb-1">展場雙螢幕角色模式</label>
+                <select id="settingDisplayRole" onchange="DualScreenSync.setRole(this.value)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-800">
+                  <option value="STANDALONE">單機標準模式</option>
+                  <option value="LED_STAGE">LED 大螢幕主舞台</option>
+                  <option value="IPAD_REMOTE">iPad 玩家遙控端</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-black text-slate-700 mb-1">變更管理員密碼 (選填，留空維持原密碼)</label>
+                <input type="password" id="settingNewAdminPwd" placeholder="輸入新密碼..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-bold" />
+              </div>
+
+              <button onclick="AdminModule.saveGameSettings()" class="btn-3d btn-3d-blue w-full py-3 text-base">
+                <i class="fa-solid fa-floppy-disk"></i> 儲存所有規則設定
+              </button>
+            </div>
+
+            <!-- 系統資料備份與還原 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+              <h3 class="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">完整設定與題庫備份還原</h3>
+              <p class="text-xs font-bold text-slate-500 leading-relaxed">
+                可將目前的題庫、雙 LOGO、吉祥物、MP3 音樂連結與規則設定匯出為 JSON 備份檔，方便在不同展場設備間快速轉移。
+              </p>
+              <div class="flex flex-wrap gap-3">
+                <button onclick="StorageManager.exportBackupJson()" class="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-sm">
+                  <i class="fa-solid fa-download mr-1.5"></i>下載 JSON 備份檔
+                </button>
+                <label class="flex-1 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm text-center cursor-pointer">
+                  <i class="fa-solid fa-upload mr-1.5"></i>匯入 JSON 還原
+                  <input type="file" accept=".json" onchange="StorageManager.importBackupJson(event)" class="hidden" />
+                </label>
+              </div>
+              <div class="pt-4 border-t border-slate-100 flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-bold">最近抽題：<span id="lastDrawnRecordLabel">尚未進行遊戲</span></span>
+                <button onclick="StorageManager.confirmResetFactory()" class="text-rose-600 font-black hover:underline">重置為出廠預設題庫</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 5: GitHub Pages + GAS + Google Sheet / Drive 雲端架構
+             ================================================================== -->
+        <div id="adminTabGas" class="hidden space-y-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+              <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫橋接設定
+              </h2>
+              <p class="text-xs font-bold text-slate-500 mt-1">
+                網站架設於 GitHub Pages 時，透過填寫 GAS 部署網址，即可從 Google Sheet 即時同步題庫、雙 LOGO、Google Drive 音樂連結並上傳玩家成績紀錄。
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <label class="block text-sm font-black text-slate-700">GAS Web App 執行網址 (https://script.google.com/macros/s/.../exec)</label>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <input type="url" id="settingGasUrl" placeholder="貼上您的 Google Apps Script Web App URL..." class="flex-1 px-4 py-3 rounded-xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-none font-bold text-sm" />
+                <button onclick="GASConnector.saveUrlAndTest()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm shadow shrink-0">
+                  <i class="fa-solid fa-plug mr-1.5"></i>儲存並測試連線
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <button onclick="GASConnector.pullFromCloud()" class="p-4 rounded-2xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 text-sky-900 font-black text-sm flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-cloud-arrow-down text-xl text-sky-600"></i>
+                <span>從 Google Sheet 拉取最新題庫與設定</span>
+              </button>
+              <button onclick="GASConnector.pushToCloud()" class="p-4 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-900 font-black text-sm flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-cloud-arrow-up text-xl text-amber-600"></i>
+                <span>將目前題庫與設定推送備份至 Google Sheet</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 完整 GAS Code.gs 程式碼複製區 -->
+          <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-lg space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 class="text-base font-black text-amber-400">Google Apps Script 後端橋接程式碼 (Code.gs)</h3>
+                <p class="text-xs text-slate-400">請在 Google 試算表點選「擴充功能 → Apps Script」，貼上以下完整程式碼並部署為「網頁應用程式 (權限：所有人)」。</p>
+              </div>
+              <button onclick="GASConnector.copyGasCode()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-copy"></i> 一鍵複製 Code.gs
+              </button>
+            </div>
+
+            <pre id="gasCodeBlock" class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-300 overflow-x-auto max-h-80 custom-scrollbar font-mono leading-relaxed">/**
+ * 彰基智慧醫療大挑戰 (Smart Medical Challenge) - Google Apps Script 後端 API
+ * Google Sheet 工作表自動建立：
+ * 1. Questions (欄位: ID | 題目 | A選項 | B選項 | C選項 | 正確答案)
+ * 2. Config (欄位: Key | Value) -> 儲存雙 LOGO、吉祥物與 Google Drive 音樂網址
+ * 3. Logs (欄位: 時間 | 總分 | 答對題數 | 結果狀態)
+ */
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const qSheet = getOrCreateSheet_(ss, 'Questions', ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
+  const cSheet = getOrCreateSheet_(ss, 'Config', ['Key', 'Value']);
+
+  const qRows = qSheet.getDataRange().getValues();
+  const questions = [];
+  for (let i = 1; i < qRows.length; i++) {
+    if (!qRows[i][1]) continue;
+    questions.push({
+      id: String(qRows[i][0] || 'q_' + i),
+      question: String(qRows[i][1]),
+      optionA: String(qRows[i][2]),
+      optionB: String(qRows[i][3]),
+      optionC: String(qRows[i][4]),
+      answer: String(qRows[i][5]).trim().toUpperCase()
+    });
+  }
+
+  const cRows = cSheet.getDataRange().getValues();
+  const config = {};
+  for (let i = 1; i < cRows.length; i++) {
+    if (cRows[i][0]) config[String(cRows[i][0])] = String(cRows[i][1] || '');
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok', questions: questions, config: config }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const payload = JSON.parse(e.postData.contents || '{}');
+
+  if (payload.action === 'SYNC_UP') {
+    const qSheet = getOrCreateSheet_(ss, 'Questions', ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
+    qSheet.clearContents();
+    qSheet.appendRow(['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
+    (payload.questions || []).forEach(function(q) {
+      qSheet.appendRow([q.id, q.question, q.optionA, q.optionB, q.optionC, q.answer]);
+    });
+
+    const cSheet = getOrCreateSheet_(ss, 'Config', ['Key', 'Value']);
+    cSheet.clearContents();
+    cSheet.appendRow(['Key', 'Value']);
+    const cfg = payload.config || {};
+    Object.keys(cfg).forEach(function(k) {
+      cSheet.appendRow([k, typeof cfg[k] === 'object' ? JSON.stringify(cfg[k]) : String(cfg[k])]);
+    });
+  } else if (payload.action === 'LOG_RESULT') {
+    const logSheet = getOrCreateSheet_(ss, 'Logs', ['時間', '總分', '答對題數', '挑戰結果']);
+    logSheet.appendRow([new Date(), payload.score, payload.correctCount, payload.outcome]);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getOrCreateSheet_(ss, name, headers) {
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    sheet.appendRow(headers);
+  }
+  return sheet;
+}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT MODULES
+       ========================================================================== -->
+  <script>
+    /* ========================================================================
+       輔助函式：Google Drive 分享網址自動轉換為可嵌入直連網址
+       ======================================================================== */
+    function normalizeDriveMediaUrl(url, mediaType = 'image') {
+      if (!url) return '';
+      const trimmed = url.trim();
+      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        const fileId = match[1];
+        return mediaType === 'image'
+          ? `https://lh3.googleusercontent.com/d/${fileId}`
+          : `https://drive.google.com/uc?export=download&id=${fileId}`;
+      }
+      return trimmed;
+    }
+
+    /* 上傳圖片自動縮放壓縮（避免塞爆 localStorage）；SVG / GIF 原樣保留 */
+    function fileToCompressedDataUrl(file, maxSize = 800) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('檔案讀取失敗'));
+        reader.onload = (e) => {
+          if (/svg|gif/.test(file.type)) return resolve(e.target.result);
+          const img = new Image();
+          img.onerror = () => reject(new Error('圖片格式無法讀取'));
+          img.onload = () => {
+            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+            const c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(img.width * scale));
+            c.height = Math.max(1, Math.round(img.height * scale));
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            let out = c.toDataURL('image/webp', 0.88);
+            if (!out.startsWith('data:image/webp')) out = c.toDataURL('image/png');
+            resolve(out);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /* ========================================================================
+       MODULE 1: 預設題庫與資料保存管理 (StorageManager)
+       ======================================================================== */
+    const DEFAULT_QUESTIONS = [
+      {
+        id: 'q_cch_01',
+        question: '彰基導入的「AI 輔助胸腔 X 光判讀系統」，最主要能協助醫療團隊達成什麼目標？',
+        optionA: '自動幫病人預約下次回診時間',
+        optionB: '快速偵測肺部異常病灶並發出早期預警',
+        optionC: '取代醫師直接開立手術同意書',
+        answer: 'B'
+      },
+      {
+        id: 'q_cch_02',
+        question: '在微創外科領域中，彰基引進的「達文西機械手臂手術系統」具有哪項顯著優勢？',
+        optionA: '提供 3D 高解析立體視野與極精細的手腕關節操作',
+        optionB: '完全不需要外科醫師在場控制即可自動開刀',
+        optionC: '只能用於簡單的皮膚表面縫合',
+        answer: 'A'
+      },
+      {
+        id: 'q_cch_03',
+        question: '彰基「智慧藥局」採用自動化調劑與條碼核對技術，其核心價值為何？',
+        optionA: '增加藥袋的印刷色彩',
+        optionB: '大幅降低人為給藥疏失並縮短民眾領藥等候時間',
+        optionC: '讓民眾可以自行調配處方用藥',
+        answer: 'B'
+      },
+      {
+        id: 'q_cch_04',
+        question: '透過「遠距醫療與智慧生理監測穿戴裝置」，偏鄉或慢性病患能獲得什麼便利服務？',
+        optionA: '在家量測血壓血糖可即時同步回傳醫院由團隊追蹤',
+        optionB: '透過手機鏡頭就能直接完成核磁共振檢查',
+        optionC: '不需要任何網路連線就能視訊看診',
+        answer: 'A'
+      },
+      {
+        id: 'q_cch_05',
+        question: '彰基智慧病房導入的「床邊智慧照護系統」，如何提升住院病人安全？',
+        optionA: '自動播放電影娛樂病人',
+        optionB: '即時整合電子白板、生理數據與離床跌倒預警通知',
+        optionC: '取代護理師進行所有抽血檢查',
+        answer: 'B'
+      },
+      {
+        id: 'q_cch_06',
+        question: '下列哪一項是「生成式 AI 智慧病歷助手」在臨床門診中的實際應用？',
+        optionA: '輔助醫師快速整理醫病對話重點與結構化病歷摘要',
+        optionB: '自動修改病人的健保卡密碼',
+        optionC: '代替病人決定是否接受化療',
+        answer: 'A'
+      },
+      {
+        id: 'q_cch_07',
+        question: '在「智慧手術室 (Hybrid OR)」中，結合高階影像導引設備的主要好處是什麼？',
+        optionA: '手術中可即時進行高精準度 3D 影像定位，無需移動病人',
+        optionB: '讓手術室燈光變得更加繽紛',
+        optionC: '可以同時為兩位病人進行同一台手術',
+        answer: 'A'
+      },
+      {
+        id: 'q_cch_08',
+        question: '彰基推動「無紙化智慧醫療與電子同意書」，除了提升效率外還符合哪項永續目標？',
+        optionA: '增加醫院紙張採購預算',
+        optionB: '實踐 ESG 綠色醫療減碳並確保資料加密可追蹤',
+        optionC: '讓病歷資料公開在網路上供人下載',
+        answer: 'B'
+      },
+      {
+        id: 'q_cch_09',
+        question: '運用「AI 心電圖判讀技術」能在幾秒內協助急診醫師篩檢出哪種高風險急症？',
+        optionA: '急性心肌梗塞與低血鉀等危急徵兆',
+        optionB: '近視度數是否加深',
+        optionC: '牙齒是否有蛀牙',
+        answer: 'A'
+      },
+      {
+        id: 'q_cch_10',
+        question: '智慧醫院中的「AGV 無人搬運機器人」主要負責協助哪項院內工作？',
+        optionA: '為門診病人進行心理諮商',
+        optionB: '精準運送檢體、藥品與醫療物資以減輕人力負擔',
+        optionC: '在醫院大廳表演特技',
+        answer: 'B'
+      },
+      {
+        id: 'q_cch_11',
+        question: '民眾使用「彰基行動服務 APP」進行智慧就醫，無法透過手機完成下列哪項功能？',
+        optionA: '查詢即時看診進度與行動支付繳費',
+        optionB: '線上預約掛號與查看檢驗報告',
+        optionC: '直接透過手機螢幕抽取靜脈血液',
+        answer: 'C'
+      },
+      {
+        id: 'q_cch_12',
+        question: '彰基智慧醫療研發團隊建置「臨床大數據與精準醫療平台」的最終願景為何？',
+        optionA: '為每位病人量身打造最合適的個人化精準治療方案',
+        optionB: '收集數據作為商業廣告推銷用途',
+        optionC: '減少醫師與病人的溝通時間',
+        answer: 'A'
+      }
+    ];
+
+    const StorageManager = {
+      KEYS: {
+        QUESTIONS: 'cch_smc_questions_v2',
+        SETTINGS: 'cch_smc_settings_v2',
+        LAST_DRAWN: 'cch_smc_last_drawn_v2'
+      },
+
+      defaultSettings: {
+        questionsPerGame: 3, // 三題驟死制
+        timePerQuestion: 15,
+        controlMode: 'HYBRID',
+        adminPasswordHash: 'cch8730',
+        gasWebAppUrl: '',
+        // 雙主要 LOGO
+        logo1Url: '',
+        logo1Title: '彰基智慧醫療創新展館',
+        logo1Sub: 'CHANGHUA CHRISTIAN HOSPITAL',
+        logo2Url: '',
+        logo2Title: '智慧醫療科技嘉年華',
+        logo2Sub: 'AI & DIGITAL HEALTH EXPO',
+        // Q 版吉祥物
+        mascotHome: '',
+        mascotIdle: '',
+        mascotHappy: '',
+        mascotSad: '',
+        // 8 大可替換 MP3 音樂與音效網址
+        audioUrls: {
+          bgmHome: '',
+          bgmGame: '',
+          sfxClick: '',
+          sfxCorrect: '',
+          sfxWrong: '',
+          sfxCountdown: '',
+          sfxCombo: '',
+          sfxVictory: ''
+        }
+      },
+
+      init() {
+        if (!localStorage.getItem(this.KEYS.QUESTIONS)) {
+          this.saveQuestions(DEFAULT_QUESTIONS);
+        }
+        if (!localStorage.getItem(this.KEYS.SETTINGS)) {
+          this.saveSettings(this.defaultSettings);
+        }
+      },
+
+      getQuestions() {
+        try {
+          const raw = localStorage.getItem(this.KEYS.QUESTIONS);
+          const parsed = raw ? JSON.parse(raw) : DEFAULT_QUESTIONS;
+          return Array.isArray(parsed) ? parsed : DEFAULT_QUESTIONS;
+        } catch (e) {
+          return DEFAULT_QUESTIONS;
+        }
+      },
+
+      saveQuestions(list) {
+        localStorage.setItem(this.KEYS.QUESTIONS, JSON.stringify(list));
+        DualScreenSync.broadcastState();
+      },
+
+      getSettings() {
+        try {
+          const raw = localStorage.getItem(this.KEYS.SETTINGS);
+          const parsed = raw ? JSON.parse(raw) : {};
+          return {
+            ...this.defaultSettings,
+            ...parsed,
+            audioUrls: { ...this.defaultSettings.audioUrls, ...(parsed.audioUrls || {}) }
+          };
+        } catch (e) {
+          return { ...this.defaultSettings };
+        }
+      },
+
+      saveSettings(settings) {
+        try {
+          localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(settings));
+        } catch (err) {
+          UI.showToast('瀏覽器儲存空間不足，請改用較小的圖片或 Google Drive 連結', 'error');
+          return false;
+        }
+        DualScreenSync.broadcastState();
+        return true;
+      },
+
+      saveLastDrawnRecord(ids) {
+        localStorage.setItem(this.KEYS.LAST_DRAWN, JSON.stringify({
+          timestamp: new Date().toLocaleString('zh-TW'),
+          questionIds: ids
+        }));
+      },
+
+      getLastDrawnRecord() {
+        try {
+          return JSON.parse(localStorage.getItem(this.KEYS.LAST_DRAWN) || 'null');
+        } catch {
+          return null;
+        }
+      },
+
+      exportBackupJson() {
+        const payload = {
+          app: 'Smart Medical Challenge',
+          exportedAt: new Date().toISOString(),
+          questions: this.getQuestions(),
+          settings: this.getSettings()
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `CCH_SmartMedical_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        UI.showToast('完整系統備份檔已下載！', 'success');
+      },
+
+      importBackupJson(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data.questions) || data.questions.length === 0) {
+              throw new Error('備份檔缺少有效題庫');
+            }
+            this.saveQuestions(data.questions);
+            if (data.settings) {
+              this.saveSettings({ ...this.defaultSettings, ...data.settings });
+            }
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+            AdminModule.refreshAllViews();
+            UI.showToast(`還原成功！載入 ${data.questions.length} 題題庫與設定`, 'success');
+          } catch (err) {
+            UI.showToast('備份檔格式錯誤：' + err.message, 'error');
+          }
+          event.target.value = '';
+        };
+        reader.readAsText(file);
+      },
+
+      confirmResetFactory() {
+        UI.showConfirm('重置出廠預設題庫', '確定將題庫恢復為預設 12 題彰基智慧醫療題目嗎？', () => {
+          this.saveQuestions(DEFAULT_QUESTIONS);
+          const s = this.getSettings();
+          s.questionsPerGame = 3;
+          this.saveSettings(s);
+          AdminModule.refreshAllViews();
+          UI.showToast('已恢復為出廠預設題庫！', 'success');
+        });
+      }
+    };
+
+    /* ========================================================================
+       MODULE 2: 雙主要 LOGO 管理系統 (LogoManager)
+       ======================================================================== */
+    const LogoManager = {
+      renderAll() {
+        const s = StorageManager.getSettings();
+        this.renderSlot('homeLogo1Container', s.logo1Url, s.logo1Title, s.logo1Sub, 'sky', 'home');
+        this.renderSlot('homeLogo2Container', s.logo2Url, s.logo2Title, s.logo2Sub, 'teal', 'home');
+        this.renderSlot('gameLogo1Container', s.logo1Url, s.logo1Title, s.logo1Sub, 'sky', 'game');
+        this.renderSlot('gameLogo2Container', s.logo2Url, s.logo2Title, s.logo2Sub, 'teal', 'game');
+      },
+
+      renderSlot(containerId, rawUrl, title, sub, theme, size = 'home') {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'image');
+        const S = {
+          home:  { img: 'h-16 sm:h-24 lg:h-28 max-w-[320px] sm:max-w-[460px]', icon: 'w-14 h-14 sm:w-20 sm:h-20 text-2xl sm:text-4xl rounded-2xl', sub: 'text-xs sm:text-sm', title: 'text-lg sm:text-2xl lg:text-3xl' },
+          game:  { img: 'h-14 sm:h-20 lg:h-24 max-w-[220px] sm:max-w-[340px]', icon: 'w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl rounded-2xl', sub: 'text-[10px] sm:text-xs', title: 'text-base sm:text-xl lg:text-2xl' },
+          admin: { img: 'h-14 max-w-[220px]', icon: 'w-10 h-10 text-xl rounded-xl', sub: 'text-[10px]', title: 'text-sm' }
+        }[size] || {};
+
+        if (resolvedUrl) {
+          el.innerHTML = `<img src="${resolvedUrl}" alt="LOGO" class="${S.img} object-contain" onerror="this.style.display='none'" />`;
+        } else {
+          const iconBg = theme === 'sky' ? 'from-sky-500 to-blue-600' : 'from-teal-500 to-emerald-600';
+          const iconClass = theme === 'sky' ? 'fa-hospital-user' : 'fa-microchip';
+          const subColor = theme === 'sky' ? 'text-sky-600' : 'text-teal-600';
+          el.innerHTML = `
+            <div class="${S.icon} bg-gradient-to-br ${iconBg} flex items-center justify-center text-white shadow-inner shrink-0">
+              <i class="fa-solid ${iconClass}"></i>
+            </div>
+            <div class="min-w-0 ml-3">
+              <div class="${S.sub} font-black tracking-wider ${subColor} uppercase whitespace-nowrap">${AdminModule.escapeHtml(sub)}</div>
+              <div class="${S.title} font-black text-slate-800 leading-tight whitespace-nowrap">${AdminModule.escapeHtml(title)}</div>
+            </div>
+          `;
+        }
+      },
+
+      updatePreview(slotNum) {
+        const url = document.getElementById(`settingLogo${slotNum}Url`).value;
+        const title = document.getElementById(`settingLogo${slotNum}Title`).value;
+        const sub = document.getElementById(`settingLogo${slotNum}Sub`).value;
+        this.renderSlot(`adminPreviewLogo${slotNum}`, url, title, sub, slotNum === 1 ? 'sky' : 'teal', 'admin');
+      },
+
+      async handleImageUpload(event, slotNum) {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          const data = await fileToCompressedDataUrl(file, 700);
+          document.getElementById(`settingLogo${slotNum}Url`).value = data;
+          this.updatePreview(slotNum);
+          UI.showToast(`已載入 LOGO ${slotNum} 圖片，請記得點擊儲存套用！`, 'info');
+        } catch (e) {
+          UI.showToast(e.message, 'error');
+        }
+        event.target.value = '';
+      },
+
+      saveLogos() {
+        const s = StorageManager.getSettings();
+        s.logo1Url = document.getElementById('settingLogo1Url').value.trim();
+        s.logo1Title = document.getElementById('settingLogo1Title').value.trim() || '彰基智慧醫療創新展館';
+        s.logo1Sub = document.getElementById('settingLogo1Sub').value.trim();
+        s.logo2Url = document.getElementById('settingLogo2Url').value.trim();
+        s.logo2Title = document.getElementById('settingLogo2Title').value.trim() || '智慧醫療科技嘉年華';
+        s.logo2Sub = document.getElementById('settingLogo2Sub').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('雙主要 LOGO 已儲存並即時更新！', 'success');
+      },
+
+      resetDefaults() {
+        document.getElementById('settingLogo1Url').value = '';
+        document.getElementById('settingLogo1Title').value = '彰基智慧醫療創新展館';
+        document.getElementById('settingLogo1Sub').value = 'CHANGHUA CHRISTIAN HOSPITAL';
+        document.getElementById('settingLogo2Url').value = '';
+        document.getElementById('settingLogo2Title').value = '智慧醫療科技嘉年華';
+        document.getElementById('settingLogo2Sub').value = 'AI & DIGITAL HEALTH EXPO';
+        this.updatePreview(1);
+        this.updatePreview(2);
+        this.saveLogos();
+      }
+    };
+
+    /* ========================================================================
+       MODULE 3: Q 版 3D 醫療吉祥物系統 (MascotManager)
+       ======================================================================== */
+    const MascotManager = {
+      renderAll() {
+        this.renderTo('homeMascotContainer', 'home');
+        this.renderTo('gameMascotContainer', 'idle');
+      },
+
+      getBuiltInSvg(mood = 'idle') {
+        const eyeLeft = mood === 'happy'
+          ? `<path d="M72 98 Q82 84 92 98" stroke="#38BDF8" stroke-width="6" stroke-linecap="round" fill="none"/>`
+          : mood === 'sad'
+          ? `<path d="M72 92 L92 100 M72 100 L92 92" stroke="#FB923C" stroke-width="5" stroke-linecap="round"/>`
+          : `<circle cx="82" cy="95" r="9" fill="#38BDF8"/><circle cx="85" cy="92" r="3" fill="#ffffff"/>`;
+
+        const eyeRight = mood === 'happy'
+          ? `<path d="M128 98 Q138 84 148 98" stroke="#38BDF8" stroke-width="6" stroke-linecap="round" fill="none"/>`
+          : mood === 'sad'
+          ? `<path d="M128 92 L148 100 M128 100 L148 92" stroke="#FB923C" stroke-width="5" stroke-linecap="round"/>`
+          : `<circle cx="138" cy="95" r="9" fill="#38BDF8"/><circle cx="141" cy="92" r="3" fill="#ffffff"/>`;
+
+        const mouth = mood === 'happy'
+          ? `<path d="M95 112 Q110 130 125 112 Z" fill="#FACC15"/>`
+          : mood === 'sad'
+          ? `<path d="M96 120 Q110 108 124 120" stroke="#94A3B8" stroke-width="5" stroke-linecap="round" fill="none"/>`
+          : `<path d="M98 114 Q110 124 122 114" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round" fill="none"/>`;
+
+        const auraColor = mood === 'happy' ? '#FACC15' : mood === 'sad' ? '#FB923C' : '#38BDF8';
+
+        return `
+          <svg viewBox="0 0 220 220" class="w-full h-full overflow-visible">
+            <defs>
+              <radialGradient id="bodyGrad_${mood}" cx="35%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="65%" stop-color="#e0f2fe"/>
+                <stop offset="100%" stop-color="#bae6fd"/>
+              </radialGradient>
+              <linearGradient id="visorGrad_${mood}" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0f172a"/>
+                <stop offset="100%" stop-color="#1e293b"/>
+              </linearGradient>
+              <linearGradient id="tealAcc_${mood}" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#2DD4BF"/>
+                <stop offset="100%" stop-color="#0D9488"/>
+              </linearGradient>
+            </defs>
+            <circle cx="110" cy="115" r="88" fill="${auraColor}" opacity="0.16"/>
+            <rect x="105" y="16" width="10" height="22" rx="5" fill="#0284C7"/>
+            <circle cx="110" cy="14" r="9" fill="#FACC15" stroke="#ffffff" stroke-width="3"/>
+            <rect x="30" y="76" width="18" height="44" rx="9" fill="url(#tealAcc_${mood})" stroke="#ffffff" stroke-width="3"/>
+            <rect x="172" y="76" width="18" height="44" rx="9" fill="url(#tealAcc_${mood})" stroke="#ffffff" stroke-width="3"/>
+            <rect x="44" y="36" width="132" height="106" rx="48" fill="url(#bodyGrad_${mood})" stroke="#ffffff" stroke-width="5"/>
+            <rect x="101" y="45" width="18" height="18" rx="5" fill="#0D9488"/>
+            <path d="M110 49 V59 M105 54 H115" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <rect x="58" y="68" width="104" height="62" rx="28" fill="url(#visorGrad_${mood})" stroke="#38BDF8" stroke-width="3"/>
+            <ellipse cx="70" cy="108" rx="7" ry="4" fill="#FB7185" opacity="${mood === 'sad' ? '0.2' : '0.65'}"/>
+            <ellipse cx="150" cy="108" rx="7" ry="4" fill="#FB7185" opacity="${mood === 'sad' ? '0.2' : '0.65'}"/>
+            ${eyeLeft}${eyeRight}${mouth}
+            <path d="M68 146 C68 138, 152 138, 152 146 L160 192 C160 202, 60 202, 60 192 Z" fill="url(#bodyGrad_${mood})" stroke="#ffffff" stroke-width="4"/>
+            <path d="M84 146 Q110 176 136 146" stroke="#0284C7" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="110" cy="172" r="8" fill="#F97316" stroke="#ffffff" stroke-width="2.5"/>
+            <ellipse cx="44" cy="${mood === 'happy' ? '132' : '162'}" rx="14" ry="20" transform="rotate(${mood === 'happy' ? '-35 44 132' : '20 44 162'})" fill="url(#tealAcc_${mood})" stroke="#ffffff" stroke-width="3"/>
+            <ellipse cx="176" cy="${mood === 'happy' ? '132' : '162'}" rx="14" ry="20" transform="rotate(${mood === 'happy' ? '35 176 132' : '-20 176 162'})" fill="url(#tealAcc_${mood})" stroke="#ffffff" stroke-width="3"/>
+          </svg>
+        `;
+      },
+
+      renderTo(elementId, mood = 'idle') {
+        const s = StorageManager.getSettings();
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        const rawUrl = mood === 'happy' ? s.mascotHappy : mood === 'sad' ? s.mascotSad : mood === 'home' ? (s.mascotHome || s.mascotIdle) : s.mascotIdle;
+        const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'image');
+
+        if (resolvedUrl) {
+          container.innerHTML = `<img src="${resolvedUrl}" alt="Mascot" class="w-full h-full object-contain" onerror="this.outerHTML=MascotManager.getBuiltInSvg('${mood}')" />`;
+        } else {
+          container.innerHTML = this.getBuiltInSvg(mood);
+        }
+      },
+
+      setGameMood(mood = 'idle') {
+        const wrapper = document.getElementById('gameMascotWrapper');
+        this.renderTo('gameMascotContainer', mood);
+        if (!wrapper) return;
+
+        wrapper.classList.remove('anim-mascot-idle', 'anim-mascot-happy', 'anim-mascot-sad');
+        void wrapper.offsetWidth;
+        wrapper.classList.add(mood === 'happy' ? 'anim-mascot-happy' : mood === 'sad' ? 'anim-mascot-sad' : 'anim-mascot-idle');
+      },
+
+      FIELDS: {
+        Home:  { input: 'settingMascotHome',  preview: 'adminPreviewMascotHome',  mood: 'idle' },
+        Idle:  { input: 'settingMascotIdle',  preview: 'adminPreviewMascotIdle',  mood: 'idle' },
+        Happy: { input: 'settingMascotHappy', preview: 'adminPreviewMascotHappy', mood: 'happy' },
+        Sad:   { input: 'settingMascotSad',   preview: 'adminPreviewMascotSad',   mood: 'sad' }
+      },
+
+      updatePreview(key) {
+        const f = this.FIELDS[key];
+        const box = document.getElementById(f.preview);
+        const input = document.getElementById(f.input);
+        if (!box || !input) return;
+        const url = normalizeDriveMediaUrl(input.value, 'image');
+        box.innerHTML = url
+          ? `<img src="${AdminModule.escapeHtml(url)}" alt="Mascot" class="h-full w-full object-contain" onerror="this.style.display='none'" />`
+          : `<div class="h-full aspect-square">${this.getBuiltInSvg(f.mood)}</div>`;
+      },
+
+      updateAllPreviews() {
+        Object.keys(this.FIELDS).forEach(k => this.updatePreview(k));
+      },
+
+      async handleImageUpload(event, key) {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          const data = await fileToCompressedDataUrl(file, 800);
+          document.getElementById(this.FIELDS[key].input).value = data;
+          this.updatePreview(key);
+          UI.showToast('圖片已載入，請按「儲存吉祥物圖片設定」套用！', 'info');
+        } catch (e) {
+          UI.showToast(e.message, 'error');
+        }
+        event.target.value = '';
+      },
+
+      saveUrls() {
+        const s = StorageManager.getSettings();
+        s.mascotHome = document.getElementById('settingMascotHome').value.trim();
+        s.mascotIdle = document.getElementById('settingMascotIdle').value.trim();
+        s.mascotHappy = document.getElementById('settingMascotHappy').value.trim();
+        s.mascotSad = document.getElementById('settingMascotSad').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('吉祥物圖片設定已儲存！', 'success');
+      },
+
+      resetToDefault() {
+        document.getElementById('settingMascotHome').value = '';
+        document.getElementById('settingMascotIdle').value = '';
+        document.getElementById('settingMascotHappy').value = '';
+        document.getElementById('settingMascotSad').value = '';
+        this.saveUrls();
+        this.updateAllPreviews();
+      }
+    };
+
+    /* ========================================================================
+       MODULE 4: 雙引擎音效系統 (MP3 / Google Drive 直連 + Web Audio API 備援)
+       支援 8 種獨立替換音訊，包含「倒數計時音效/緊張音樂」
+       ======================================================================== */
+    const SoundEngine = {
+      ctx: null,
+      bgmGain: null,
+      sfxGain: null,
+      bgmVolume: 0.50,
+      sfxVolume: 0.85,
+      isMuted: false,
+      paused: false,
+
+      activeBgmAudio: null,
+      activeCountdownAudio: null,
+      previewAudioEl: null,
+      synthBgmInterval: null,
+      currentBgmMode: 'NONE',
+      stepIndex: 0,
+
+      SLOT_DEFS: [
+        { key: 'bgmHome', label: '1. 首頁背景音樂 (BGM)', isLoop: true },
+        { key: 'bgmGame', label: '2. 遊戲答題背景音樂 (BGM)', isLoop: true },
+        { key: 'sfxClick', label: '3. 按鈕點擊音效', isLoop: false },
+        { key: 'sfxCorrect', label: '4. 答對歡呼音效', isLoop: false },
+        { key: 'sfxWrong', label: '5. 答錯 / 淘汰音效', isLoop: false },
+        { key: 'sfxCountdown', label: '6. 倒數計時音效 / 緊張音樂', isLoop: false },
+        { key: 'sfxCombo', label: '7. Combo 連擊音效', isLoop: false },
+        { key: 'sfxVictory', label: '8. 三題全破關勝利音效', isLoop: false }
+      ],
+
+      unlock() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+          this.bgmGain = this.ctx.createGain();
+          this.sfxGain = this.ctx.createGain();
+          this.bgmGain.connect(this.ctx.destination);
+          this.sfxGain.connect(this.ctx.destination);
+          this.applyVolumes();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      applyVolumes() {
+        if (this.bgmGain && this.sfxGain) {
+          const now = this.ctx.currentTime;
+          this.bgmGain.gain.setTargetAtTime(this.isMuted ? 0 : this.bgmVolume * 0.25, now, 0.05);
+          this.sfxGain.gain.setTargetAtTime(this.isMuted ? 0 : this.sfxVolume * 0.5, now, 0.02);
+        }
+        if (this.activeBgmAudio) {
+          this.activeBgmAudio.volume = this.isMuted ? 0 : this.bgmVolume;
+        }
+        if (this.activeCountdownAudio) {
+          this.activeCountdownAudio.volume = this.isMuted ? 0 : this.sfxVolume;
+        }
+      },
+
+      setBgmVolume(val) {
+        this.bgmVolume = Number(val) / 100;
+        document.getElementById('bgmVolLabel').textContent = `${val}%`;
+        this.applyVolumes();
+      },
+
+      setSfxVolume(val) {
+        this.sfxVolume = Number(val) / 100;
+        document.getElementById('sfxVolLabel').textContent = `${val}%`;
+        this.applyVolumes();
+      },
+
+      toggleMute() {
+        this.unlock();
+        this.isMuted = !this.isMuted;
+        this.applyVolumes();
+        UI.showToast(this.isMuted ? '已切換為靜音' : '已開啟音效與音樂', 'info');
+      },
+
+      // 嘗試播放自訂 MP3 URL，失敗時執行 fallbackFn
+      playCustomOrFallback(slotKey, fallbackFn, isBgm = false) {
+        if (this.isMuted) return;
+        this.unlock();
+
+        const settings = StorageManager.getSettings();
+        const rawUrl = settings.audioUrls ? settings.audioUrls[slotKey] : '';
+        const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'audio');
+
+        if (resolvedUrl) {
+          try {
+            const audio = new Audio(resolvedUrl);
+            audio.volume = this.isMuted ? 0 : (isBgm ? this.bgmVolume : this.sfxVolume);
+            audio.loop = isBgm;
+            audio.onerror = () => {
+              if (typeof fallbackFn === 'function') fallbackFn();
+            };
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {
+                if (typeof fallbackFn === 'function') fallbackFn();
+              });
+            }
+            return audio;
+          } catch (e) {
+            if (typeof fallbackFn === 'function') fallbackFn();
+          }
+        } else {
+          if (typeof fallbackFn === 'function') fallbackFn();
+        }
+        return null;
+      },
+
+      playTone(freq, duration, type = 'sine', offset = 0, targetGain = null, slideTo = null) {
+        if (this.isMuted) return;
+        this.unlock();
+        const now = this.ctx.currentTime + offset;
+        const osc = this.ctx.createOscillator();
+        const env = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+
+        env.gain.setValueAtTime(0.001, now);
+        env.gain.linearRampToValueAtTime(0.45, now + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(env);
+        env.connect(targetGain || this.sfxGain);
+        osc.start(now);
+        osc.stop(now + duration + 0.02);
+      },
+
+      startBgm(mode) {
+        if (this.currentBgmMode === mode) return;
+        this.stopBgm();
+        this.unlock();
+        this.currentBgmMode = mode;
+
+        const slotKey = mode === 'HOME' ? 'bgmHome' : 'bgmGame';
+        const customAudio = this.playCustomOrFallback(slotKey, () => {
+          this.startSynthBgm(mode);
+        }, true);
+
+        if (customAudio) {
+          this.activeBgmAudio = customAudio;
+        }
+      },
+
+      startSynthBgm(mode) {
+        clearInterval(this.synthBgmInterval);
+        this.stepIndex = 0;
+        const homeNotes = [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25, 587.33, 783.99];
+        const gameNotes = [440, 523.25, 659.25, 523.25, 587.33, 698.46, 880, 698.46];
+        const tempoMs = mode === 'HOME' ? 340 : 270;
+
+        this.synthBgmInterval = setInterval(() => {
+          if (this.isMuted || this.paused || !this.ctx || this.ctx.state !== 'running') return;
+          const seq = mode === 'HOME' ? homeNotes : gameNotes;
+          const note = seq[this.stepIndex % seq.length];
+          this.playTone(note, 0.22, mode === 'HOME' ? 'triangle' : 'sine', 0, this.bgmGain);
+          if (this.stepIndex % 4 === 0) this.playTone(note / 2, 0.28, 'sine', 0, this.bgmGain);
+          this.stepIndex++;
+        }, tempoMs);
+      },
+
+      stopBgm() {
+        if (this.activeBgmAudio) {
+          this.activeBgmAudio.pause();
+          this.activeBgmAudio.currentTime = 0;
+          this.activeBgmAudio = null;
+        }
+        if (this.synthBgmInterval) {
+          clearInterval(this.synthBgmInterval);
+          this.synthBgmInterval = null;
+        }
+        this.stopCountdownAudio();
+        this.currentBgmMode = 'NONE';
+      },
+
+      stopCountdownAudio() {
+        if (this.activeCountdownAudio) {
+          this.activeCountdownAudio.pause();
+          this.activeCountdownAudio.currentTime = 0;
+          this.activeCountdownAudio = null;
+        }
+      },
+
+      pauseAll() {
+        this.paused = true;
+        if (this.activeBgmAudio) this.activeBgmAudio.pause();
+        this.stopCountdownAudio();
+      },
+
+      resumeAll() {
+        if (!this.paused) return;
+        this.paused = false;
+        if (this.activeBgmAudio) this.activeBgmAudio.play().catch(() => {});
+      },
+
+      playClick() {
+        this.playCustomOrFallback('sfxClick', () => {
+          this.playTone(620, 0.08, 'triangle', 0, this.sfxGain, 880);
+        });
+      },
+
+      playCorrect() {
+        this.stopCountdownAudio();
+        this.playCustomOrFallback('sfxCorrect', () => {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => {
+            this.playTone(f, 0.28, 'triangle', idx * 0.065);
+          });
+        });
+      },
+
+      playWrong() {
+        this.stopCountdownAudio();
+        this.playCustomOrFallback('sfxWrong', () => {
+          this.playTone(330, 0.22, 'sawtooth', 0, this.sfxGain, 260);
+          this.playTone(260, 0.35, 'triangle', 0.16, this.sfxGain, 180);
+        });
+      },
+
+      // 倒數音效：若有設定自訂 MP3 倒數音軌，於剩餘 5 秒啟動連續播放；若無則於最後 3 秒播放滴答音
+      handleCountdownTick(secondsLeft) {
+        const settings = StorageManager.getSettings();
+        const hasCustomCountdown = Boolean(settings.audioUrls?.sfxCountdown?.trim());
+
+        if (hasCustomCountdown) {
+          if (secondsLeft === 5 && !this.activeCountdownAudio) {
+            this.activeCountdownAudio = this.playCustomOrFallback('sfxCountdown', () => {
+              this.playTone(880, 0.12, 'square', 0);
+            });
+          }
+        } else if (secondsLeft > 0 && secondsLeft <= 3) {
+          const pitch = secondsLeft === 1 ? 1046.5 : 880;
+          this.playTone(pitch, 0.12, 'square', 0);
+        }
+      },
+
+      playCombo(comboCount) {
+        this.playCustomOrFallback('sfxCombo', () => {
+          const base = 587.33 + Math.min(comboCount, 6) * 65;
+          this.playTone(base, 0.18, 'sine', 0.05);
+          this.playTone(base * 1.25, 0.25, 'triangle', 0.14);
+          this.playTone(base * 1.5, 0.35, 'triangle', 0.23);
+        });
+      },
+
+      playVictoryFanfare() {
+        this.stopCountdownAudio();
+        this.playCustomOrFallback('sfxVictory', () => {
+          const fanfare = [
+            { f: 523.25, t: 0, d: 0.15 },
+            { f: 523.25, t: 0.16, d: 0.15 },
+            { f: 523.25, t: 0.32, d: 0.15 },
+            { f: 659.25, t: 0.48, d: 0.35 },
+            { f: 587.33, t: 0.85, d: 0.22 },
+            { f: 659.25, t: 1.08, d: 0.22 },
+            { f: 783.99, t: 1.32, d: 0.65 }
+          ];
+          fanfare.forEach(n => this.playTone(n.f, n.d, 'triangle', n.t));
+        });
+      },
+
+      // 後台 MP3 管理介面渲染與試聽
+      renderAdminSlots() {
+        const settings = StorageManager.getSettings();
+        const container = document.getElementById('audioSlotsList');
+        if (!container) return;
+
+        container.innerHTML = this.SLOT_DEFS.map(slot => {
+          const val = settings.audioUrls[slot.key] || '';
+          return `
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-black text-slate-800 text-sm">${slot.label}</span>
+                <div class="flex items-center gap-1.5">
+                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer" title="從本機選擇 MP3">
+                    <i class="fa-solid fa-folder-open"></i> 本機
+                    <input type="file" accept="audio/*" onchange="SoundEngine.handleLocalAudioUpload(event, '${slot.key}')" class="hidden" />
+                  </label>
+                  <button type="button" onclick="SoundEngine.previewSlot('${slot.key}')" class="px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs">
+                    <i class="fa-solid fa-play mr-1"></i>試聽
+                  </button>
+                </div>
+              </div>
+              <input type="text" id="audioInput_${slot.key}" value="${AdminModule.escapeHtml(val)}"
+                placeholder="貼上 MP3 網址或 Google Drive 音訊連結 (留空用內建音效)"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white" />
+            </div>
+          `;
+        }).join('');
+      },
+
+      handleLocalAudioUpload(event, slotKey) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const blobUrl = URL.createObjectURL(file);
+        document.getElementById(`audioInput_${slotKey}`).value = blobUrl;
+        UI.showToast(`已載入本機音訊「${file.name}」（僅限本次瀏覽器工作階段有效，永久保存請用 Google Drive 網址）`, 'info');
+        event.target.value = '';
+      },
+
+      previewSlot(slotKey) {
+        this.stopAllPreview();
+        this.unlock();
+        const inputVal = document.getElementById(`audioInput_${slotKey}`)?.value.trim();
+        const resolvedUrl = normalizeDriveMediaUrl(inputVal, 'audio');
+
+        if (resolvedUrl) {
+          this.previewAudioEl = new Audio(resolvedUrl);
+          this.previewAudioEl.volume = this.sfxVolume;
+          this.previewAudioEl.play().catch(() => {
+            UI.showToast('無法直接播放此網址，請確認 Google Drive 權限已設為「知道連結的任何人均可檢視」', 'error');
+          });
+        } else {
+          // 試聽內建合成音效
+          if (slotKey === 'sfxClick') this.playClick();
+          else if (slotKey === 'sfxCorrect') this.playCorrect();
+          else if (slotKey === 'sfxWrong') this.playWrong();
+          else if (slotKey === 'sfxCountdown') this.playTone(880, 0.25, 'square', 0);
+          else if (slotKey === 'sfxCombo') this.playCombo(3);
+          else if (slotKey === 'sfxVictory') this.playVictoryFanfare();
+          else this.playCorrect();
+        }
+      },
+
+      stopAllPreview() {
+        if (this.previewAudioEl) {
+          this.previewAudioEl.pause();
+          this.previewAudioEl = null;
+        }
+      },
+
+      saveCustomAudioUrls() {
+        const s = StorageManager.getSettings();
+        this.SLOT_DEFS.forEach(slot => {
+          const el = document.getElementById(`audioInput_${slot.key}`);
+          if (el) s.audioUrls[slot.key] = el.value.trim();
+        });
+        StorageManager.saveSettings(s);
+        UI.showToast('所有 MP3 音樂與音效網址已儲存！', 'success');
+      },
+
+      resetAllCustomAudio() {
+        this.SLOT_DEFS.forEach(slot => {
+          const el = document.getElementById(`audioInput_${slot.key}`);
+          if (el) el.value = '';
+        });
+        this.saveCustomAudioUrls();
+      }
+    };
+
+    /* ========================================================================
+       MODULE 5: GitHub Pages + Google Apps Script (GAS) 雲端資料庫橋接器
+       ======================================================================== */
+    const GASConnector = {
+      async syncOnBoot() {
+        const settings = StorageManager.getSettings();
+        const gasUrl = (settings.gasWebAppUrl || '').trim();
+        if (!gasUrl) return;
+
+        try {
+          const res = await fetch(gasUrl, { method: 'GET' });
+          const data = await res.json();
+          if (data && data.status === 'ok') {
+            if (Array.isArray(data.questions) && data.questions.length > 0) {
+              StorageManager.saveQuestions(data.questions);
+            }
+            if (data.config && typeof data.config === 'object') {
+              const merged = { ...StorageManager.getSettings(), ...data.config };
+              if (typeof data.config.audioUrls === 'string') {
+                try { merged.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
+              }
+              StorageManager.saveSettings(merged);
+            }
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+          }
+        } catch (err) {
+          console.warn('GAS 背景自動同步略過（離線或 CORS 限制）:', err);
+        }
+      },
+
+      saveUrlAndTest() {
+        const url = document.getElementById('settingGasUrl').value.trim();
+        const s = StorageManager.getSettings();
+        s.gasWebAppUrl = url;
+        StorageManager.saveSettings(s);
+        AdminModule.refreshAllViews();
+
+        if (!url) {
+          UI.showToast('已清除 GAS 網址，切換為本機儲存模式', 'info');
+          return;
+        }
+        this.pullFromCloud();
+      },
+
+      async pullFromCloud() {
+        const url = StorageManager.getSettings().gasWebAppUrl;
+        if (!url) {
+          UI.showToast('請先輸入 GAS Web App URL！', 'error');
+          return;
+        }
+        UI.showToast('正在從 Google Sheet 拉取最新資料...', 'info');
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data && data.status === 'ok') {
+            if (Array.isArray(data.questions) && data.questions.length > 0) {
+              StorageManager.saveQuestions(data.questions);
+            }
+            if (data.config) {
+              const current = StorageManager.getSettings();
+              const nextSettings = { ...current, ...data.config };
+              if (typeof data.config.audioUrls === 'string') {
+                try { nextSettings.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
+              }
+              StorageManager.saveSettings(nextSettings);
+            }
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+            AdminModule.refreshAllViews();
+            UI.showToast(`雲端同步成功！已載入 ${data.questions?.length || 0} 題題庫與設定`, 'success');
+          } else {
+            throw new Error('回傳格式非預期');
+          }
+        } catch (err) {
+          UI.showToast('GAS 連線失敗，請確認部署權限已設為「所有人」', 'error');
+        }
+      },
+
+      async pushToCloud() {
+        const url = StorageManager.getSettings().gasWebAppUrl;
+        if (!url) {
+          UI.showToast('請先輸入 GAS Web App URL！', 'error');
+          return;
+        }
+        UI.showToast('正在推送題庫與設定至 Google Sheet...', 'info');
+        try {
+          const s = StorageManager.getSettings();
+          const safeConfig = { ...s };
+          delete safeConfig.adminPasswordHash; // 不將密碼明文推送至試算表
+          // Google Sheet 單一儲存格上限約 5 萬字元：過大的「上傳圖片」不推送（本機仍保留）
+          const skipped = [];
+          Object.keys(safeConfig).forEach(k => {
+            const v = safeConfig[k];
+            if (typeof v === 'string' && v.startsWith('data:') && v.length > 45000) {
+              delete safeConfig[k];
+              skipped.push(k);
+            }
+          });
+
+          await fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'SYNC_UP',
+              questions: StorageManager.getQuestions(),
+              config: safeConfig
+            })
+          });
+          UI.showToast(skipped.length ? `已送出！但 ${skipped.length} 張上傳圖片過大未同步，多機共用請改用 Drive 連結` : '資料已送出至 Google Sheet！', skipped.length ? 'info' : 'success');
+        } catch (err) {
+          UI.showToast('推送失敗：' + err.message, 'error');
+        }
+      },
+
+      logGameResult(score, correctCount, outcome) {
+        const url = StorageManager.getSettings().gasWebAppUrl;
+        if (!url) return;
+        fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'LOG_RESULT',
+            score,
+            correctCount,
+            outcome
+          })
+        }).catch(() => {});
+      },
+
+      copyGasCode() {
+        const codeText = document.getElementById('gasCodeBlock').textContent;
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        UI.showToast('Code.gs 程式碼已複製到剪貼簿！', 'success');
+      }
+    };
+
+    /* ========================================================================
+       MODULE 6: 展場雙螢幕即時同步引擎 (DualScreenSync)
+       ======================================================================== */
+    const DualScreenSync = {
+      channel: null,
+      role: 'STANDALONE',
+
+      init() {
+        if ('BroadcastChannel' in window) {
+          this.channel = new BroadcastChannel('cch_smart_medical_expo_sync_v2');
+          this.channel.onmessage = (event) => {
+            const msg = event.data;
+            if (!msg || !msg.type) return;
+            if (msg.type === 'REMOTE_ANSWER' && this.role === 'LED_STAGE') {
+              GameEngine.submitAnswer(msg.choice, true);
+            } else if (msg.type === 'REMOTE_START' && this.role === 'LED_STAGE') {
+              GameEngine.startNewGame(true);
+            } else if (msg.type === 'STATE_SYNC' && this.role === 'IPAD_REMOTE') {
+              GameEngine.applySyncedState(msg.payload);
+            }
+          };
+        }
+      },
+
+      setRole(newRole) {
+        this.role = newRole;
+      },
+
+      sendRemoteCommand(type, data = {}) {
+        if (this.channel) this.channel.postMessage({ type, ...data });
+      },
+
+      broadcastState() {
+        if (!this.channel) return;
+        this.channel.postMessage({
+          type: 'STATE_SYNC',
+          payload: {
+            screen: GameEngine.currentScreen,
+            questionIndex: GameEngine.currentIndex,
+            totalQuestions: GameEngine.sessionQuestions.length,
+            currentQuestion: GameEngine.sessionQuestions[GameEngine.currentIndex] || null,
+            score: GameEngine.score
+          }
+        });
+      }
+    };
+
+    /* ========================================================================
+       MODULE 7: 動態背景與粒子特效 (BackgroundAndFX)
+       ======================================================================== */
+    const BackgroundAndFX = {
+      bgCanvas: null,
+      bgCtx: null,
+      fxCanvas: null,
+      fxCtx: null,
+      particles: [],
+      bgItems: [],
+      ecgOffset: 0,
+
+      init() {
+        this.bgCanvas = document.getElementById('bgCanvas');
+        this.bgCtx = this.bgCanvas.getContext('2d');
+        this.fxCanvas = document.getElementById('fxCanvas');
+        this.fxCtx = this.fxCanvas.getContext('2d');
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+
+        for (let i = 0; i < 24; i++) {
+          this.bgItems.push({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            size: 8 + Math.random() * 14,
+            speedY: -0.25 - Math.random() * 0.45,
+            type: i % 3 === 0 ? 'cross' : 'dot',
+            color: ['#38BDF8', '#2DD4BF', '#FB923C', '#FACC15'][i % 4],
+            alpha: 0.18 + Math.random() * 0.22
+          });
+        }
+        requestAnimationFrame(() => this.loop());
+      },
+
+      resize() {
+        this.bgCanvas.width = window.innerWidth;
+        this.bgCanvas.height = window.innerHeight;
+        this.fxCanvas.width = window.innerWidth;
+        this.fxCanvas.height = window.innerHeight;
+      },
+
+      spawnConfetti(intensity = 1) {
+        if (this.particles.length > 350) return;
+        const count = Math.floor(26 * intensity);
+        const colors = ['#0284C7', '#2DD4BF', '#F97316', '#FACC15', '#EC4899', '#22C55E'];
+        const cx = this.fxCanvas.width / 2;
+        const cy = this.fxCanvas.height * 0.45;
+
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 4 + Math.random() * (11 * intensity);
+          this.particles.push({
+            x: cx + (Math.random() - 0.5) * 180,
+            y: cy + (Math.random() - 0.5) * 80,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 4,
+            gravity: 0.26,
+            size: 7 + Math.random() * 8,
+            color: colors[i % colors.length],
+            rotation: Math.random() * 360,
+            rotSpeed: (Math.random() - 0.5) * 12,
+            shape: i % 3 === 0 ? 'star' : 'rect',
+            life: 1.0,
+            decay: 0.012 + Math.random() * 0.01
+          });
+        }
+      },
+
+      // 左右下角彩帶大砲
+      spawnCannons(level = 1) {
+        if (this.particles.length > 350) return;
+        const w = this.fxCanvas.width, h = this.fxCanvas.height;
+        const colors = ['#0284C7', '#2DD4BF', '#F97316', '#FACC15', '#EC4899', '#22C55E'];
+        const per = 10 + level * 5;
+        [{ x: w * 0.03, base: -62 }, { x: w * 0.97, base: -118 }].forEach(c => {
+          for (let i = 0; i < per; i++) {
+            const ang = ((c.base + (Math.random() - 0.5) * 34) * Math.PI) / 180;
+            const sp = 15 + Math.random() * (10 + level * 4);
+            this.particles.push({
+              x: c.x, y: h - 10, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, gravity: 0.38,
+              size: 8 + Math.random() * 8, color: colors[i % colors.length],
+              rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 16,
+              shape: i % 4 === 0 ? 'star' : 'rect', life: 1.0, decay: 0.012 + Math.random() * 0.006
+            });
+          }
+        });
+      },
+
+      // 表情符號雨
+      spawnEmojiRain(level = 1) {
+        if (this.particles.length > 350) return;
+        const w = this.fxCanvas.width;
+        const emojis = ['🎉', '⭐', '✨', '💖', '🎈', '👏', '🌟', '💙'];
+        const n = 4 + level * 2;
+        for (let i = 0; i < n; i++) {
+          this.particles.push({
+            x: Math.random() * w, y: -30 - Math.random() * 220,
+            vx: (Math.random() - 0.5) * 2, vy: 2 + Math.random() * 3, gravity: 0.04,
+            size: 12 + Math.random() * 10, color: '#ffffff', rotation: 0, rotSpeed: (Math.random() - 0.5) * 4,
+            shape: 'emoji', char: emojis[i % emojis.length], life: 1.0, decay: 0.006
+          });
+        }
+      },
+
+      // 煙火
+      spawnFirework(x, y) {
+        const colors = ['#FACC15', '#F97316', '#EC4899', '#38BDF8', '#22C55E', '#A78BFA'];
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        const n = 22;
+        for (let i = 0; i < n; i++) {
+          const ang = (i / n) * Math.PI * 2;
+          const sp = 4 + Math.random() * 4;
+          this.particles.push({
+            x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, gravity: 0.09,
+            size: 6 + Math.random() * 4, color: i % 2 ? col : '#ffffff', rotation: 0, rotSpeed: 0,
+            shape: 'circle', life: 1.0, decay: 0.016 + Math.random() * 0.01
+          });
+        }
+      },
+
+      drawBg() {
+        const ctx = this.bgCtx;
+        const w = this.bgCanvas.width;
+        const h = this.bgCanvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(2, 132, 199, 0.05)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+        for (let y = 0; y < h; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+        const dnaX = w - 90;
+        const t = Date.now() * 0.0018;
+        for (let y = 40; y < h - 40; y += 26) {
+          const offset = Math.sin(y * 0.025 + t) * 34;
+          ctx.strokeStyle = 'rgba(13, 148, 136, 0.14)';
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(dnaX - offset, y); ctx.lineTo(dnaX + offset, y); ctx.stroke();
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.22)';
+          ctx.beginPath(); ctx.arc(dnaX - offset, y, 4.5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(249, 115, 22, 0.22)';
+          ctx.beginPath(); ctx.arc(dnaX + offset, y, 4.5, 0, Math.PI * 2); ctx.fill();
+        }
+
+        ctx.strokeStyle = 'rgba(13, 148, 136, 0.16)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        const baseY = h * 0.86;
+        this.ecgOffset = (this.ecgOffset + 4.4) % 320;
+        for (let x = 0; x < w; x += 6) {
+          const localX = (x + this.ecgOffset) % 320;
+          let dy = 0;
+          if (localX > 120 && localX < 135) dy = -16;
+          else if (localX >= 135 && localX < 148) dy = 38;
+          else if (localX >= 148 && localX < 162) dy = -52;
+          else if (localX >= 162 && localX < 176) dy = 22;
+          else if (localX >= 195 && localX < 220) dy = -12 * Math.sin(((localX - 195) / 25) * Math.PI);
+          if (x === 0) ctx.moveTo(x, baseY + dy);
+          else ctx.lineTo(x, baseY + dy);
+        }
+        ctx.stroke();
+
+        this.bgItems.forEach(item => {
+          item.y += item.speedY * 2;
+          if (item.y < -30) { item.y = h + 30; item.x = Math.random() * w; }
+          ctx.save();
+          ctx.globalAlpha = item.alpha;
+          ctx.fillStyle = item.color;
+          if (item.type === 'cross') {
+            const s = item.size;
+            ctx.fillRect(item.x - s * 0.2, item.y - s * 0.6, s * 0.4, s * 1.2);
+            ctx.fillRect(item.x - s * 0.6, item.y - s * 0.2, s * 1.2, s * 0.4);
+          } else {
+            ctx.beginPath(); ctx.arc(item.x, item.y, item.size * 0.45, 0, Math.PI * 2); ctx.fill();
+          }
+          ctx.restore();
+        });
+      },
+
+      drawFx() {
+        const ctx = this.fxCtx;
+        ctx.clearRect(0, 0, this.fxCanvas.width, this.fxCanvas.height);
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.rotation += p.rotSpeed; p.life -= p.decay;
+          if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fillStyle = p.color;
+          if (p.shape === 'emoji') {
+            ctx.font = `${p.size * 2.4}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.char, 0, 0);
+          } else if (p.shape === 'circle') {
+            ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill();
+          } else if (p.shape === 'star') {
+            ctx.beginPath();
+            for (let k = 0; k < 5; k++) {
+              ctx.lineTo(Math.cos(((18 + k * 72) * Math.PI) / 180) * p.size, -Math.sin(((18 + k * 72) * Math.PI) / 180) * p.size);
+              ctx.lineTo(Math.cos(((54 + k * 72) * Math.PI) / 180) * (p.size * 0.45), -Math.sin(((54 + k * 72) * Math.PI) / 180) * (p.size * 0.45));
+            }
+            ctx.closePath(); ctx.fill();
+          } else {
+            ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.65);
+          }
+          ctx.restore();
+        }
+      },
+
+      loop() {
+        // 背景降為約 30fps；沒有粒子時不重繪特效層，減少 CPU / GPU 負擔
+        this.frame = (this.frame || 0) + 1;
+        if (this.frame % 2 === 0) this.drawBg();
+        if (this.particles.length > 0) {
+          this.drawFx();
+          this.hadFx = true;
+        } else if (this.hadFx) {
+          this.fxCtx.clearRect(0, 0, this.fxCanvas.width, this.fxCanvas.height);
+          this.hadFx = false;
+        }
+        requestAnimationFrame(() => this.loop());
+      }
+    };
+
+    /* ========================================================================
+       MODULE 7.5: 答對慶祝動畫 (CelebrationFX)
+       ======================================================================== */
+    const CelebrationFX = {
+      hideTimer: null,
+      outTimer: null,
+      praises: ['答對了！', '太棒了！', '好厲害！', '答對囉！', '讚讚讚！', '完美！'],
+
+      show(text, level = 1, duration = 1700) {
+        const ov = document.getElementById('celebrateOverlay');
+        const tx = document.getElementById('celebrateText');
+        if (!ov || !tx) return;
+        clearTimeout(this.hideTimer); clearTimeout(this.outTimer);
+        tx.textContent = text;
+        tx.style.fontSize = level >= 3 ? 'clamp(2.4rem,8.5vmin,7rem)' : 'clamp(3rem,12vmin,9.5rem)';
+        ov.classList.remove('hidden', 'celebrate-run', 'celebrate-out');
+        ov.classList.add('flex');
+        void ov.offsetWidth;
+        ov.classList.add('celebrate-run');
+        this.outTimer = setTimeout(() => ov.classList.add('celebrate-out'), duration - 400);
+        this.hideTimer = setTimeout(() => {
+          ov.classList.add('hidden');
+          ov.classList.remove('flex', 'celebrate-run', 'celebrate-out');
+        }, duration);
+      },
+
+      sparklesAround(elId) {
+        const host = document.getElementById(elId)?.parentElement;
+        if (!host) return;
+        const chars = ['✨', '⭐', '💫', '🌟'];
+        for (let i = 0; i < 8; i++) {
+          const s = document.createElement('span');
+          s.className = 'sparkle-pop';
+          s.textContent = chars[i % chars.length];
+          const ang = (i / 8) * Math.PI * 2;
+          const dist = 110 + Math.random() * 90;
+          s.style.setProperty('--dx', `${Math.cos(ang) * dist}px`);
+          s.style.setProperty('--dy', `${Math.sin(ang) * dist}px`);
+          s.style.fontSize = `${24 + Math.random() * 22}px`;
+          s.style.animationDelay = `${Math.random() * 0.25}s`;
+          host.appendChild(s);
+          setTimeout(() => s.remove(), 1500);
+        }
+      },
+
+      celebrateCorrect(combo) {
+        const level = combo >= 3 ? 3 : combo >= 2 ? 2 : 1;
+        const text = level === 3 ? `SUPER COMBO ×${combo}！`
+          : level === 2 ? '連續答對！🔥'
+          : this.praises[Math.floor(Math.random() * this.praises.length)];
+        this.show(text, level);
+        BackgroundAndFX.spawnConfetti(0.8 + level * 0.3);
+        BackgroundAndFX.spawnCannons(level);
+        BackgroundAndFX.spawnEmojiRain(level);
+        if (level >= 2) {
+          const w = window.innerWidth, h = window.innerHeight;
+          setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.25, h * 0.3), 250);
+          if (level >= 3) setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.75, h * 0.35), 500);
+        }
+        this.sparklesAround('gameMascotWrapper');
+      },
+
+      celebrateVictory() {
+        this.show('🏆 全數過關！', 3, 2800);
+        BackgroundAndFX.spawnConfetti(1.8);
+        BackgroundAndFX.spawnCannons(2);
+        BackgroundAndFX.spawnEmojiRain(2);
+        const w = window.innerWidth, h = window.innerHeight;
+        [400, 1100, 1900, 2800].forEach((ms, i) => {
+          setTimeout(() => {
+            BackgroundAndFX.spawnFirework(w * (0.15 + Math.random() * 0.7), h * (0.15 + Math.random() * 0.35));
+            if (i === 1) BackgroundAndFX.spawnCannons(1);
+          }, ms);
+        });
+      }
+    };
+
+    /* ========================================================================
+       MODULE 8: 核心三題驟死制遊戲引擎 (GameEngine)
+       規則：總共 3 題，錯一題或超時即刻結束本次遊戲，換下一位挑戰！
+       ======================================================================== */
+    const GameEngine = {
+      currentScreen: 'HOME',
+      sessionQuestions: [],
+      currentIndex: 0,
+      score: 0,
+      correctCount: 0,
+      combo: 0,
+      maxCombo: 0,
+      timeLimit: 15,
+      timeLeft: 15,
+      timerInterval: null,
+      isAnswered: false,
+      nextStepTimeout: null,
+      isPaused: false,
+      pendingNext: null,
+
+      switchScreen(screenName) {
+        this.currentScreen = screenName;
+        ['screenHome', 'screenGame', 'screenResult', 'screenAdmin'].forEach(id => {
+          document.getElementById(id).classList.add('hidden');
+          document.getElementById(id).classList.remove('flex');
+        });
+
+        const targetId = screenName === 'HOME' ? 'screenHome'
+          : screenName === 'GAME' ? 'screenGame'
+          : screenName === 'RESULT' ? 'screenResult'
+          : 'screenAdmin';
+
+        const targetEl = document.getElementById(targetId);
+        targetEl.classList.remove('hidden');
+        targetEl.classList.add('flex');
+
+        // 後台畫面隱藏右下角齒輪並解除 100vh 鎖定；遊戲畫面保持右下角低調齒輪
+        const cornerBtn = document.getElementById('cornerSettingsTrigger');
+        if (screenName === 'ADMIN') {
+          document.body.classList.remove('game-viewport-lock');
+          cornerBtn.classList.add('hidden');
+          SoundEngine.stopBgm();
+        } else {
+          document.body.classList.add('game-viewport-lock');
+          cornerBtn.classList.remove('hidden');
+        }
+      },
+
+      drawRandomQuestions(allQuestions, count) {
+        const pool = [...allQuestions];
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        return pool.slice(0, Math.min(Math.max(1, count), pool.length));
+      },
+
+      startNewGame(fromRemote = false) {
+        SoundEngine.unlock();
+        SoundEngine.playClick();
+
+        if (DualScreenSync.role === 'IPAD_REMOTE' && !fromRemote) {
+          DualScreenSync.sendRemoteCommand('REMOTE_START');
+        }
+
+        const allQuestions = StorageManager.getQuestions();
+        if (!allQuestions.length) {
+          UI.showToast('題庫是空的，請先到後台新增或匯入題目！', 'error');
+          return;
+        }
+        this.isPaused = false;
+        this.pendingNext = null;
+        this.hidePauseOverlay();
+        const settings = StorageManager.getSettings();
+        const totalDraw = Math.max(1, Number(settings.questionsPerGame) || 3);
+
+        this.timeLimit = Math.max(5, Number(settings.timePerQuestion) || 15);
+        this.sessionQuestions = this.drawRandomQuestions(allQuestions, totalDraw);
+        StorageManager.saveLastDrawnRecord(this.sessionQuestions.map(q => q.id));
+
+        this.currentIndex = 0;
+        this.score = 0;
+        this.correctCount = 0;
+        this.combo = 0;
+        this.maxCombo = 0;
+
+        this.switchScreen('GAME');
+        SoundEngine.startBgm('GAME');
+        this.loadCurrentQuestion();
+      },
+
+      loadCurrentQuestion() {
+        clearInterval(this.timerInterval);
+        clearTimeout(this.nextStepTimeout);
+        this.pendingNext = null;
+        SoundEngine.stopCountdownAudio();
+
+        this.isAnswered = false;
+        this.timeLeft = this.timeLimit;
+
+        const q = this.sessionQuestions[this.currentIndex];
+        const total = this.sessionQuestions.length;
+
+        document.getElementById('hudQuestionCurrent').textContent = this.currentIndex + 1;
+        document.getElementById('hudQuestionTotal').textContent = total;
+        this.renderProgress(this.currentIndex, total);
+        this.updateComboHud();
+
+        const qCard = document.getElementById('questionCard');
+        qCard.classList.remove('anim-question-in');
+        void qCard.offsetWidth;
+        qCard.classList.add('anim-question-in');
+
+        document.getElementById('questionText').textContent = q.question;
+        document.getElementById('optionTextA').textContent = q.optionA;
+        document.getElementById('optionTextB').textContent = q.optionB;
+        document.getElementById('optionTextC').textContent = q.optionC;
+
+        ['A', 'B', 'C'].forEach(letter => {
+          const btn = document.getElementById(`optionBtn${letter}`);
+          btn.disabled = false;
+          btn.classList.remove('option-correct', 'option-wrong', 'option-dimmed');
+        });
+
+        document.getElementById('feedbackBanner').classList.add('hidden');
+        document.getElementById('comboCelebrationBanner').classList.add('hidden');
+        MascotManager.setGameMood('idle');
+
+        this.updateTimerVisual();
+        this.startQuestionTimer();
+        DualScreenSync.broadcastState();
+      },
+
+      startQuestionTimer() {
+        clearInterval(this.timerInterval);
+        this.timerInterval = setInterval(() => {
+          if (this.isAnswered) {
+            clearInterval(this.timerInterval);
+            return;
+          }
+
+          this.timeLeft--;
+          this.updateTimerVisual();
+
+          if (this.timeLeft > 0) {
+            SoundEngine.handleCountdownTick(this.timeLeft);
+          }
+
+          if (this.timeLeft <= 0) {
+            clearInterval(this.timerInterval);
+            this.handleTimeOut();
+          }
+        }, 1000);
+      },
+
+      updateTimerVisual() {
+        const numEl = document.getElementById('timerNumberText');
+        const circleEl = document.getElementById('timerCircleProgress');
+        const wrapperEl = document.getElementById('timerWrapper');
+
+        const safeTime = Math.max(0, this.timeLeft);
+        numEl.textContent = safeTime;
+
+        const circumference = 326.72;
+        circleEl.style.strokeDashoffset = circumference * (1 - safeTime / this.timeLimit);
+
+        if (safeTime <= 5 && safeTime > 0) {
+          // 最後 5 秒：整個計時器放大 + 縮放震動 + 紅色警示
+          circleEl.setAttribute('stroke', '#EF4444');
+          numEl.classList.add('text-rose-600');
+          wrapperEl.classList.add('timer-urgent', 'anim-timer-panic');
+          numEl.classList.remove('anim-num-tick');
+          void numEl.offsetWidth;
+          numEl.classList.add('anim-num-tick');
+        } else {
+          this.stopTimerPanic();
+          circleEl.setAttribute('stroke', '#0284C7');
+        }
+      },
+
+      scheduleNext(fn, ms) {
+        this.pendingNext = { fn, remaining: ms, startedAt: Date.now() };
+        return setTimeout(() => { this.pendingNext = null; fn(); }, ms);
+      },
+
+      pauseGame() {
+        if (this.currentScreen !== 'GAME' || this.isPaused) return;
+        this.isPaused = true;
+        clearInterval(this.timerInterval);
+        if (this.pendingNext) {
+          clearTimeout(this.nextStepTimeout);
+          this.pendingNext.remaining = Math.max(0, this.pendingNext.remaining - (Date.now() - this.pendingNext.startedAt));
+        }
+        SoundEngine.pauseAll();
+        const ov = document.getElementById('pauseOverlay');
+        ov.classList.remove('hidden'); ov.classList.add('flex');
+      },
+
+      hidePauseOverlay() {
+        const ov = document.getElementById('pauseOverlay');
+        ov.classList.add('hidden'); ov.classList.remove('flex');
+      },
+
+      resumeGame() {
+        if (!this.isPaused) return;
+        this.isPaused = false;
+        this.hidePauseOverlay();
+        SoundEngine.resumeAll();
+        if (this.pendingNext) {
+          const { fn, remaining } = this.pendingNext;
+          this.nextStepTimeout = this.scheduleNext(fn, remaining);
+        } else if (!this.isAnswered) {
+          this.startQuestionTimer();
+        }
+      },
+
+      confirmQuit() {
+        UI.showConfirm('結束本次挑戰', '確定要放棄這一場並返回首頁嗎？', () => {
+          this.goToHome();
+        });
+      },
+
+      stopTimerPanic() {
+        const numEl = document.getElementById('timerNumberText');
+        const wrapperEl = document.getElementById('timerWrapper');
+        numEl.classList.remove('text-rose-600', 'anim-num-tick');
+        wrapperEl.classList.remove('timer-urgent', 'anim-timer-panic');
+      },
+
+      submitAnswer(choice, fromRemote = false) {
+        if (this.isAnswered || this.isPaused || this.currentScreen !== 'GAME') return;
+
+        if (DualScreenSync.role === 'IPAD_REMOTE' && !fromRemote) {
+          DualScreenSync.sendRemoteCommand('REMOTE_ANSWER', { choice });
+        }
+
+        this.isAnswered = true;
+        clearInterval(this.timerInterval);
+        this.stopTimerPanic();
+
+        const q = this.sessionQuestions[this.currentIndex];
+        const isCorrect = choice === q.answer;
+
+        ['A', 'B', 'C'].forEach(letter => {
+          const btn = document.getElementById(`optionBtn${letter}`);
+          btn.disabled = true;
+          if (letter === q.answer) btn.classList.add('option-correct');
+          else if (letter === choice && !isCorrect) btn.classList.add('option-wrong');
+          else btn.classList.add('option-dimmed');
+        });
+
+        const banner = document.getElementById('feedbackBanner');
+        banner.classList.remove('hidden', 'bg-emerald-500', 'text-white', 'border-emerald-200', 'bg-rose-500', 'border-rose-200');
+
+        if (isCorrect) {
+          this.correctCount++;
+          this.combo++;
+          if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+
+          const timeBonus = Math.round((this.timeLeft / this.timeLimit) * 50);
+          const comboBonus = this.combo >= 2 ? (this.combo - 1) * 40 : 0;
+          const gained = 100 + timeBonus + comboBonus;
+          this.score += gained;
+
+          this.updateComboHud();
+
+          banner.textContent = '🎉 答對了！';
+          banner.classList.add('bg-emerald-500', 'text-white', 'border-emerald-200');
+          MascotManager.setGameMood('happy');
+
+          SoundEngine.playCorrect();
+          if (this.combo >= 2) SoundEngine.playCombo(this.combo);
+          CelebrationFX.celebrateCorrect(this.combo);
+
+          DualScreenSync.broadcastState();
+
+          // 答對後進入下一題；若 3 題全對則完美過關
+          this.nextStepTimeout = this.scheduleNext(() => {
+            this.currentIndex++;
+            if (this.currentIndex < this.sessionQuestions.length) {
+              this.loadCurrentQuestion();
+            } else {
+              this.finishGame(true);
+            }
+          }, 2400);
+
+        } else {
+          // 驟死制：錯一題直接結束本次遊戲！
+          this.combo = 0;
+          this.updateComboHud();
+
+          banner.textContent = `❌ 答錯了！正解是 ${q.answer}`;
+          banner.classList.add('bg-rose-500', 'text-white', 'border-rose-200');
+          MascotManager.setGameMood('sad');
+          SoundEngine.playWrong();
+
+          const stage = document.getElementById('gameStageMain');
+          stage.classList.remove('anim-screen-shake');
+          void stage.offsetWidth;
+          stage.classList.add('anim-screen-shake');
+
+          DualScreenSync.broadcastState();
+
+          this.nextStepTimeout = this.scheduleNext(() => {
+            this.finishGame(false, 'WRONG');
+          }, 1900);
+        }
+      },
+
+      handleTimeOut() {
+        if (this.isAnswered) return;
+        this.isAnswered = true;
+        this.combo = 0;
+        this.updateComboHud();
+
+        const q = this.sessionQuestions[this.currentIndex];
+        ['A', 'B', 'C'].forEach(letter => {
+          const btn = document.getElementById(`optionBtn${letter}`);
+          btn.disabled = true;
+          if (letter === q.answer) btn.classList.add('option-correct');
+          else btn.classList.add('option-dimmed');
+        });
+
+        const banner = document.getElementById('feedbackBanner');
+        banner.classList.remove('hidden', 'bg-emerald-500', 'border-emerald-200');
+        banner.textContent = `⏰ 時間到！正解是 ${q.answer}`;
+        banner.classList.add('bg-rose-500', 'text-white', 'border-rose-200');
+        MascotManager.setGameMood('sad');
+        SoundEngine.playWrong();
+
+        DualScreenSync.broadcastState();
+
+        // 驟死制：超時同樣直接結束本次遊戲
+        this.nextStepTimeout = this.scheduleNext(() => {
+          this.finishGame(false, 'TIMEOUT');
+        }, 1900);
+      },
+
+      updateComboHud() {
+        const badge = document.getElementById('hudComboBadge');
+        const text = document.getElementById('hudComboText');
+        const celebBanner = document.getElementById('comboCelebrationBanner');
+
+        if (this.combo >= 2) {
+          badge.classList.remove('hidden');
+          badge.classList.add('inline-flex');
+          badge.classList.remove('anim-combo-pop');
+          void badge.offsetWidth;
+          badge.classList.add('anim-combo-pop');
+
+          if (this.combo >= 3) {
+            text.textContent = `SUPER COMBO x${this.combo}`;
+            celebBanner.textContent = `🔥 SUPER COMBO x${this.combo}！`;
+            celebBanner.classList.remove('hidden');
+          } else {
+            text.textContent = `COMBO x${this.combo}`;
+            celebBanner.classList.add('hidden');
+          }
+        } else {
+          badge.classList.add('hidden');
+          badge.classList.remove('inline-flex');
+          celebBanner.classList.add('hidden');
+        }
+      },
+
+      // 垂直進度條：填滿高度 + 每一關的圓形標記
+      renderProgress(index, total) {
+        const bar = document.getElementById('hudProgressBar');
+        const steps = document.getElementById('hudProgressSteps');
+        if (bar) bar.style.height = `${((index + 1) / Math.max(1, total)) * 100}%`;
+        if (!steps) return;
+        if (total > 12) { steps.innerHTML = ''; return; }
+        steps.innerHTML = Array.from({ length: total }, (_, i) => {
+          const cls = i < index ? 'done' : i === index ? 'current' : 'todo';
+          const label = i < index ? '<i class="fa-solid fa-check"></i>' : (i + 1);
+          return `<div class="rail-marker ${cls}" style="bottom:${((i + 0.5) / total) * 100}%">${label}</div>`;
+        }).join('');
+      },
+
+      finishGame(isCleared, failReason = '') {
+        clearInterval(this.timerInterval);
+        this.switchScreen('RESULT');
+        SoundEngine.stopBgm();
+
+        const total = this.sessionQuestions.length;
+        const accuracy = total > 0 ? Math.round((this.correctCount / total) * 100) : 0;
+        const trophyBox = document.getElementById('resultTrophyBox');
+        const trophyIcon = document.getElementById('resultTrophyIcon');
+        const starsRow = document.getElementById('resultStarsRow');
+
+        if (isCleared) {
+          // 三題全數過關！
+          SoundEngine.playVictoryFanfare();
+          document.getElementById('resultRankTitle').textContent = '醫療智慧大師 · 完美過關！';
+          document.getElementById('resultRankSubtitle').textContent = `太厲害了！連續答對全部 ${total} 道智慧醫療關卡！`;
+
+          trophyBox.className = 'w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-amber-300 to-orange-500 text-white flex items-center justify-center text-4xl sm:text-5xl shadow-xl border-4 border-amber-100 anim-mascot-idle';
+          trophyIcon.className = 'fa-solid fa-trophy';
+
+          starsRow.innerHTML = [1, 2, 3].map(idx => {
+            const size = idx === 2 ? 'text-4xl sm:text-6xl -mt-3' : 'text-3xl sm:text-5xl';
+            return `<i class="fa-solid fa-star text-amber-400 ${size}"></i>`;
+          }).join('');
+
+          CelebrationFX.celebrateVictory();
+          GASConnector.logGameResult(this.score, `${this.correctCount}/${total}`, 'CLEARED');
+        } else {
+          // 驟死淘汰結束本次遊戲，準備換下一位
+          document.getElementById('resultRankTitle').textContent = failReason === 'TIMEOUT' ? '時間到 · 挑戰結束' : '差一點點 · 挑戰結束';
+          document.getElementById('resultRankSubtitle').textContent = `本次共答對 ${this.correctCount} 題，歡迎下一位挑戰者上場！`;
+
+          trophyBox.className = 'w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-sky-400 to-teal-500 text-white flex items-center justify-center text-4xl sm:text-5xl shadow-xl border-4 border-sky-100 anim-mascot-idle';
+          trophyIcon.className = 'fa-solid fa-medal';
+
+          starsRow.innerHTML = [1, 2, 3].map(idx => {
+            const active = idx <= this.correctCount ? 'text-amber-400' : 'text-slate-300';
+            const size = idx === 2 ? 'text-4xl sm:text-6xl -mt-3' : 'text-3xl sm:text-5xl';
+            return `<i class="fa-solid fa-star ${active} ${size}"></i>`;
+          }).join('');
+
+          GASConnector.logGameResult(this.score, `${this.correctCount}/${total}`, failReason || 'ELIMINATED');
+        }
+
+        document.getElementById('resultCorrectCount').textContent = `${this.correctCount} / ${total}`;
+        this.animateNumber('resultAccuracy', 0, accuracy, 700, '%');
+        this.animateNumber('resultMaxCombo', 0, this.maxCombo, 600);
+      },
+
+      animateNumber(elementId, start, end, duration, suffix = '') {
+        const el = document.getElementById(elementId);
+        const startTime = performance.now();
+        const step = (now) => {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = `${Math.round(start + (end - start) * eased)}${suffix}`;
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      },
+
+      goToHome() {
+        clearInterval(this.timerInterval);
+        clearTimeout(this.nextStepTimeout);
+        this.pendingNext = null;
+        this.isPaused = false;
+        this.hidePauseOverlay();
+        SoundEngine.resumeAll();
+        this.switchScreen('HOME');
+        SoundEngine.startBgm('HOME');
+      },
+
+      applySyncedState(state) {
+        if (!state) return;
+        if (state.screen === 'GAME' && this.currentScreen !== 'GAME') this.switchScreen('GAME');
+        else if (state.screen === 'HOME' && this.currentScreen !== 'HOME') this.switchScreen('HOME');
+        if (state.currentQuestion) {
+          document.getElementById('hudQuestionCurrent').textContent = state.questionIndex + 1;
+          document.getElementById('hudQuestionTotal').textContent = state.totalQuestions;
+          this.renderProgress(state.questionIndex, state.totalQuestions);
+          document.getElementById('questionText').textContent = state.currentQuestion.question;
+          document.getElementById('optionTextA').textContent = state.currentQuestion.optionA;
+          document.getElementById('optionTextB').textContent = state.currentQuestion.optionB;
+          document.getElementById('optionTextC').textContent = state.currentQuestion.optionC;
+        }
+      }
+    };
+
+    /* ========================================================================
+       MODULE 9: 管理後台控制器與 Excel 匯入驗證 (AdminModule & ExcelManager)
+       ======================================================================== */
+    const AdminModule = {
+      selectedIds: new Set(),
+      currentFilteredIds: [],
+
+      openLogin() {
+        SoundEngine.playClick();
+        document.getElementById('adminPasswordInput').value = '';
+        document.getElementById('adminLoginError').classList.add('hidden');
+        const modal = document.getElementById('adminLoginModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => document.getElementById('adminPasswordInput').focus(), 100);
+      },
+
+      closeLogin() {
+        const modal = document.getElementById('adminLoginModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      },
+
+      handleLoginSubmit(event) {
+        event.preventDefault();
+        const inputPwd = document.getElementById('adminPasswordInput').value;
+        const settings = StorageManager.getSettings();
+        if (inputPwd === settings.adminPasswordHash) {
+          this.closeLogin();
+          GameEngine.switchScreen('ADMIN');
+          this.refreshAllViews();
+        } else {
+          document.getElementById('adminLoginError').classList.remove('hidden');
+          SoundEngine.playWrong();
+        }
+      },
+
+      logoutAndReturn() {
+        SoundEngine.stopAllPreview();
+        LogoManager.renderAll();
+        MascotManager.renderAll();
+        GameEngine.goToHome();
+      },
+
+      switchTab(tabName) {
+        ['questions', 'branding', 'audio', 'rules', 'gas'].forEach(name => {
+          const cap = name.charAt(0).toUpperCase() + name.slice(1);
+          const panel = document.getElementById(`adminTab${cap}`);
+          const btn = document.getElementById(`tabBtn${cap}`);
+          if (name === tabName) {
+            panel.classList.remove('hidden');
+            btn.className = 'px-4 py-2.5 rounded-xl font-black text-sm bg-sky-600 text-white shadow';
+          } else {
+            panel.classList.add('hidden');
+            btn.className = 'px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200';
+          }
+        });
+      },
+
+      refreshAllViews() {
+        const questions = StorageManager.getQuestions();
+        const settings = StorageManager.getSettings();
+
+        document.getElementById('statTotalQuestions').textContent = questions.length;
+        document.getElementById('statDrawCount').textContent = `${settings.questionsPerGame} 題驟死制`;
+        document.getElementById('statTimeLimit').textContent = `${settings.timePerQuestion} 秒`;
+        document.getElementById('statGasStatus').textContent = settings.gasWebAppUrl
+          ? '已綁定 GAS 雲端試算表'
+          : '本機儲存模式';
+
+        // 填充 LOGO 與吉祥物設定
+        document.getElementById('settingLogo1Url').value = settings.logo1Url || '';
+        document.getElementById('settingLogo1Title').value = settings.logo1Title || '';
+        document.getElementById('settingLogo1Sub').value = settings.logo1Sub || '';
+        document.getElementById('settingLogo2Url').value = settings.logo2Url || '';
+        document.getElementById('settingLogo2Title').value = settings.logo2Title || '';
+        document.getElementById('settingLogo2Sub').value = settings.logo2Sub || '';
+        LogoManager.updatePreview(1);
+        LogoManager.updatePreview(2);
+
+        document.getElementById('settingMascotHome').value = settings.mascotHome || '';
+        document.getElementById('settingMascotIdle').value = settings.mascotIdle || '';
+        document.getElementById('settingMascotHappy').value = settings.mascotHappy || '';
+        document.getElementById('settingMascotSad').value = settings.mascotSad || '';
+        MascotManager.updateAllPreviews();
+
+        // 填充 MP3 音訊槽位
+        SoundEngine.renderAdminSlots();
+
+        // 填充規則與 GAS 設定
+        document.getElementById('settingQuestionCount').value = settings.questionsPerGame;
+        document.getElementById('settingTimePerQuestion').value = settings.timePerQuestion;
+        document.getElementById('settingControlMode').value = settings.controlMode;
+        document.getElementById('settingDisplayRole').value = DualScreenSync.role;
+        document.getElementById('settingGasUrl').value = settings.gasWebAppUrl || '';
+
+        const lastDrawn = StorageManager.getLastDrawnRecord();
+        document.getElementById('lastDrawnRecordLabel').textContent = lastDrawn ? lastDrawn.timestamp : '尚未進行遊戲';
+
+        this.renderQuestionList();
+      },
+
+      renderQuestionList() {
+        const questions = StorageManager.getQuestions();
+        const keyword = (document.getElementById('adminSearchInput')?.value || '').trim().toLowerCase();
+        const tbody = document.getElementById('adminQuestionTableBody');
+
+        const filtered = questions.filter(q =>
+          q.question.toLowerCase().includes(keyword) ||
+          q.optionA.toLowerCase().includes(keyword) ||
+          q.optionB.toLowerCase().includes(keyword) ||
+          q.optionC.toLowerCase().includes(keyword)
+        );
+
+        this.currentFilteredIds = filtered.map(q => q.id);
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-bold">${questions.length === 0 ? '題庫是空的，請新增或匯入題目' : '查無符合條件的題目'}</td></tr>`;
+          this.updateBulkUi();
+          return;
+        }
+
+        tbody.innerHTML = filtered.map((q, idx) => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3"><input type="checkbox" class="w-5 h-5 accent-rose-600 cursor-pointer" ${this.selectedIds.has(q.id) ? 'checked' : ''} onchange="AdminModule.toggleSelect('${q.id}', this.checked)" /></td>
+            <td class="p-3 font-display font-black text-slate-400">${idx + 1}</td>
+            <td class="p-3 font-bold text-slate-800 max-w-md">${this.escapeHtml(q.question)}</td>
+            <td class="p-3 text-xs space-y-1">
+              <div class="text-sky-700 font-bold"><span class="inline-block w-5 font-black">A:</span>${this.escapeHtml(q.optionA)}</div>
+              <div class="text-teal-700 font-bold"><span class="inline-block w-5 font-black">B:</span>${this.escapeHtml(q.optionB)}</div>
+              <div class="text-orange-700 font-bold"><span class="inline-block w-5 font-black">C:</span>${this.escapeHtml(q.optionC)}</div>
+            </td>
+            <td class="p-3 text-center">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg font-display font-black text-white ${q.answer === 'A' ? 'bg-sky-600' : q.answer === 'B' ? 'bg-teal-600' : 'bg-orange-500'}">
+                ${q.answer}
+              </span>
+            </td>
+            <td class="p-3 text-center space-x-1">
+              <button onclick="AdminModule.editQuestion('${q.id}')" class="px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 font-black text-xs">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button onclick="AdminModule.deleteQuestion('${q.id}')" class="px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 font-black text-xs">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+        this.updateBulkUi();
+      },
+
+      toggleSelect(id, checked) {
+        checked ? this.selectedIds.add(id) : this.selectedIds.delete(id);
+        this.updateBulkUi();
+      },
+
+      toggleSelectAll(checked) {
+        this.currentFilteredIds.forEach(id => checked ? this.selectedIds.add(id) : this.selectedIds.delete(id));
+        this.renderQuestionList();
+      },
+
+      updateBulkUi() {
+        const n = this.selectedIds.size;
+        const cnt = document.getElementById('bulkSelectedCount');
+        const btn = document.getElementById('bulkDeleteBtn');
+        const all = document.getElementById('selectAllQuestions');
+        if (cnt) cnt.textContent = n;
+        if (btn) {
+          btn.disabled = n === 0;
+          btn.classList.toggle('opacity-40', n === 0);
+          btn.classList.toggle('cursor-not-allowed', n === 0);
+        }
+        if (all) {
+          const ids = this.currentFilteredIds;
+          const sel = ids.filter(id => this.selectedIds.has(id)).length;
+          all.checked = ids.length > 0 && sel === ids.length;
+          all.indeterminate = sel > 0 && sel < ids.length;
+        }
+      },
+
+      deleteSelected() {
+        const ids = [...this.selectedIds];
+        if (!ids.length) return;
+        UI.showConfirm('批次刪除題目', `確定要一次刪除選取的 ${ids.length} 道題目嗎？此動作無法復原。`, () => {
+          StorageManager.saveQuestions(StorageManager.getQuestions().filter(q => !this.selectedIds.has(q.id)));
+          this.selectedIds.clear();
+          this.refreshAllViews();
+          UI.showToast(`已刪除 ${ids.length} 道題目`, 'info');
+        });
+      },
+
+      clearAllQuestions() {
+        const total = StorageManager.getQuestions().length;
+        if (!total) { UI.showToast('題庫已經是空的', 'info'); return; }
+        UI.showConfirm('清空整個題庫', `確定要一次刪除全部 ${total} 道題目嗎？此動作無法復原（之後可匯入 Excel 或重置為預設題庫）。`, () => {
+          StorageManager.saveQuestions([]);
+          this.selectedIds.clear();
+          this.refreshAllViews();
+          UI.showToast('題庫已全部清空', 'info');
+        });
+      },
+
+      saveQuestionForm(event) {
+        event.preventDefault();
+        const editId = document.getElementById('editQuestionId').value;
+        const question = document.getElementById('inputQText').value.trim();
+        const optionA = document.getElementById('inputOptA').value.trim();
+        const optionB = document.getElementById('inputOptB').value.trim();
+        const optionC = document.getElementById('inputOptC').value.trim();
+        const answer = document.querySelector('input[name="correctAnsRadio"]:checked').value;
+
+        if (!question || !optionA || !optionB || !optionC) return;
+
+        const questions = StorageManager.getQuestions();
+        if (editId) {
+          const idx = questions.findIndex(item => item.id === editId);
+          if (idx !== -1) questions[idx] = { ...questions[idx], question, optionA, optionB, optionC, answer };
+          UI.showToast('題目已更新！', 'success');
+        } else {
+          questions.unshift({
+            id: 'q_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            question, optionA, optionB, optionC, answer
+          });
+          UI.showToast('新題目已新增！', 'success');
+        }
+
+        StorageManager.saveQuestions(questions);
+        this.resetQuestionForm();
+        this.refreshAllViews();
+      },
+
+      editQuestion(id) {
+        const q = StorageManager.getQuestions().find(item => item.id === id);
+        if (!q) return;
+        document.getElementById('editQuestionId').value = q.id;
+        document.getElementById('inputQText').value = q.question;
+        document.getElementById('inputOptA').value = q.optionA;
+        document.getElementById('inputOptB').value = q.optionB;
+        document.getElementById('inputOptC').value = q.optionC;
+        document.querySelector(`input[name="correctAnsRadio"][value="${q.answer}"]`).checked = true;
+        document.getElementById('questionFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-500"></i> 編輯現有題目`;
+        document.getElementById('cancelEditBtn').classList.remove('hidden');
+      },
+
+      resetQuestionForm() {
+        document.getElementById('editQuestionId').value = '';
+        document.getElementById('questionEditorForm').reset();
+        document.getElementById('questionFormTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-sky-600"></i> 新增智慧醫療題目`;
+        document.getElementById('cancelEditBtn').classList.add('hidden');
+      },
+
+      deleteQuestion(id) {
+        const questions = StorageManager.getQuestions();
+        UI.showConfirm('刪除題目', '確定要刪除此題目嗎？', () => {
+          StorageManager.saveQuestions(questions.filter(q => q.id !== id));
+          this.refreshAllViews();
+          UI.showToast('題目已刪除', 'info');
+        });
+      },
+
+      saveGameSettings() {
+        const questions = StorageManager.getQuestions();
+        const settings = StorageManager.getSettings();
+
+        let qCount = parseInt(document.getElementById('settingQuestionCount').value, 10);
+        if (isNaN(qCount) || qCount < 1) qCount = 3;
+        if (qCount > questions.length) qCount = Math.max(1, questions.length);
+
+        let tLimit = parseInt(document.getElementById('settingTimePerQuestion').value, 10);
+        if (isNaN(tLimit) || tLimit < 5) tLimit = 15;
+
+        const newPwd = document.getElementById('settingNewAdminPwd').value.trim();
+        settings.questionsPerGame = qCount;
+        settings.timePerQuestion = tLimit;
+        settings.controlMode = document.getElementById('settingControlMode').value;
+        if (newPwd.length >= 4) {
+          settings.adminPasswordHash = newPwd;
+          document.getElementById('settingNewAdminPwd').value = '';
+        }
+
+        StorageManager.saveSettings(settings);
+        this.refreshAllViews();
+        UI.showToast('遊戲規則設定已保存！', 'success');
+      },
+
+      escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+    };
+
+    const ExcelManager = {
+      stagedValidRows: [],
+
+      downloadTemplate() {
+        if (typeof XLSX === 'undefined') return;
+        const rows = [
+          ['題目', 'A 選項', 'B 選項', 'C 選項', '正確答案'],
+          ['彰基智慧藥局主要透過哪項技術提升給藥安全？', '手寫處方簽', '自動化調劑與條碼核對', '人工目測比對', 'B']
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '智慧醫療題庫範本');
+        XLSX.writeFile(wb, '彰基智慧醫療大挑戰_匯入範本.xlsx');
+      },
+
+      exportCurrentBank() {
+        if (typeof XLSX === 'undefined') return;
+        const questions = StorageManager.getQuestions();
+        const rows = [
+          ['題目', 'A 選項', 'B 選項', 'C 選項', '正確答案'],
+          ...questions.map(q => [q.question, q.optionA, q.optionB, q.optionC, q.answer])
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '目前題庫');
+        XLSX.writeFile(wb, `彰基智慧醫療題庫_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      },
+
+      handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const rawRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: '' });
+            this.validateAndPreviewRows(rawRows);
+          } catch {
+            UI.showToast('Excel 檔案解析失敗', 'error');
+          }
+          event.target.value = '';
+        };
+        reader.readAsArrayBuffer(file);
+      },
+
+      validateAndPreviewRows(rawRows) {
+        this.stagedValidRows = [];
+        const errors = [];
+        const existing = StorageManager.getQuestions().map(q => q.question.trim().toLowerCase());
+        const seen = new Set();
+
+        let startIndex = 0;
+        if (rawRows[0] && rawRows[0].join('|').includes('題目')) startIndex = 1;
+
+        for (let i = startIndex; i < rawRows.length; i++) {
+          const rowNum = i + 1;
+          const row = rawRows[i];
+          if (!row || row.every(c => String(c).trim() === '')) continue;
+
+          const question = String(row[0] || '').trim();
+          const optionA = String(row[1] || '').trim();
+          const optionB = String(row[2] || '').trim();
+          const optionC = String(row[3] || '').trim();
+          const answer = String(row[4] || '').trim().toUpperCase();
+
+          if (!question || !optionA || !optionB || !optionC || !answer) {
+            errors.push(`第 ${rowNum} 列：欄位不可為空白`);
+            continue;
+          }
+          if (!['A', 'B', 'C'].includes(answer)) {
+            errors.push(`第 ${rowNum} 列：答案「${answer}」必須為 A、B 或 C`);
+            continue;
+          }
+          const key = question.toLowerCase();
+          if (existing.includes(key) || seen.has(key)) {
+            errors.push(`第 ${rowNum} 列：題目重複`);
+            continue;
+          }
+          seen.add(key);
+          this.stagedValidRows.push({ rowNum, question, optionA, optionB, optionC, answer });
+        }
+
+        document.getElementById('excelPreviewContainer').classList.remove('hidden');
+        document.getElementById('excelValidCount').textContent = this.stagedValidRows.length;
+        document.getElementById('excelErrorCount').textContent = errors.length;
+
+        const errBox = document.getElementById('excelErrorLogBox');
+        if (errors.length > 0) {
+          errBox.classList.remove('hidden');
+          errBox.innerHTML = errors.map(e => `<div>• ${AdminModule.escapeHtml(e)}</div>`).join('');
+        } else {
+          errBox.classList.add('hidden');
+        }
+
+        document.getElementById('excelValidPreviewBody').innerHTML = this.stagedValidRows.map(r => `
+          <tr>
+            <td class="p-2 text-slate-400">${r.rowNum}</td>
+            <td class="p-2 font-bold">${AdminModule.escapeHtml(r.question)}</td>
+            <td class="p-2">${AdminModule.escapeHtml(r.optionA)}</td>
+            <td class="p-2">${AdminModule.escapeHtml(r.optionB)}</td>
+            <td class="p-2">${AdminModule.escapeHtml(r.optionC)}</td>
+            <td class="p-2 font-black text-sky-700">${r.answer}</td>
+          </tr>
+        `).join('');
+      },
+
+      commitImport() {
+        if (this.stagedValidRows.length === 0) return;
+        const current = StorageManager.getQuestions();
+        const added = this.stagedValidRows.map(r => ({
+          id: 'q_xls_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          question: r.question,
+          optionA: r.optionA,
+          optionB: r.optionB,
+          optionC: r.optionC,
+          answer: r.answer
+        }));
+        StorageManager.saveQuestions([...current, ...added]);
+        UI.showToast(`成功匯入 ${added.length} 題新題目！`, 'success');
+        this.stagedValidRows = [];
+        document.getElementById('excelPreviewContainer').classList.add('hidden');
+        AdminModule.refreshAllViews();
+      }
+    };
+
+    /* ========================================================================
+       MODULE 10: UI 彈窗與鍵盤監聽
+       ======================================================================== */
+    const UI = {
+      showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const el = document.createElement('div');
+        const bgClass = type === 'success' ? 'bg-emerald-600 border-emerald-300'
+          : type === 'error' ? 'bg-rose-600 border-rose-300'
+          : 'bg-slate-800 border-slate-600';
+        el.className = `${bgClass} text-white px-5 py-3 rounded-2xl shadow-xl border-2 font-black text-sm flex items-center gap-2 anim-combo-pop`;
+        el.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info'}"></i><span>${message}</span>`;
+        container.appendChild(el);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2600);
+      },
+
+      showConfirm(title, message, onConfirm) {
+        const modal = document.getElementById('confirmModal');
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmMessage').textContent = message;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+        const cleanup = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+        okBtn.onclick = () => { cleanup(); onConfirm(); };
+        cancelBtn.onclick = cleanup;
+      }
+    };
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      if (GameEngine.currentScreen === 'GAME' && (e.key === 'Escape' || e.key.toUpperCase() === 'P')) {
+        e.preventDefault();
+        GameEngine.isPaused ? GameEngine.resumeGame() : GameEngine.pauseGame();
+        return;
+      }
+
+      if (GameEngine.currentScreen === 'GAME' && !GameEngine.isAnswered && !GameEngine.isPaused) {
+        const settings = StorageManager.getSettings();
+        if (settings.controlMode === 'TOUCH_ONLY') return;
+        const key = e.key.toUpperCase();
+        if (key === 'A' || key === 'B' || key === 'C') {
+          e.preventDefault();
+          GameEngine.submitAnswer(key);
+        }
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      StorageManager.init();
+      LogoManager.renderAll();
+      MascotManager.renderAll();
+      DualScreenSync.init();
+      BackgroundAndFX.init();
+      GASConnector.syncOnBoot();
+    });
+  </script>
+</body>
+</html>
