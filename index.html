@@ -2,7 +2,12 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="醫療大挑戰" />
+  <meta name="theme-color" content="#e0f2fe" />
   <title>彰基智慧醫療大挑戰 | Smart Medical Challenge</title>
 
   <!-- Google Fonts -->
@@ -242,14 +247,14 @@
     .timer-urgent{border-color:#fb7185 !important;background:#fff1f2 !important;
       box-shadow:0 0 0 10px rgba(244,63,94,.22),0 0 60px rgba(244,63,94,.6) !important}
     @keyframes timerPanic{
-      0%,100%{transform:scale(1.32) translate(0,0) rotate(0deg)}
-      12%{transform:scale(1.44) translate(-5px,3px) rotate(-3deg)}
-      25%{transform:scale(1.30) translate(6px,-4px) rotate(3deg)}
-      37%{transform:scale(1.46) translate(-6px,-2px) rotate(-2deg)}
-      50%{transform:scale(1.32) translate(5px,4px) rotate(2deg)}
-      62%{transform:scale(1.48) translate(-4px,-4px) rotate(-3deg)}
-      75%{transform:scale(1.30) translate(6px,2px) rotate(3deg)}
-      87%{transform:scale(1.44) translate(-5px,-3px) rotate(-2deg)}}
+      0%,100%{transform:scale(1.25) translate(0,0) rotate(0deg)}
+      12%{transform:scale(1.35) translate(-5px,3px) rotate(-3deg)}
+      25%{transform:scale(1.24) translate(6px,-4px) rotate(3deg)}
+      37%{transform:scale(1.38) translate(-6px,-2px) rotate(-2deg)}
+      50%{transform:scale(1.25) translate(5px,4px) rotate(2deg)}
+      62%{transform:scale(1.40) translate(-4px,-4px) rotate(-3deg)}
+      75%{transform:scale(1.24) translate(6px,2px) rotate(3deg)}
+      87%{transform:scale(1.35) translate(-5px,-3px) rotate(-2deg)}}
     .anim-timer-panic{animation:timerPanic .5s linear infinite;z-index:20}
     @keyframes numTick{0%{transform:scale(1.5)}100%{transform:scale(1)}}
     .anim-num-tick{animation:numTick .35s ease-out}
@@ -259,7 +264,8 @@
       border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:900;
       font-size:clamp(1rem,2.6vh,1.6rem);z-index:2;transition:all .4s var(--ease-bounce)}
     .rail-marker.done{background:#10b981;color:#fff;border:3px solid #a7f3d0}
-    .rail-marker.current{background:#f97316;color:#fff;border:4px solid #fed7aa;box-shadow:0 0 0 6px rgba(249,115,22,.25);animation:pulseUrgent 1s ease-in-out infinite}
+    .rail-marker.current{background:#f97316;color:#fff;border:4px solid #fed7aa;box-shadow:0 0 0 6px rgba(249,115,22,.25);animation:markerPulse 1s ease-in-out infinite}
+    @keyframes markerPulse{0%,100%{transform:translate(-50%,50%) scale(1)}50%{transform:translate(-50%,50%) scale(1.15)}}
     .rail-marker.todo{background:#fff;color:#94a3b8;border:3px solid #cbd5e1}
 
     /* 答對慶祝 */
@@ -299,6 +305,85 @@
     @keyframes charBounce{0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}25%{transform:translateY(-.14em) rotate(3deg) scale(1.1)}50%{transform:translateY(0) rotate(-2deg) scale(1)}}
     .title-spark{position:absolute;font-size:.42em;animation:twinkle 1.8s ease-in-out infinite;pointer-events:none}
     @keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.45}50%{transform:scale(1.25) rotate(25deg);opacity:1}}
+
+    /* ===== v5：多裝置版型（桌機 / iPad / Android 平板 / 手機；直式、橫式皆可） ===== */
+    :root{
+      --mascot:clamp(90px,min(36vh,22vw),460px);
+      --timer:clamp(84px,min(25vh,17vw),310px);
+    }
+    @media (orientation:portrait){
+      :root{--mascot:clamp(110px,min(20vh,34vw),320px);--timer:clamp(100px,min(18vh,32vw),270px)}
+    }
+    html{-webkit-text-size-adjust:100%;overscroll-behavior:none}
+    body{overscroll-behavior:none;touch-action:manipulation;-webkit-touch-callout:none}
+    body.game-viewport-lock{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:hidden}
+    #appRoot{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+    @media (hover:none){.btn-3d:hover:not(:active){transform:none;filter:none}}
+
+    /* 首頁 */
+    .home-section{padding:clamp(.5rem,2vh,2rem) clamp(.75rem,2.5vw,2rem);max-width:1920px;overflow-y:auto}
+    .home-main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(.75rem,3vh,2rem);padding:.25rem 0}
+    .home-mascot{width:clamp(180px,min(42vh,78vw),560px);height:clamp(180px,min(42vh,78vw),560px)}
+    .home-title{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:48rem}
+    .home-h1{font-size:clamp(2rem,min(10vw,7vh),6.5rem);margin-bottom:clamp(.75rem,3vh,2.2rem)}
+    .home-start{padding:clamp(.7rem,2.4vh,2.2rem) clamp(1.8rem,6vw,5.5rem);font-size:clamp(1.5rem,min(7vw,5.5vh),3.8rem)}
+    .title-line2{justify-content:center}
+    .logo-img-home{height:clamp(40px,min(11vh,9vw),128px);max-width:44vw;object-fit:contain}
+    .logo-img-game{height:clamp(30px,min(8.5vh,7vw),96px);max-width:28vw;object-fit:contain}
+    .logo-icon-home{width:clamp(40px,min(10vh,9vw),88px);height:clamp(40px,min(10vh,9vw),88px);font-size:clamp(1.1rem,min(4.2vh,4vw),2.4rem)}
+    .logo-title-home{font-size:clamp(.95rem,min(3.4vh,3.4vw),1.9rem)}
+    .logo-sub-home{font-size:clamp(.6rem,min(1.9vh,1.9vw),.9rem)}
+    .logo-icon-game{width:clamp(26px,7vh,60px);height:clamp(26px,7vh,60px);font-size:clamp(.85rem,3.2vh,1.8rem)}
+    .logo-title-game{font-size:clamp(.72rem,2.6vh,1.4rem);max-width:24vw}
+    .logo-sub-game{font-size:clamp(.45rem,1.5vh,.72rem);max-width:24vw}
+    .logo-bar{padding:clamp(.25rem,1vh,.75rem) clamp(.6rem,2vw,1.75rem);gap:clamp(.5rem,1.5vw,1.5rem);min-width:0}
+    .pause-btn{white-space:nowrap;padding:clamp(.4rem,1.4vh,1.1rem) clamp(.8rem,1.8vw,2rem);font-size:clamp(.95rem,min(2.4vh,3.4vw),1.9rem)}
+    @media (max-width:520px){.logo-img-game{max-width:23vw}.pause-label{display:none}}
+    @media (orientation:landscape){
+      .home-section{overflow:hidden}
+      .home-main{flex-direction:row;gap:clamp(1rem,5vw,5rem)}
+      .home-mascot{width:clamp(130px,min(56vh,40vw),720px);height:clamp(130px,min(56vh,40vw),720px)}
+      .home-title{align-items:flex-start;text-align:left}
+      .home-h1{font-size:clamp(1.8rem,min(5.6vw,11vh),6.5rem)}
+      .home-start{font-size:clamp(1.3rem,min(3.6vw,7vh),3.8rem)}
+      .title-line2{justify-content:flex-start}
+    }
+    @media (orientation:landscape) and (max-height:430px){
+      .home-section{overflow-y:auto}
+      .home-badge{display:none}
+    }
+
+    /* 挑戰頁 */
+    .game-section{gap:clamp(.4rem,1.4vw,1.5rem);padding:clamp(.4rem,1.6vh,1.5rem) clamp(.5rem,1.6vw,1.5rem);max-width:1920px;overflow-y:auto}
+    .game-col{gap:clamp(.35rem,1.3vh,1rem)}
+    .q-card{padding:clamp(.5rem,1.8vh,2rem) clamp(.9rem,3vw,3.5rem)}
+    .q-text{font-size:clamp(1.3rem,min(4.6vw,3.2vh),3rem)}
+    .stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,1.8vh,2rem);align-items:center}
+    .stage-mascot{grid-column:1;grid-row:1}
+    .stage-timer{grid-column:2;grid-row:1}
+    .stage-options{grid-column:1 / -1;grid-row:2;gap:clamp(.45rem,1.5vh,1.4rem)}
+    .mascot-box{width:var(--mascot);height:var(--mascot);max-width:100%}
+    .timer-box{width:var(--timer);height:var(--timer)}
+    .timer-num{font-size:calc(var(--timer)*.36)}
+    .timer-label{font-size:calc(var(--timer)*.085)}
+    .rail-box{width:clamp(64px,8.5vw,136px)}
+    .rail-count{font-size:clamp(1.2rem,min(4.5vh,3.2vw),3rem)}
+    .rail-track{width:clamp(34px,5.8vh,56px);min-height:90px}
+    .opt-btn{min-height:clamp(72px,11.5vh,150px)}
+    .opt-letter{width:clamp(40px,min(9vh,9vw),96px);height:clamp(40px,min(9vh,9vw),96px);font-size:clamp(1.4rem,min(5vh,6vw),3.4rem)}
+    .opt-text{font-size:clamp(1.3rem,min(4.4vw,3.6vh),2.7rem)}
+    @media (orientation:landscape){
+      .game-section{overflow-y:auto}
+      .q-text{font-size:clamp(1.15rem,min(3vw,5vh),3.3rem)}
+      .stage-grid{grid-template-columns:minmax(0,1fr) minmax(0,2.3fr) minmax(0,1fr);gap:clamp(.5rem,1.8vw,1.6rem)}
+      .stage-mascot{grid-column:1;grid-row:1}
+      .stage-options{grid-column:2;grid-row:1}
+      .stage-timer{grid-column:3;grid-row:1}
+      .opt-btn{min-height:clamp(56px,15.5vh,176px)}
+      .opt-text{font-size:clamp(1.1rem,min(2.6vw,4.6vh),2.7rem)}
+    }
+    @media (orientation:landscape) and (min-height:430px){.game-section{overflow:hidden}}
+    .rail-marker{width:clamp(28px,4.8vh,48px);height:clamp(28px,4.8vh,48px);font-size:clamp(.8rem,2.2vh,1.5rem)}
   </style>
 </head>
 <body class="game-viewport-lock">
@@ -351,8 +436,15 @@
   <!-- ==========================================================================
        右下角低調「設定」齒輪按鈕 (全遊戲頁面常駐，點擊輸入密碼進入後台)
        ========================================================================== -->
+  <button id="fullscreenBtn" onclick="FullscreenHelper.toggle()" aria-label="全螢幕"
+    class="fixed z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200"
+    style="bottom:max(1rem,env(safe-area-inset-bottom));left:max(1rem,env(safe-area-inset-left))">
+    <i class="fa-solid fa-expand"></i>
+  </button>
+
   <button id="cornerSettingsTrigger" onclick="AdminModule.openLogin()" aria-label="設定"
-    class="fixed bottom-4 right-4 z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200 hover:rotate-90">
+    style="bottom:max(1rem,env(safe-area-inset-bottom));left:max(4.25rem,calc(env(safe-area-inset-left) + 3.25rem))"
+    class="fixed z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200 hover:rotate-90">
     <i class="fa-solid fa-gear"></i>
   </button>
 
@@ -364,16 +456,16 @@
     <!-- ========================================================================
          1. 首頁 (HOME SCREEN)：雙 LOGO 置中放大、Q 版人物放大
          ======================================================================== -->
-    <section id="screenHome" class="w-full h-full flex flex-col justify-between gap-2 p-4 sm:p-6 lg:p-8 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
+    <section id="screenHome" class="home-section w-full h-full flex flex-col justify-between gap-2 mx-auto">
       <header class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 shrink-0">
         <div id="homeLogo1Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
         <div class="hidden sm:block w-1.5 h-14 lg:h-20 rounded-full bg-gradient-to-b from-sky-300 to-teal-300"></div>
         <div id="homeLogo2Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
       </header>
 
-      <main class="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-20 py-2">
+      <main class="home-main flex-1 min-h-0">
         <!-- 超大 Q 版吉祥物 -->
-        <div class="relative flex items-center justify-center shrink-0" style="width:clamp(260px,56vh,720px);height:clamp(260px,56vh,720px);max-width:90vw">
+        <div class="home-mascot relative flex items-center justify-center shrink-0">
           <div class="absolute inset-[-8%] rounded-full bg-gradient-to-br from-sky-300/45 via-teal-200/35 to-amber-200/45 blur-2xl"></div>
           <span class="float-badge" style="top:2%;left:-4%;color:#0284C7"><i class="fa-solid fa-stethoscope"></i></span>
           <span class="float-badge" style="top:8%;right:-4%;color:#EF4444;animation-delay:.6s"><i class="fa-solid fa-heart-pulse"></i></span>
@@ -386,19 +478,19 @@
         </div>
 
         <!-- 標題與開始按鈕 -->
-        <div class="text-center lg:text-left max-w-3xl flex flex-col items-center lg:items-start">
-          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
+        <div class="home-title">
+          <div class="home-badge inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
             <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
             SMART MEDICAL CHALLENGE
           </div>
-          <h1 class="relative w-fit font-black tracking-tight leading-none mb-9" style="font-size:clamp(2.6rem,5.6vw,6.5rem)">
+          <h1 class="home-h1 relative w-fit font-black tracking-tight leading-none">
             <span class="gradient-title-text block leading-tight pb-1">彰基智慧醫療</span>
-            <span class="title-line2 justify-center lg:justify-start" aria-label="大挑戰"><span class="title-char">大</span><span class="title-char">挑</span><span class="title-char">戰</span></span>
+            <span class="title-line2" aria-label="大挑戰"><span class="title-char">大</span><span class="title-char">挑</span><span class="title-char">戰</span></span>
             <span class="title-spark" style="top:48%;right:4%">✨</span>
             <span class="title-spark" style="top:78%;right:15%;animation-delay:.6s">⭐</span>
             <span class="title-spark" style="top:-6%;left:-3%;animation-delay:1.1s">✨</span>
           </h1>
-          <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange rounded-[2rem] w-full sm:w-auto group" style="padding:clamp(1.1rem,3vh,2.4rem) clamp(2.5rem,6vw,6rem);font-size:clamp(1.8rem,3.8vw,3.8rem)">
+          <button onclick="GameEngine.startNewGame()" class="home-start btn-3d btn-3d-orange rounded-[2rem] group">
             <i class="fa-solid fa-play text-amber-200 group-hover:scale-125 transition-transform"></i>
             <span>開始挑戰</span>
           </button>
@@ -410,30 +502,30 @@
     <!-- ========================================================================
          2. 遊戲答題舞台：題目在上、答案置中、右側垂直進度條
          ======================================================================== -->
-    <section id="screenGame" class="hidden w-full h-full flex-row gap-3 sm:gap-5 p-3 sm:p-5 lg:p-6 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
+    <section id="screenGame" class="game-section hidden w-full h-full flex-row mx-auto">
       <!-- 左側主區 -->
-      <div class="flex-1 min-w-0 min-h-0 flex flex-col gap-3 sm:gap-4">
+      <div class="game-col flex-1 min-w-0 min-h-0 flex flex-col">
         <!-- 左上：雙 LOGO（放大） + 連擊徽章 -->
-        <header class="flex items-center justify-between gap-3 shrink-0">
-          <div class="flex items-center gap-3 sm:gap-6 bg-white/90 backdrop-blur-md px-4 sm:px-7 py-2 sm:py-3 rounded-3xl shadow-md border-2 border-white">
-            <div id="gameLogo1Container" class="flex items-center"></div>
-            <div class="w-0.5 h-10 sm:h-14 bg-slate-200"></div>
-            <div id="gameLogo2Container" class="flex items-center"></div>
+        <header class="flex items-center justify-between gap-2 shrink-0 min-w-0">
+          <div class="logo-bar flex items-center bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white">
+            <div id="gameLogo1Container" class="flex items-center min-w-0"></div>
+            <div class="w-0.5 bg-slate-200 shrink-0" style="height:clamp(24px,6vh,56px)"></div>
+            <div id="gameLogo2Container" class="flex items-center min-w-0"></div>
           </div>
           <div class="flex items-center gap-3 sm:gap-4">
             <div id="hudComboBadge" class="hidden px-5 sm:px-8 py-2 sm:py-3 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-display font-black text-xl sm:text-3xl shadow-lg border-2 border-yellow-200 items-center gap-2">
               <i class="fa-solid fa-fire text-yellow-200"></i>
               <span id="hudComboText">COMBO x2</span>
             </div>
-            <button id="pauseBtn" onclick="GameEngine.pauseGame()" aria-label="暫停" class="btn-3d btn-3d-blue" style="padding:clamp(.6rem,1.6vh,1.1rem) clamp(1.1rem,2vw,2rem);font-size:clamp(1.1rem,2.4vh,1.9rem)">
-              <i class="fa-solid fa-pause"></i><span>暫停</span>
+            <button id="pauseBtn" onclick="GameEngine.pauseGame()" aria-label="暫停" class="pause-btn btn-3d btn-3d-blue shrink-0">
+              <i class="fa-solid fa-pause"></i><span class="pause-label">暫停</span>
             </button>
           </div>
         </header>
 
         <!-- 題目（最上方） -->
-        <div id="questionCard" class="stage-card shrink-0 w-full px-6 py-5 sm:px-10 sm:py-7 lg:px-14 lg:py-8 flex flex-col justify-center relative overflow-hidden">
-          <h2 id="questionText" class="font-black text-slate-800 leading-snug tracking-tight text-center" style="font-size:clamp(1.6rem,3vw,3.3rem)">
+        <div id="questionCard" class="q-card stage-card shrink-0 w-full flex flex-col justify-center relative overflow-hidden">
+          <h2 id="questionText" class="q-text font-black text-slate-800 leading-snug tracking-tight text-center">
             題目載入中...
           </h2>
           <div id="comboCelebrationBanner" class="hidden mt-4 py-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-display font-black text-center text-xl sm:text-3xl shadow-lg anim-combo-pop">
@@ -442,19 +534,19 @@
         </div>
 
         <!-- 中央舞台：吉祥物（左）｜ A B C 答案（置中）｜ 倒數計時（右） -->
-        <main id="gameStageMain" class="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-[1fr_minmax(0,2.3fr)_1fr] gap-4 lg:gap-8 items-center">
+        <main id="gameStageMain" class="stage-grid flex-1 min-h-0">
           <!-- 吉祥物 -->
-          <div class="relative col-start-1 row-start-1 flex items-center justify-center">
+          <div class="stage-mascot relative flex items-center justify-center">
             <div id="feedbackBanner" class="hidden absolute -top-4 sm:-top-6 whitespace-nowrap px-5 py-2 rounded-2xl font-black text-xl sm:text-3xl shadow-lg border-2 z-20 anim-combo-pop">
               答對了！
             </div>
-            <div id="gameMascotWrapper" class="flex items-center justify-center anim-mascot-idle" style="width:clamp(170px,38vh,460px);height:clamp(170px,38vh,460px);max-width:100%">
+            <div id="gameMascotWrapper" class="mascot-box flex items-center justify-center anim-mascot-idle">
               <div id="gameMascotContainer" class="w-full h-full flex items-center justify-center drop-shadow-xl"></div>
             </div>
           </div>
 
           <!-- 答案 A / B / C -->
-          <div id="optionsContainer" class="col-span-2 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-start-1 flex flex-col gap-3 sm:gap-5 w-full">
+          <div id="optionsContainer" class="stage-options flex flex-col w-full">
             <button id="optionBtnA" onclick="GameEngine.submitAnswer('A')" class="btn-3d btn-3d-blue opt-btn">
               <span class="opt-letter">A</span>
               <span id="optionTextA" class="opt-text">選項 A</span>
@@ -470,15 +562,15 @@
           </div>
 
           <!-- 倒數計時器（放大；最後 5 秒縮放震動） -->
-          <div class="col-start-2 row-start-1 lg:col-start-3 flex items-center justify-center">
-            <div id="timerWrapper" class="relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100" style="width:clamp(140px,28vh,310px);height:clamp(140px,28vh,310px)">
+          <div class="stage-timer flex items-center justify-center">
+            <div id="timerWrapper" class="timer-box relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100">
               <svg class="w-full h-full -rotate-90 transform p-2" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" stroke-width="11" />
                 <circle id="timerCircleProgress" cx="60" cy="60" r="52" fill="none" stroke="#0284C7" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.72" stroke-dashoffset="0" class="transition-all duration-200" />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="font-black text-slate-400" style="font-size:clamp(.85rem,2.2vh,1.5rem)">TIME</span>
-                <span id="timerNumberText" class="font-display font-black text-slate-800 leading-none" style="font-size:clamp(3.4rem,11vh,8rem)">15</span>
+                <span class="timer-label font-black text-slate-400">TIME</span>
+                <span id="timerNumberText" class="timer-num font-display font-black text-slate-800 leading-none">15</span>
               </div>
             </div>
           </div>
@@ -486,12 +578,12 @@
       </div>
 
       <!-- 最右側：垂直關卡進度條 -->
-      <aside id="progressRail" class="shrink-0 w-[92px] sm:w-[116px] lg:w-[136px] flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
+      <aside id="progressRail" class="rail-box shrink-0 flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
         <div class="font-black text-slate-700 text-center leading-tight" style="font-size:clamp(.95rem,2.2vh,1.4rem)">關卡進度</div>
-        <div class="font-display font-black text-sky-600 leading-none text-center" style="font-size:clamp(1.6rem,4.5vh,3rem)">
+        <div class="rail-count font-display font-black text-sky-600 leading-none text-center">
           <span id="hudQuestionCurrent">1</span><span class="text-slate-400" style="font-size:.6em"> / <span id="hudQuestionTotal">3</span></span>
         </div>
-        <div class="relative flex-1 min-h-[140px] w-11 sm:w-14">
+        <div class="rail-track relative flex-1">
           <div class="absolute inset-0 bg-slate-200 rounded-full shadow-inner overflow-hidden">
             <div id="hudProgressBar" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sky-400 via-teal-400 to-emerald-400 rounded-full transition-all duration-700" style="height:33.3%"></div>
           </div>
@@ -503,7 +595,7 @@
     <!-- ========================================================================
          3. 成績結算舞台 (RESULT STAGE - 過關慶祝 & 驟死淘汰換下一位)
          ======================================================================== -->
-    <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto">
+    <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto overflow-y-auto">
       <div class="stage-card w-full p-6 sm:p-10 text-center relative overflow-hidden">
         <!-- 獎盃 / 狀態圖示與星級 -->
         <div class="flex flex-col items-center justify-center mb-4">
@@ -1058,7 +1150,7 @@
                 <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫橋接設定
               </h2>
               <p class="text-xs font-bold text-slate-500 mt-1">
-                網站架設於 GitHub Pages 時，透過填寫 GAS 部署網址，即可從 Google Sheet 即時同步題庫、雙 LOGO、Google Drive 音樂連結並上傳玩家成績紀錄。
+                填入 GAS 部署網址後：題庫與設定會自動同步到 Google Sheet；在後台上傳的 LOGO、吉祥物、MP3 會自動存進 Google Drive 素材資料夾，所有裝置開啟網頁時自動從 Drive 取用。
               </p>
             </div>
 
@@ -1082,6 +1174,10 @@
                 <span>將目前題庫與設定推送備份至 Google Sheet</span>
               </button>
             </div>
+            <button onclick="GASConnector.diagnose(false)" class="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 text-slate-800 font-black text-sm flex items-center justify-center gap-2 transition">
+              <i class="fa-solid fa-stethoscope text-slate-500"></i> 診斷連線（檢查為什麼沒有資料 / 素材連不上）
+            </button>
+            <div id="gasDiagResult" class="hidden bg-white border-2 border-slate-200 rounded-2xl px-4 py-2"></div>
           </div>
 
           <!-- 完整 GAS Code.gs 程式碼複製區 -->
@@ -1089,7 +1185,7 @@
             <div class="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h3 class="text-base font-black text-amber-400">Google Apps Script 後端橋接程式碼 (Code.gs)</h3>
-                <p class="text-xs text-slate-400">請在 Google 試算表點選「擴充功能 → Apps Script」，貼上以下完整程式碼並部署為「網頁應用程式 (權限：所有人)」。</p>
+                <p class="text-xs text-slate-400">請在 Google 試算表點選「擴充功能 → Apps Script」，貼上以下完整程式碼，先執行一次 setup 授權，再部署為「網頁應用程式 (權限：所有人)」。</p>
               </div>
               <button onclick="GASConnector.copyGasCode()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-1.5">
                 <i class="fa-solid fa-copy"></i> 一鍵複製 Code.gs
@@ -1097,20 +1193,116 @@
             </div>
 
             <pre id="gasCodeBlock" class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-300 overflow-x-auto max-h-80 custom-scrollbar font-mono leading-relaxed">/**
- * 彰基智慧醫療大挑戰 (Smart Medical Challenge) - Google Apps Script 後端 API
- * Google Sheet 工作表自動建立：
- * 1. Questions (欄位: ID | 題目 | A選項 | B選項 | C選項 | 正確答案)
- * 2. Config (欄位: Key | Value) -> 儲存雙 LOGO、吉祥物與 Google Drive 音樂網址
- * 3. Logs (欄位: 時間 | 總分 | 答對題數 | 結果狀態)
+ * 彰基智慧醫療大挑戰 (Smart Medical Challenge) - Google Apps Script 後端 v2
+ *
+ * 功能：
+ *  1. 題庫 / 設定同步（Google 試算表：Questions、Config、Logs 三個工作表，自動建立）
+ *  2. 素材自動上傳：後台上傳的圖片、MP3 會自動存進 Google Drive 指定資料夾
+ *  3. 素材代理讀取：網頁透過本程式讀取 Drive 檔案（不再受「連結直連被 Google 擋住」影響）
+ *  4. 連線診斷（後台「診斷連線」按鈕使用）
+ *
+ * 【第一次使用】編輯器上方函式選單選「setup」按「執行」，依畫面完成授權。
+ * 【修改程式後】部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。
  */
-function doGet(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const qSheet = getOrCreateSheet_(ss, 'Questions', ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
-  const cSheet = getOrCreateSheet_(ss, 'Config', ['Key', 'Value']);
 
-  const qRows = qSheet.getDataRange().getValues();
+// ★ 選填：貼上你自己建立的 Drive 資料夾 ID（資料夾網址 .../folders/ 後面那一串）。
+//   留空 = 自動在「我的雲端硬碟」建立名為下方 FOLDER_NAME 的資料夾。
+const FOLDER_ID = '';
+const FOLDER_NAME = '彰基智慧醫療大挑戰_素材';
+
+const VERSION = 'v2.0';
+const MAX_FILE_BYTES = 20 * 1024 * 1024;
+const Q_HEADERS = ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案'];
+const C_HEADERS = ['Key', 'Value'];
+const L_HEADERS = ['時間', '總分', '答對題數', '挑戰結果'];
+
+/* ------------------------------------------------------------------ 入口 */
+
+function setup() {
+  const ss = getSS_();
+  ensureSheets_(ss);
+  const folder = getFolder_();
+  Logger.log('試算表：' + ss.getUrl());
+  Logger.log('素材資料夾：' + folder.getUrl());
+}
+
+function doGet(e) {
+  try {
+    const p = (e &amp;&amp; e.parameter) || {};
+    if (p.action === 'ping') return json_(pingInfo_());
+    if (p.action === 'file') return json_(readFile_(p.id));
+    return json_(readAll_());
+  } catch (err) {
+    return json_({ status: 'error', message: errMsg_(err) });
+  }
+}
+
+function doPost(e) {
+  let lock = null;
+  try {
+    const payload = JSON.parse((e &amp;&amp; e.postData &amp;&amp; e.postData.contents) || '{}');
+    const action = payload.action;
+
+    if (action === 'PING') {
+      PropertiesService.getScriptProperties().setProperty('LAST_PING', new Date().toISOString());
+      return json_({ status: 'ok', version: VERSION, time: new Date().toISOString() });
+    }
+
+    if (action === 'UPLOAD_ASSET') {
+      return json_(uploadAsset_(payload));
+    }
+
+    lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    const ss = getSS_();
+    ensureSheets_(ss);
+
+    if (action === 'SYNC_UP') {
+      let qCount = null;
+      let cCount = null;
+      if (Array.isArray(payload.questions)) {
+        const rows = payload.questions.map(function (q) {
+          return [str_(q.id), str_(q.question), str_(q.optionA), str_(q.optionB), str_(q.optionC), str_(q.answer)];
+        });
+        writeTable_(ss.getSheetByName('Questions'), Q_HEADERS, rows);
+        qCount = rows.length;
+      }
+      if (payload.config &amp;&amp; typeof payload.config === 'object') {
+        // 與現有設定合併（保留你在試算表手動加的欄位）
+        const merged = readConfig_(ss);
+        Object.keys(payload.config).forEach(function (k) {
+          const v = payload.config[k];
+          const s = (v !== null &amp;&amp; typeof v === 'object') ? JSON.stringify(v) : str_(v);
+          if (s.length &lt; 49000) merged[k] = s;
+        });
+        const rows = Object.keys(merged).map(function (k) { return [k, merged[k]]; });
+        writeTable_(ss.getSheetByName('Config'), C_HEADERS, rows);
+        cCount = rows.length;
+      }
+      return json_({ status: 'ok', questions: qCount, config: cCount, sheetUrl: ss.getUrl() });
+    }
+
+    if (action === 'LOG_RESULT') {
+      ss.getSheetByName('Logs').appendRow([new Date(), payload.score, payload.correctCount, payload.outcome]);
+      return json_({ status: 'ok' });
+    }
+
+    return json_({ status: 'error', message: '未知的 action：' + action });
+  } catch (err) {
+    return json_({ status: 'error', message: errMsg_(err) });
+  } finally {
+    if (lock) { try { lock.releaseLock(); } catch (x) {} }
+  }
+}
+
+/* ------------------------------------------------------------------ 讀取 */
+
+function readAll_() {
+  const ss = getSS_();
+  ensureSheets_(ss);
+  const qRows = ss.getSheetByName('Questions').getDataRange().getValues();
   const questions = [];
-  for (let i = 1; i < qRows.length; i++) {
+  for (let i = 1; i &lt; qRows.length; i++) {
     if (!qRows[i][1]) continue;
     questions.push({
       id: String(qRows[i][0] || 'q_' + i),
@@ -1121,54 +1313,183 @@ function doGet(e) {
       answer: String(qRows[i][5]).trim().toUpperCase()
     });
   }
-
-  const cRows = cSheet.getDataRange().getValues();
-  const config = {};
-  for (let i = 1; i < cRows.length; i++) {
-    if (cRows[i][0]) config[String(cRows[i][0])] = String(cRows[i][1] || '');
-  }
-
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok', questions: questions, config: config }))
-    .setMimeType(ContentService.MimeType.JSON);
+  return { status: 'ok', version: VERSION, questions: questions, config: readConfig_(ss) };
 }
 
-function doPost(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const payload = JSON.parse(e.postData.contents || '{}');
-
-  if (payload.action === 'SYNC_UP') {
-    const qSheet = getOrCreateSheet_(ss, 'Questions', ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
-    qSheet.clearContents();
-    qSheet.appendRow(['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案']);
-    (payload.questions || []).forEach(function(q) {
-      qSheet.appendRow([q.id, q.question, q.optionA, q.optionB, q.optionC, q.answer]);
-    });
-
-    const cSheet = getOrCreateSheet_(ss, 'Config', ['Key', 'Value']);
-    cSheet.clearContents();
-    cSheet.appendRow(['Key', 'Value']);
-    const cfg = payload.config || {};
-    Object.keys(cfg).forEach(function(k) {
-      cSheet.appendRow([k, typeof cfg[k] === 'object' ? JSON.stringify(cfg[k]) : String(cfg[k])]);
-    });
-  } else if (payload.action === 'LOG_RESULT') {
-    const logSheet = getOrCreateSheet_(ss, 'Logs', ['時間', '總分', '答對題數', '挑戰結果']);
-    logSheet.appendRow([new Date(), payload.score, payload.correctCount, payload.outcome]);
+function readConfig_(ss) {
+  const rows = ss.getSheetByName('Config').getDataRange().getValues();
+  const cfg = {};
+  for (let i = 1; i &lt; rows.length; i++) {
+    if (rows[i][0]) cfg[String(rows[i][0])] = String(rows[i][1] === null || rows[i][1] === undefined ? '' : rows[i][1]);
   }
-
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok' }))
-    .setMimeType(ContentService.MimeType.JSON);
+  return cfg;
 }
 
-function getOrCreateSheet_(ss, name, headers) {
+function pingInfo_() {
+  const ss = getSS_();
+  ensureSheets_(ss);
+  const info = {
+    status: 'ok',
+    version: VERSION,
+    sheetName: ss.getName(),
+    sheetUrl: ss.getUrl(),
+    questionRows: Math.max(0, ss.getSheetByName('Questions').getLastRow() - 1),
+    configRows: Math.max(0, ss.getSheetByName('Config').getLastRow() - 1),
+    logRows: Math.max(0, ss.getSheetByName('Logs').getLastRow() - 1),
+    lastPing: PropertiesService.getScriptProperties().getProperty('LAST_PING') || ''
+  };
+  try {
+    const folder = getFolder_();
+    info.folderName = folder.getName();
+    info.folderUrl = folder.getUrl();
+    let n = 0;
+    const it = folder.getFiles();
+    while (it.hasNext() &amp;&amp; n &lt; 500) { it.next(); n++; }
+    info.folderFiles = n;
+  } catch (err) {
+    info.driveError = errMsg_(err);
+  }
+  return info;
+}
+
+/* ------------------------------------------------------------------ Drive 素材 */
+
+function uploadAsset_(payload) {
+  const mime = String(payload.mime || '');
+  if (!/^(image|audio)\//.test(mime)) throw new Error('只支援圖片或音訊檔案（收到：' + mime + '）');
+  if (!payload.data) throw new Error('沒有收到檔案內容');
+
+  const bytes = Utilities.base64Decode(payload.data);
+  if (bytes.length &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
+
+  const slot = String(payload.slot || 'asset').replace(/[^\w-]/g, '');
+  const safeName = String(payload.name || 'file').replace(/[\\/:*?"&lt;&gt;|]/g, '_');
+  const stamp = Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyyMMdd-HHmmss');
+  const blob = Utilities.newBlob(bytes, mime, slot + '_' + stamp + '_' + safeName);
+
+  const folder = getFolder_();
+  const file = folder.createFile(blob);
+  let shared = true;
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (err) {
+    shared = false; // 組織政策不允許公開時略過；網頁仍可透過本程式讀取
+  }
+  return {
+    status: 'ok',
+    id: file.getId(),
+    name: file.getName(),
+    size: bytes.length,
+    shared: shared,
+    url: file.getUrl(),
+    folderUrl: folder.getUrl()
+  };
+}
+
+function readFile_(id) {
+  if (!id) throw new Error('缺少檔案 ID');
+  const file = DriveApp.getFileById(id);
+  if (!isAllowedFile_(file)) {
+    throw new Error('此檔案不在素材資料夾內，且未開放「知道連結的任何人」，基於安全無法讀取');
+  }
+  if (file.getSize() &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
+  const blob = file.getBlob();
+  return {
+    status: 'ok',
+    id: id,
+    name: file.getName(),
+    mime: fixMime_(blob.getContentType(), file.getName()),
+    data: Utilities.base64Encode(blob.getBytes())
+  };
+}
+
+function isAllowedFile_(file) {
+  try {
+    const acc = file.getSharingAccess();
+    if (acc === DriveApp.Access.ANYONE_WITH_LINK || acc === DriveApp.Access.ANYONE) return true;
+  } catch (err) {}
+  const folderId = getFolder_().getId();
+  const parents = file.getParents();
+  while (parents.hasNext()) {
+    if (parents.next().getId() === folderId) return true;
+  }
+  return false;
+}
+
+function fixMime_(mime, name) {
+  if (mime &amp;&amp; mime !== 'application/octet-stream') return mime;
+  const ext = String(name).split('.').pop().toLowerCase();
+  const map = { mp3: 'audio/mpeg', m4a: 'audio/mp4', wav: 'audio/wav', ogg: 'audio/ogg', aac: 'audio/aac',
+                png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
+  return map[ext] || mime || 'application/octet-stream';
+}
+
+/* ------------------------------------------------------------------ 工具 */
+
+function getSS_() {
+  // 從試算表「擴充功能 → Apps Script」開啟的腳本：直接用綁定的試算表
+  let ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss) return ss;
+  // 獨立腳本（沒綁定試算表）：自動建立一份並記住
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('SHEET_ID');
+  if (id) {
+    try { return SpreadsheetApp.openById(id); } catch (err) {}
+  }
+  ss = SpreadsheetApp.create('彰基智慧醫療大挑戰資料庫');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
+function getFolder_() {
+  if (FOLDER_ID) {
+    try { return DriveApp.getFolderById(FOLDER_ID); }
+    catch (err) { throw new Error('找不到 FOLDER_ID 指定的資料夾，請確認 ID 正確且此帳號有權限：' + FOLDER_ID); }
+  }
+  const props = PropertiesService.getScriptProperties();
+  const saved = props.getProperty('FOLDER_ID');
+  if (saved) {
+    try { return DriveApp.getFolderById(saved); } catch (err) {}
+  }
+  const it = DriveApp.getFoldersByName(FOLDER_NAME);
+  const folder = it.hasNext() ? it.next() : DriveApp.createFolder(FOLDER_NAME);
+  props.setProperty('FOLDER_ID', folder.getId());
+  return folder;
+}
+
+function ensureSheets_(ss) {
+  getSheet_(ss, 'Questions', Q_HEADERS);
+  getSheet_(ss, 'Config', C_HEADERS);
+  getSheet_(ss, 'Logs', L_HEADERS);
+  const blank = ss.getSheetByName('Sheet1') || ss.getSheetByName('工作表1');
+  if (blank &amp;&amp; ss.getSheets().length &gt; 1 &amp;&amp; blank.getLastRow() === 0) ss.deleteSheet(blank);
+}
+
+function getSheet_(ss, name, headers) {
   let sheet = ss.getSheetByName(name);
   if (!sheet) {
     sheet = ss.insertSheet(name);
-    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
   }
   return sheet;
+}
+
+// 整張表一次寫入，並設為純文字格式（避免 = + 開頭的題目被當成公式）
+function writeTable_(sheet, headers, rows) {
+  sheet.clearContents();
+  const all = [headers].concat(rows);
+  const range = sheet.getRange(1, 1, all.length, headers.length);
+  range.setNumberFormat('@');
+  range.setValues(all);
+  sheet.setFrozenRows(1);
+}
+
+function str_(v) { return (v === null || v === undefined) ? '' : String(v); }
+function errMsg_(err) { return String((err &amp;&amp; err.message) || err); }
+
+function json_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }</pre>
           </div>
         </div>
@@ -1185,16 +1506,209 @@ function getOrCreateSheet_(ss, name, headers) {
        ======================================================================== */
     function normalizeDriveMediaUrl(url, mediaType = 'image') {
       if (!url) return '';
-      const trimmed = url.trim();
-      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        const fileId = match[1];
-        return mediaType === 'image'
-          ? `https://lh3.googleusercontent.com/d/${fileId}`
-          : `https://drive.google.com/uc?export=download&id=${fileId}`;
-      }
-      return trimmed;
+      const trimmed = String(url).trim();
+      if (!trimmed) return '';
+      if (/^(data:|blob:)/i.test(trimmed)) return trimmed;
+      const id = DriveAssets.extractId(trimmed);
+      if (!id) return trimmed;
+      return DriveAssets.resolve(id, mediaType);
     }
+
+    /* ========================================================================
+       Google Drive 素材管理：透過 GAS 代理讀取 Drive 檔案，並快取在瀏覽器 (IndexedDB)
+       值的格式：gdrive:檔案ID（後台上傳後自動產生），或貼上任何 Drive 分享連結
+       ======================================================================== */
+    const DriveAssets = {
+      cache: {},
+      loading: {},
+      failed: {},
+      db: null,
+      renderTimer: null,
+
+      extractId(value) {
+        const v = String(value || '').trim();
+        let m = v.match(/^gdrive:([\w-]{10,})$/);
+        if (m) return m[1];
+        m = v.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/)
+          || v.match(/drive\.google\.com\/(?:open|uc|thumbnail)\?(?:[^#]*&)?id=([\w-]{10,})/)
+          || v.match(/drive\.usercontent\.google\.com\/download\?(?:[^#]*&)?id=([\w-]{10,})/)
+          || v.match(/lh3\.googleusercontent\.com\/d\/([\w-]{10,})/);
+        return m ? m[1] : null;
+      },
+
+      directUrl(id, type) {
+        return type === 'image'
+          ? `https://drive.google.com/thumbnail?id=${id}&sz=w1600`
+          : `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
+      },
+
+      // 同步回傳可用網址；尚在載入時回傳 ''（載入完成後會自動重繪畫面）
+      resolve(id, type) {
+        if (this.cache[id]) return this.cache[id];
+        if (!GASConnector.isConfigured() || this.failed[id]) return this.directUrl(id, type);
+        this.load(id);
+        return '';
+      },
+
+      openDb() {
+        if (this.db) return Promise.resolve(this.db);
+        return new Promise(resolve => {
+          try {
+            const req = indexedDB.open('cch_drive_assets', 1);
+            req.onupgradeneeded = () => req.result.createObjectStore('files');
+            req.onsuccess = () => { this.db = req.result; resolve(this.db); };
+            req.onerror = () => resolve(null);
+          } catch (e) { resolve(null); }
+        });
+      },
+
+      async dbGet(id) {
+        const db = await this.openDb();
+        if (!db) return null;
+        return new Promise(resolve => {
+          try {
+            const r = db.transaction('files').objectStore('files').get(id);
+            r.onsuccess = () => resolve(r.result || null);
+            r.onerror = () => resolve(null);
+          } catch (e) { resolve(null); }
+        });
+      },
+
+      async dbPut(id, blob) {
+        const db = await this.openDb();
+        if (!db) return;
+        try { db.transaction('files', 'readwrite').objectStore('files').put(blob, id); } catch (e) {}
+      },
+
+      seed(id, blob) {
+        this.cache[id] = URL.createObjectURL(blob);
+        this.dbPut(id, blob);
+      },
+
+      load(id) {
+        if (this.loading[id]) return this.loading[id];
+        this.loading[id] = (async () => {
+          try {
+            let blob = await this.dbGet(id);
+            if (!blob) {
+              blob = await this.fetchFromGas(id);
+              await this.dbPut(id, blob);
+            }
+            this.cache[id] = URL.createObjectURL(blob);
+          } catch (err) {
+            console.warn('Drive 素材讀取失敗，改用直連網址：', id, err.message);
+            this.failed[id] = true;
+          } finally {
+            delete this.loading[id];
+            this.scheduleRerender();
+          }
+        })();
+        return this.loading[id];
+      },
+
+      async fetchFromGas(id) {
+        const j = await GASConnector.getGas(`action=file&id=${encodeURIComponent(id)}`);
+        const bin = atob(j.data);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new Blob([bytes], { type: j.mime || 'application/octet-stream' });
+      },
+
+      scheduleRerender() {
+        clearTimeout(this.renderTimer);
+        this.renderTimer = setTimeout(() => {
+          try {
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+            LogoManager.updatePreview(1);
+            LogoManager.updatePreview(2);
+            MascotManager.updateAllPreviews();
+          } catch (e) {}
+        }, 80);
+      },
+
+      preloadAll() {
+        const s = StorageManager.getSettings();
+        const vals = [s.logo1Url, s.logo2Url, s.mascotHome, s.mascotIdle, s.mascotHappy, s.mascotSad, ...Object.values(s.audioUrls || {})];
+        vals.forEach(v => { const id = this.extractId(v); if (id && GASConnector.isConfigured()) this.load(id); });
+      }
+    };
+
+    /* 後台上傳：圖片 / MP3 → 自動存進 Drive 素材資料夾 */
+    const AssetUploader = {
+      readBase64(file) {
+        return new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onerror = () => reject(new Error('檔案讀取失敗'));
+          r.onload = () => resolve(String(r.result).split(',')[1] || '');
+          r.readAsDataURL(file);
+        });
+      },
+      b64ToBlob(b64, mime) {
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new Blob([bytes], { type: mime });
+      },
+      async upload(b64, mime, name, slot) {
+        const r = await GASConnector.postGas({ action: 'UPLOAD_ASSET', slot, name, mime, data: b64 });
+        DriveAssets.seed(r.id, this.b64ToBlob(b64, mime));
+        return r;
+      },
+      async uploadImage(file, slot, maxSize) {
+        const dataUrl = await fileToCompressedDataUrl(file, maxSize);
+        const m = dataUrl.match(/^data:([^;,]+);base64,(.*)$/);
+        if (!m) throw new Error('圖片轉檔失敗');
+        const ext = m[1].split('/')[1].replace('+xml', '');
+        const base = file.name.replace(/\.[^.]+$/, '') || 'image';
+        const r = await this.upload(m[2], m[1], `${base}.${ext}`, slot);
+        return r.id;
+      },
+      async uploadAudio(file, slot) {
+        if (file.size > 12 * 1024 * 1024) throw new Error('音檔超過 12MB，請先壓縮（建議 128kbps MP3）');
+        const b64 = await this.readBase64(file);
+        const r = await this.upload(b64, file.type || 'audio/mpeg', file.name, slot);
+        return r.id;
+      }
+    };
+
+    /* 全螢幕輔助（iPad / Android 平板 / 桌機） */
+    const FullscreenHelper = {
+      isStandalone() {
+        return window.matchMedia('(display-mode: fullscreen)').matches
+          || window.matchMedia('(display-mode: standalone)').matches
+          || window.navigator.standalone === true;
+      },
+      isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); },
+      canRequest() { const el = document.documentElement; return !!(el.requestFullscreen || el.webkitRequestFullscreen); },
+      request() {
+        const el = document.documentElement;
+        try {
+          const p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+          if (p && p.catch) p.catch(() => {});
+        } catch (e) {}
+      },
+      exit() {
+        try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {}
+      },
+      toggle() {
+        if (this.isFull()) this.exit();
+        else if (this.canRequest()) this.request();
+        else UI.showToast('此瀏覽器不支援一鍵全螢幕：請點 Safari 的「分享」→「加入主畫面」，之後從主畫面圖示開啟即為全螢幕', 'info');
+      },
+      updateButton() {
+        const btn = document.getElementById('fullscreenBtn');
+        if (!btn) return;
+        btn.classList.toggle('hidden', this.isStandalone());
+        btn.innerHTML = `<i class="fa-solid ${this.isFull() ? 'fa-compress' : 'fa-expand'}"></i>`;
+      },
+      init() {
+        ['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => this.updateButton()));
+        this.updateButton();
+        // 禁止 iOS 雙指縮放手勢
+        ['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+      }
+    };
 
     /* 上傳圖片自動縮放壓縮（避免塞爆 localStorage）；SVG / GIF 原樣保留 */
     function fileToCompressedDataUrl(file, maxSize = 800) {
@@ -1383,6 +1897,7 @@ function getOrCreateSheet_(ss, name, headers) {
       saveQuestions(list) {
         localStorage.setItem(this.KEYS.QUESTIONS, JSON.stringify(list));
         DualScreenSync.broadcastState();
+        GASConnector.scheduleAutoPush('questions');
       },
 
       getSettings() {
@@ -1407,6 +1922,7 @@ function getOrCreateSheet_(ss, name, headers) {
           return false;
         }
         DualScreenSync.broadcastState();
+        GASConnector.scheduleAutoPush('config');
         return true;
       },
 
@@ -1497,8 +2013,8 @@ function getOrCreateSheet_(ss, name, headers) {
         if (!el) return;
         const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'image');
         const S = {
-          home:  { img: 'h-16 sm:h-24 lg:h-28 max-w-[320px] sm:max-w-[460px]', icon: 'w-14 h-14 sm:w-20 sm:h-20 text-2xl sm:text-4xl rounded-2xl', sub: 'text-xs sm:text-sm', title: 'text-lg sm:text-2xl lg:text-3xl' },
-          game:  { img: 'h-14 sm:h-20 lg:h-24 max-w-[220px] sm:max-w-[340px]', icon: 'w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl rounded-2xl', sub: 'text-[10px] sm:text-xs', title: 'text-base sm:text-xl lg:text-2xl' },
+          home:  { img: 'logo-img-home', icon: 'logo-icon-home rounded-2xl', sub: 'logo-sub-home', title: 'logo-title-home' },
+          game:  { img: 'logo-img-game', icon: 'logo-icon-game rounded-2xl', sub: 'logo-sub-game truncate', title: 'logo-title-game truncate' },
           admin: { img: 'h-14 max-w-[220px]', icon: 'w-10 h-10 text-xl rounded-xl', sub: 'text-[10px]', title: 'text-sm' }
         }[size] || {};
 
@@ -1529,16 +2045,29 @@ function getOrCreateSheet_(ss, name, headers) {
 
       async handleImageUpload(event, slotNum) {
         const file = event.target.files[0];
+        event.target.value = '';
         if (!file) return;
+        const input = document.getElementById(`settingLogo${slotNum}Url`);
+        if (GASConnector.isConfigured()) {
+          try {
+            UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
+            const id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(slotNum);
+            this.saveLogos();
+            UI.showToast(`✅ LOGO ${slotNum} 已上傳到 Drive 並自動套用`, 'success');
+            return;
+          } catch (e) {
+            UI.showToast(`Drive 上傳失敗（${e.message}），改存本機`, 'error');
+          }
+        }
         try {
-          const data = await fileToCompressedDataUrl(file, 700);
-          document.getElementById(`settingLogo${slotNum}Url`).value = data;
+          input.value = await fileToCompressedDataUrl(file, 700);
           this.updatePreview(slotNum);
-          UI.showToast(`已載入 LOGO ${slotNum} 圖片，請記得點擊儲存套用！`, 'info');
+          UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後會自動上傳 Drive）。請按儲存套用`, 'info');
         } catch (e) {
           UI.showToast(e.message, 'error');
         }
-        event.target.value = '';
       },
 
       saveLogos() {
@@ -1684,16 +2213,29 @@ function getOrCreateSheet_(ss, name, headers) {
 
       async handleImageUpload(event, key) {
         const file = event.target.files[0];
+        event.target.value = '';
         if (!file) return;
+        const input = document.getElementById(this.FIELDS[key].input);
+        if (GASConnector.isConfigured()) {
+          try {
+            UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
+            const id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(key);
+            this.saveUrls();
+            UI.showToast('✅ 吉祥物圖片已上傳到 Drive 並自動套用', 'success');
+            return;
+          } catch (e) {
+            UI.showToast(`Drive 上傳失敗（${e.message}），改存本機`, 'error');
+          }
+        }
         try {
-          const data = await fileToCompressedDataUrl(file, 800);
-          document.getElementById(this.FIELDS[key].input).value = data;
+          input.value = await fileToCompressedDataUrl(file, 800);
           this.updatePreview(key);
-          UI.showToast('圖片已載入，請按「儲存吉祥物圖片設定」套用！', 'info');
+          UI.showToast('圖片已載入（僅存本機；連接 GAS 後會自動上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
         } catch (e) {
           UI.showToast(e.message, 'error');
         }
-        event.target.value = '';
       },
 
       saveUrls() {
@@ -1994,8 +2536,8 @@ function getOrCreateSheet_(ss, name, headers) {
               <div class="flex items-center justify-between gap-2">
                 <span class="font-black text-slate-800 text-sm">${slot.label}</span>
                 <div class="flex items-center gap-1.5">
-                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer" title="從本機選擇 MP3">
-                    <i class="fa-solid fa-folder-open"></i> 本機
+                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer" title="上傳音檔（已連接 GAS 時會自動存入 Drive 資料夾並套用）">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> 上傳
                     <input type="file" accept="audio/*" onchange="SoundEngine.handleLocalAudioUpload(event, '${slot.key}')" class="hidden" />
                   </label>
                   <button type="button" onclick="SoundEngine.previewSlot('${slot.key}')" class="px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs">
@@ -2004,20 +2546,32 @@ function getOrCreateSheet_(ss, name, headers) {
                 </div>
               </div>
               <input type="text" id="audioInput_${slot.key}" value="${AdminModule.escapeHtml(val)}"
-                placeholder="貼上 MP3 網址或 Google Drive 音訊連結 (留空用內建音效)"
+                placeholder="按「上傳」自動存 Drive，或貼上 MP3 / Drive 連結（留空用內建音效）"
                 class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white" />
             </div>
           `;
         }).join('');
       },
 
-      handleLocalAudioUpload(event, slotKey) {
+      async handleLocalAudioUpload(event, slotKey) {
         const file = event.target.files[0];
-        if (!file) return;
-        const blobUrl = URL.createObjectURL(file);
-        document.getElementById(`audioInput_${slotKey}`).value = blobUrl;
-        UI.showToast(`已載入本機音訊「${file.name}」（僅限本次瀏覽器工作階段有效，永久保存請用 Google Drive 網址）`, 'info');
         event.target.value = '';
+        if (!file) return;
+        const input = document.getElementById(`audioInput_${slotKey}`);
+        if (GASConnector.isConfigured()) {
+          try {
+            UI.showToast(`正在上傳「${file.name}」到 Google Drive…`, 'info');
+            const id = await AssetUploader.uploadAudio(file, slotKey);
+            input.value = `gdrive:${id}`;
+            this.saveCustomAudioUrls();
+            UI.showToast('✅ 音訊已上傳到 Drive 並自動套用', 'success');
+            return;
+          } catch (e) {
+            UI.showToast(`Drive 上傳失敗（${e.message}），改為本次暫存`, 'error');
+          }
+        }
+        input.value = URL.createObjectURL(file);
+        UI.showToast(`已載入本機音訊「${file.name}」（僅本次有效；連接 GAS 後上傳會自動存入 Drive）`, 'info');
       },
 
       previewSlot(slotKey) {
@@ -2032,6 +2586,9 @@ function getOrCreateSheet_(ss, name, headers) {
           this.previewAudioEl.play().catch(() => {
             UI.showToast('無法直接播放此網址，請確認 Google Drive 權限已設為「知道連結的任何人均可檢視」', 'error');
           });
+        } else if (inputVal) {
+          UI.showToast('音檔載入中，請 2～3 秒後再按試聽', 'info');
+          return;
         } else {
           // 試聽內建合成音效
           if (slotKey === 'sfxClick') this.playClick();
@@ -2074,30 +2631,107 @@ function getOrCreateSheet_(ss, name, headers) {
        MODULE 5: GitHub Pages + Google Apps Script (GAS) 雲端資料庫橋接器
        ======================================================================== */
     const GASConnector = {
-      async syncOnBoot() {
-        const settings = StorageManager.getSettings();
-        const gasUrl = (settings.gasWebAppUrl || '').trim();
-        if (!gasUrl) return;
+      suppress: false,
+      autoTimer: null,
+      pendingParts: new Set(),
+      lastStatus: null,
 
+      getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
+      isConfigured() { return !!this.getUrl(); },
+
+      // 讀取 GAS 回應並確認是 JSON（不是 Google 的登入頁 / 錯誤頁）
+      async fetchJson(url, options) {
+        const res = await fetch(url, options);
+        const text = await res.text();
         try {
-          const res = await fetch(gasUrl, { method: 'GET' });
-          const data = await res.json();
-          if (data && data.status === 'ok') {
-            if (Array.isArray(data.questions) && data.questions.length > 0) {
-              StorageManager.saveQuestions(data.questions);
-            }
-            if (data.config && typeof data.config === 'object') {
-              const merged = { ...StorageManager.getSettings(), ...data.config };
-              if (typeof data.config.audioUrls === 'string') {
-                try { merged.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
-              }
-              StorageManager.saveSettings(merged);
-            }
-            LogoManager.renderAll();
-            MascotManager.renderAll();
+          return JSON.parse(text);
+        } catch (e) {
+          const isHtml = /<html|<!doctype/i.test(text);
+          throw new Error(isHtml
+            ? 'GAS 回傳的是網頁而不是資料（通常是部署權限沒設成「所有人」，或程式執行出錯）'
+            : 'GAS 回傳格式不正確');
+        }
+      },
+
+      async getGas(params = '') {
+        const url = this.getUrl();
+        if (!url) throw new Error('尚未設定 GAS 網址');
+        const j = await this.fetchJson(url + (params ? (url.includes('?') ? '&' : '?') + params : ''));
+        if (j.status !== 'ok') throw new Error(j.message || 'GAS 回傳錯誤');
+        return j;
+      },
+
+      // 以 text/plain 送出（不觸發 CORS 預檢），並讀取真正的回應，讓成功 / 失敗都看得見
+      async postGas(payload) {
+        const url = this.getUrl();
+        if (!url) throw new Error('尚未設定 GAS 網址');
+        const j = await this.fetchJson(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        if (j.status !== 'ok') throw new Error(j.message || 'GAS 回傳錯誤');
+        return j;
+      },
+
+      // 試算表回傳的設定值一律是字串：依預設值型別還原（避免 "false" 變成 true）
+      coerceConfig(cfg) {
+        const defs = StorageManager.defaultSettings;
+        const out = {};
+        Object.keys(cfg).forEach(k => {
+          if (k === 'gasWebAppUrl' || k === 'adminPasswordHash') return;
+          const v = cfg[k];
+          const d = defs[k];
+          if (k === 'audioUrls') {
+            try { out.audioUrls = typeof v === 'string' ? JSON.parse(v) : v; } catch (e) {}
+          } else if (typeof d === 'number') {
+            const n = Number(v);
+            out[k] = (v === '' || isNaN(n)) ? d : n;
+          } else if (typeof d === 'boolean') {
+            out[k] = v === true || v === 'true';
+          } else {
+            out[k] = v;
+          }
+        });
+        return out;
+      },
+
+      applyCloud(data) {
+        this.suppress = true;
+        try {
+          if (Array.isArray(data.questions) && data.questions.length > 0) {
+            StorageManager.saveQuestions(data.questions);
+          }
+          if (data.config && typeof data.config === 'object') {
+            const current = StorageManager.getSettings();
+            const cloud = this.coerceConfig(data.config);
+            StorageManager.saveSettings({
+              ...current,
+              ...cloud,
+              audioUrls: { ...current.audioUrls, ...(cloud.audioUrls || {}) }
+            });
+          }
+        } finally {
+          this.suppress = false;
+        }
+        LogoManager.renderAll();
+        MascotManager.renderAll();
+        DriveAssets.preloadAll();
+      },
+
+      async syncOnBoot() {
+        if (!this.isConfigured()) return;
+        try {
+          const data = await this.getGas();
+          this.applyCloud(data);
+          this.lastStatus = { ok: true, time: new Date() };
+          // 試算表還是空的：把本機題庫自動寫進去，初始化資料庫
+          if (!(data.questions || []).length && StorageManager.getQuestions().length) {
+            await this.pushToCloud('boot', ['questions', 'config']);
           }
         } catch (err) {
-          console.warn('GAS 背景自動同步略過（離線或 CORS 限制）:', err);
+          this.lastStatus = { ok: false, error: err.message };
+          console.warn('GAS 開機同步失敗：', err.message);
         }
       },
 
@@ -2105,101 +2739,199 @@ function getOrCreateSheet_(ss, name, headers) {
         const url = document.getElementById('settingGasUrl').value.trim();
         const s = StorageManager.getSettings();
         s.gasWebAppUrl = url;
+        this.suppress = true;
         StorageManager.saveSettings(s);
+        this.suppress = false;
         AdminModule.refreshAllViews();
 
         if (!url) {
           UI.showToast('已清除 GAS 網址，切換為本機儲存模式', 'info');
           return;
         }
-        this.pullFromCloud();
+        this.diagnose(true);
       },
 
       async pullFromCloud() {
-        const url = StorageManager.getSettings().gasWebAppUrl;
-        if (!url) {
+        if (!this.isConfigured()) {
           UI.showToast('請先輸入 GAS Web App URL！', 'error');
           return;
         }
         UI.showToast('正在從 Google Sheet 拉取最新資料...', 'info');
         try {
-          const res = await fetch(url);
-          const data = await res.json();
-          if (data && data.status === 'ok') {
-            if (Array.isArray(data.questions) && data.questions.length > 0) {
-              StorageManager.saveQuestions(data.questions);
-            }
-            if (data.config) {
-              const current = StorageManager.getSettings();
-              const nextSettings = { ...current, ...data.config };
-              if (typeof data.config.audioUrls === 'string') {
-                try { nextSettings.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
-              }
-              StorageManager.saveSettings(nextSettings);
-            }
-            LogoManager.renderAll();
-            MascotManager.renderAll();
-            AdminModule.refreshAllViews();
-            UI.showToast(`雲端同步成功！已載入 ${data.questions?.length || 0} 題題庫與設定`, 'success');
-          } else {
-            throw new Error('回傳格式非預期');
-          }
+          const data = await this.getGas();
+          this.applyCloud(data);
+          AdminModule.refreshAllViews();
+          this.lastStatus = { ok: true, time: new Date() };
+          UI.showToast(`雲端同步成功！已載入 ${data.questions.length} 題題庫與設定`, 'success');
         } catch (err) {
-          UI.showToast('GAS 連線失敗，請確認部署權限已設為「所有人」', 'error');
+          this.lastStatus = { ok: false, error: err.message };
+          UI.showToast('拉取失敗：' + err.message, 'error');
         }
       },
 
-      async pushToCloud() {
-        const url = StorageManager.getSettings().gasWebAppUrl;
-        if (!url) {
-          UI.showToast('請先輸入 GAS Web App URL！', 'error');
-          return;
-        }
-        UI.showToast('正在推送題庫與設定至 Google Sheet...', 'info');
-        try {
-          const s = StorageManager.getSettings();
-          const safeConfig = { ...s };
-          delete safeConfig.adminPasswordHash; // 不將密碼明文推送至試算表
-          // Google Sheet 單一儲存格上限約 5 萬字元：過大的「上傳圖片」不推送（本機仍保留）
-          const skipped = [];
-          Object.keys(safeConfig).forEach(k => {
-            const v = safeConfig[k];
-            if (typeof v === 'string' && v.startsWith('data:') && v.length > 45000) {
-              delete safeConfig[k];
-              skipped.push(k);
-            }
-          });
+      buildSafeConfig(skipped) {
+        const cfg = { ...StorageManager.getSettings() };
+        delete cfg.adminPasswordHash;
+        delete cfg.gasWebAppUrl;
+        // blob: 只在本次瀏覽器有效、過大的 data: 超過試算表儲存格上限，都不送出
+        const bad = v => typeof v === 'string' && (v.startsWith('blob:') || (v.startsWith('data:') && v.length > 45000));
+        Object.keys(cfg).forEach(k => {
+          if (k === 'audioUrls') {
+            const a = {};
+            Object.keys(cfg.audioUrls || {}).forEach(ak => {
+              if (bad(cfg.audioUrls[ak])) skipped.push(ak); else a[ak] = cfg.audioUrls[ak];
+            });
+            cfg.audioUrls = a;
+          } else if (bad(cfg[k])) {
+            delete cfg[k];
+            skipped.push(k);
+          }
+        });
+        return cfg;
+      },
 
-          await fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'SYNC_UP',
-              questions: StorageManager.getQuestions(),
-              config: safeConfig
-            })
-          });
-          UI.showToast(skipped.length ? `已送出！但 ${skipped.length} 張上傳圖片過大未同步，多機共用請改用 Drive 連結` : '資料已送出至 Google Sheet！', skipped.length ? 'info' : 'success');
-        } catch (err) {
-          UI.showToast('推送失敗：' + err.message, 'error');
+      // mode: 'manual'（按鈕）| 'auto'（後台修改後自動）| 'boot'（開機初始化，不跳提示）
+      async pushToCloud(mode = 'manual', parts = ['questions', 'config']) {
+        if (!this.isConfigured()) {
+          if (mode !== 'boot') UI.showToast('請先輸入 GAS Web App URL！', 'error');
+          return false;
         }
+        if (mode === 'manual') UI.showToast('正在推送題庫與設定至 Google Sheet...', 'info');
+        try {
+          const payload = { action: 'SYNC_UP' };
+          const skipped = [];
+          if (parts.includes('questions')) payload.questions = StorageManager.getQuestions();
+          if (parts.includes('config')) payload.config = this.buildSafeConfig(skipped);
+          const r = await this.postGas(payload);
+          this.lastStatus = { ok: true, time: new Date() };
+          if (mode === 'manual') {
+            UI.showToast(`✅ 已寫入 Google Sheet（題庫 ${r.questions ?? '—'} 題）${skipped.length ? `；${skipped.length} 個本機暫存素材未同步` : ''}`, 'success');
+          } else if (mode === 'auto') {
+            UI.showToast('☁️ 已自動同步到 Google Sheet', 'success');
+          }
+          return true;
+        } catch (err) {
+          this.lastStatus = { ok: false, error: err.message };
+          if (mode !== 'boot') UI.showToast('同步失敗：' + err.message, 'error');
+          return false;
+        }
+      },
+
+      // 後台修改題庫 / 設定後 2 秒自動同步到 Google Sheet
+      scheduleAutoPush(part) {
+        if (this.suppress || !this.isConfigured()) return;
+        if (typeof GameEngine === 'undefined' || GameEngine.currentScreen !== 'ADMIN') return;
+        this.pendingParts.add(part);
+        clearTimeout(this.autoTimer);
+        this.autoTimer = setTimeout(() => {
+          const parts = [...this.pendingParts];
+          this.pendingParts.clear();
+          this.pushToCloud('auto', parts);
+        }, 2000);
       },
 
       logGameResult(score, correctCount, outcome) {
-        const url = StorageManager.getSettings().gasWebAppUrl;
-        if (!url) return;
-        fetch(url, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'LOG_RESULT',
-            score,
-            correctCount,
-            outcome
-          })
-        }).catch(() => {});
+        if (!this.isConfigured()) return;
+        this.postGas({ action: 'LOG_RESULT', score, correctCount, outcome }).catch(err => {
+          console.warn('成績紀錄失敗：', err.message);
+        });
+      },
+
+      explainError(msg) {
+        const m = String(msg || '');
+        if (/Cannot read properties of null|getSheetByName|getActiveSpreadsheet/i.test(m)) {
+          return '腳本沒有綁定試算表（舊版程式碼的問題）。請改貼新版 Code.gs 並「新增版本」重新部署。';
+        }
+        if (/permission|authoriz|授權|權限/i.test(m)) {
+          return m + ' → 請在 Apps Script 編輯器選 setup 函式按「執行」並同意授權，再「新增版本」重新部署。';
+        }
+        return m;
+      },
+
+      explainNetwork(err) {
+        const m = String((err && err.message) || err);
+        if (/Failed to fetch|NetworkError|Load failed/i.test(m)) {
+          return '瀏覽器連不到 GAS。常見原因：①部署時「誰可以存取」沒選「所有人」 ②網址貼錯或不完整 ③目前網路擋住 script.google.com。';
+        }
+        return m;
+      },
+
+      // 連線診斷：逐步檢查並用白話說明問題在哪
+      async diagnose(autoSync = false) {
+        const box = document.getElementById('gasDiagResult');
+        if (!box) return;
+        const esc = s => AdminModule.escapeHtml(String(s));
+        const steps = [];
+        const add = (ok, title, detail = '', link = '') => steps.push({ ok, title, detail, link });
+        const render = (busy = false) => {
+          box.classList.remove('hidden');
+          box.innerHTML = steps.map(s => `
+            <div class="flex gap-2 py-2 border-b border-slate-100 last:border-0">
+              <div class="text-lg leading-none">${s.ok === true ? '✅' : s.ok === 'warn' ? '⚠️' : '❌'}</div>
+              <div class="min-w-0">
+                <div class="font-black text-slate-800 text-sm">${esc(s.title)}</div>
+                ${s.detail ? `<div class="text-xs font-bold text-slate-500 mt-0.5 break-words">${esc(s.detail)}</div>` : ''}
+                ${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener" class="text-xs font-black text-sky-600 underline">開啟</a>` : ''}
+              </div>
+            </div>`).join('') + (busy ? '<div class="text-xs font-bold text-slate-400 pt-2">檢查中…</div>' : '');
+        };
+
+        box.classList.remove('hidden');
+        box.innerHTML = '<div class="text-xs font-bold text-slate-400">檢查中…</div>';
+        const url = this.getUrl();
+        let info = null;
+
+        if (!url) {
+          add(false, '尚未填寫 GAS 網址', '請在上方欄位貼上以 /exec 結尾的 Web App 網址');
+          render();
+          return;
+        }
+        if (!/^https:\/\/script\.google\.com\/(a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/.test(url)) {
+          add(false, '網址格式看起來不對', '正確格式：https://script.google.com/macros/s/長串英數字/exec。若結尾是 /dev 是「測試版網址」，請改用「部署 → 管理部署作業」裡的網頁應用程式網址。');
+        } else {
+          add(true, '網址格式正確');
+        }
+        render(true);
+
+        try {
+          const r = await this.fetchJson(url + (url.includes('?') ? '&' : '?') + 'action=ping');
+          if (r.status !== 'ok') {
+            add(false, 'GAS 程式執行出錯', this.explainError(r.message));
+          } else if (!r.version) {
+            add(false, '你部署的還是舊版 Code.gs', '舊版沒有 Drive 上傳與診斷功能。請把新版 Code.gs 全部貼上取代、存檔，然後：部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。');
+          } else {
+            info = r;
+            add(true, `已連上 GAS（程式版本 ${r.version}）`);
+            add(true, `試算表：${r.sheetName}`, `題庫 ${r.questionRows} 題｜設定 ${r.configRows} 筆｜成績 ${r.logRows} 筆`, r.sheetUrl);
+            if (r.driveError) {
+              add(false, 'Drive 素材資料夾無法使用', this.explainError(r.driveError));
+            } else {
+              add(true, `Drive 素材資料夾：${r.folderName}`, `目前 ${r.folderFiles} 個檔案`, r.folderUrl);
+            }
+          }
+        } catch (err) {
+          add(false, '無法連上 GAS', this.explainNetwork(err));
+        }
+
+        if (info) {
+          render(true);
+          try {
+            await this.postGas({ action: 'PING' });
+            add(true, '寫入測試成功（網頁 → GAS）');
+          } catch (err) {
+            add(false, '寫入測試失敗', this.explainError(err.message));
+          }
+          const local = StorageManager.getQuestions().length;
+          add(info.questionRows > 0 ? true : 'warn',
+            `雲端題庫 ${info.questionRows} 題 ／ 本機題庫 ${local} 題`,
+            info.questionRows === 0 ? '雲端還是空的，按下方「推送」即可把本機題庫寫進試算表。' : '');
+        }
+        render();
+
+        if (autoSync && info) {
+          if (info.questionRows > 0) await this.pullFromCloud();
+          else if (StorageManager.getQuestions().length) await this.pushToCloud('manual');
+        }
       },
 
       copyGasCode() {
@@ -2631,6 +3363,9 @@ function getOrCreateSheet_(ss, name, headers) {
           DualScreenSync.sendRemoteCommand('REMOTE_START');
         }
 
+        try {
+          if (navigator.maxTouchPoints > 0 && !FullscreenHelper.isFull() && !FullscreenHelper.isStandalone() && FullscreenHelper.canRequest()) FullscreenHelper.request();
+        } catch (e) {}
         const allQuestions = StorageManager.getQuestions();
         if (!allQuestions.length) {
           UI.showToast('題庫是空的，請先到後台新增或匯入題目！', 'error');
@@ -3509,6 +4244,8 @@ function getOrCreateSheet_(ss, name, headers) {
       MascotManager.renderAll();
       DualScreenSync.init();
       BackgroundAndFX.init();
+      FullscreenHelper.init();
+      DriveAssets.preloadAll();
       GASConnector.syncOnBoot();
     });
   </script>
