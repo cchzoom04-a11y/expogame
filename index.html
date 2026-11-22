@@ -1965,7 +1965,7 @@ function json_(obj) {
         }
       },
 
-      saveSettings(settings, { autoSync = true } = {}) {
+      saveSettings(settings) {
         try {
           localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(settings));
         } catch (err) {
@@ -1973,7 +1973,7 @@ function json_(obj) {
           return false;
         }
         DualScreenSync.broadcastState();
-        if (autoSync) GASConnector.scheduleAutoPush('config');
+        GASConnector.scheduleAutoPush('config');
         return true;
       },
 
@@ -2098,26 +2098,23 @@ function json_(obj) {
         const file = event.target.files[0];
         event.target.value = '';
         if (!file) return;
-        const inputId = `settingLogo${slotNum}Url`;
+        const input = document.getElementById(`settingLogo${slotNum}Url`);
         if (GASConnector.isConfigured()) {
-          let id;
           try {
             UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
+            const id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(slotNum);
+            this.saveLogos();
+            UI.showToast(`✅ LOGO ${slotNum} 已上傳到 Drive 並自動套用`, 'success');
+            return;
           } catch (e) {
             UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
             return;
           }
-          const url = `gdrive:${id}`;
-          document.getElementById(inputId).value = url;
-          await GASConnector.saveBranding({ [`logo${slotNum}Url`]: url }, () => {
-            this.renderAll();
-            this.updatePreview(slotNum);
-          }, { uploaded: true });
-          return;
         }
         try {
-          document.getElementById(inputId).value = await fileToCompressedDataUrl(file, 700);
+          input.value = await fileToCompressedDataUrl(file, 700);
           this.updatePreview(slotNum);
           UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按儲存套用`, 'info');
         } catch (e) {
@@ -2126,15 +2123,16 @@ function json_(obj) {
       },
 
       saveLogos() {
-        const changes = {
-          logo1Url: document.getElementById('settingLogo1Url').value.trim(),
-          logo1Title: document.getElementById('settingLogo1Title').value.trim() || '彰基智慧醫療創新展館',
-          logo1Sub: document.getElementById('settingLogo1Sub').value.trim(),
-          logo2Url: document.getElementById('settingLogo2Url').value.trim(),
-          logo2Title: document.getElementById('settingLogo2Title').value.trim() || '智慧醫療科技嘉年華',
-          logo2Sub: document.getElementById('settingLogo2Sub').value.trim()
-        };
-        return GASConnector.saveBranding(changes, () => this.renderAll());
+        const s = StorageManager.getSettings();
+        s.logo1Url = document.getElementById('settingLogo1Url').value.trim();
+        s.logo1Title = document.getElementById('settingLogo1Title').value.trim() || '彰基智慧醫療創新展館';
+        s.logo1Sub = document.getElementById('settingLogo1Sub').value.trim();
+        s.logo2Url = document.getElementById('settingLogo2Url').value.trim();
+        s.logo2Title = document.getElementById('settingLogo2Title').value.trim() || '智慧醫療科技嘉年華';
+        s.logo2Sub = document.getElementById('settingLogo2Sub').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('雙主要 LOGO 已儲存並即時更新！', 'success');
       },
 
       resetDefaults() {
@@ -2269,26 +2267,23 @@ function json_(obj) {
         const file = event.target.files[0];
         event.target.value = '';
         if (!file) return;
-        const inputId = this.FIELDS[key].input;
+        const input = document.getElementById(this.FIELDS[key].input);
         if (GASConnector.isConfigured()) {
-          let id;
           try {
             UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
+            const id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
+            input.value = `gdrive:${id}`;
+            this.updatePreview(key);
+            this.saveUrls();
+            UI.showToast('✅ 吉祥物圖片已上傳到 Drive 並自動套用', 'success');
+            return;
           } catch (e) {
             UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
             return;
           }
-          const url = `gdrive:${id}`;
-          document.getElementById(inputId).value = url;
-          await GASConnector.saveBranding({ [`mascot${key}`]: url }, () => {
-            this.renderAll();
-            this.updatePreview(key);
-          }, { uploaded: true });
-          return;
         }
         try {
-          document.getElementById(inputId).value = await fileToCompressedDataUrl(file, 800);
+          input.value = await fileToCompressedDataUrl(file, 800);
           this.updatePreview(key);
           UI.showToast('圖片已載入（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
         } catch (e) {
@@ -2297,11 +2292,14 @@ function json_(obj) {
       },
 
       saveUrls() {
-        const changes = {};
-        for (const [key, field] of Object.entries(this.FIELDS)) {
-          changes[`mascot${key}`] = document.getElementById(field.input).value.trim();
-        }
-        return GASConnector.saveBranding(changes, () => this.renderAll());
+        const s = StorageManager.getSettings();
+        s.mascotHome = document.getElementById('settingMascotHome').value.trim();
+        s.mascotIdle = document.getElementById('settingMascotIdle').value.trim();
+        s.mascotHappy = document.getElementById('settingMascotHappy').value.trim();
+        s.mascotSad = document.getElementById('settingMascotSad').value.trim();
+        StorageManager.saveSettings(s);
+        this.renderAll();
+        UI.showToast('吉祥物圖片設定已儲存！', 'success');
       },
 
       resetToDefault() {
@@ -2691,8 +2689,6 @@ function json_(obj) {
       autoTimer: null,
       pendingParts: new Set(),
       lastStatus: null,
-      syncQueue: Promise.resolve(),
-      brandingRevision: 0,
 
       getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
       isConfigured() { return !!this.getUrl(); },
@@ -2830,13 +2826,13 @@ function json_(obj) {
         return out;
       },
 
-      applyCloud(data, { applyConfig = true } = {}) {
+      applyCloud(data) {
         this.suppress = true;
         try {
           if (Array.isArray(data.questions) && data.questions.length > 0) {
             StorageManager.saveQuestions(data.questions);
           }
-          if (applyConfig && data.config && typeof data.config === 'object') {
+          if (data.config && typeof data.config === 'object') {
             const current = StorageManager.getSettings();
             const cloud = this.coerceConfig(data.config);
             StorageManager.saveSettings({
@@ -2855,12 +2851,9 @@ function json_(obj) {
 
       async syncOnBoot() {
         if (!this.isConfigured()) return;
-        const brandingRevision = this.brandingRevision;
-        const url = this.getUrl();
         try {
           const data = await this.getGas();
-          if (url !== this.getUrl()) return;
-          this.applyCloud(data, { applyConfig: brandingRevision === this.brandingRevision });
+          this.applyCloud(data);
           this.lastStatus = { ok: true, time: new Date() };
           // 試算表還是空的：把本機題庫自動寫進去，初始化資料庫
           if (!(data.questions || []).length && StorageManager.getQuestions().length) {
@@ -2906,8 +2899,8 @@ function json_(obj) {
         }
       },
 
-      buildSafeConfig(skipped, settings = StorageManager.getSettings()) {
-        const cfg = { ...settings };
+      buildSafeConfig(skipped) {
+        const cfg = { ...StorageManager.getSettings() };
         delete cfg.adminPasswordHash;
         delete cfg.gasWebAppUrl;
         // blob: 只在本次瀏覽器有效、過大的 data: 超過試算表儲存格上限，都不送出
@@ -2927,55 +2920,6 @@ function json_(obj) {
         return cfg;
       },
 
-      sendSheetSync(payload) {
-        const url = this.getUrl();
-        const sync = this.syncQueue.then(() => {
-          if (url !== this.getUrl()) throw new Error('GAS 網址已變更，請重新儲存');
-          return this.postGas(payload);
-        });
-        this.syncQueue = sync.catch(() => {});
-        return sync;
-      },
-
-      async saveBranding(changes, render, { uploaded = false } = {}) {
-        this.brandingRevision++;
-        const settings = { ...StorageManager.getSettings(), ...changes };
-        const localSaved = StorageManager.saveSettings(settings, { autoSync: false });
-        if (localSaved) render();
-        if (!this.isConfigured()) {
-          if (localSaved) UI.showToast('圖片設定已儲存於本機', 'success');
-          return localSaved;
-        }
-
-        const skipped = [];
-        const config = this.buildSafeConfig(skipped, changes);
-        for (const key of Object.keys(config)) {
-          if (config[key].length >= 49000) {
-            delete config[key];
-            skipped.push(key);
-          }
-        }
-        try {
-          if (Object.keys(config).length) {
-            UI.showToast('正在將圖片設定寫入 Google Sheet…', 'info');
-            const result = await this.sendSheetSync({ action: 'SYNC_UP', config });
-            if (!Number.isInteger(result.config) || result.config < 1) {
-              throw new Error('GAS 未確認設定已寫入');
-            }
-          }
-          if (skipped.length) {
-            UI.showToast('部分素材是本機檔或超過儲存格大小，請使用 Drive 上傳或貼上 Drive 連結', 'error');
-            return false;
-          }
-          UI.showToast(uploaded ? '圖片已存入 Drive，網站設定已同步至 Google Sheet' : '圖片設定已同步至 Google Sheet', 'success');
-          return true;
-        } catch (err) {
-          const prefix = uploaded ? '圖片已存入 Drive，但網站設定未確認同步' : '圖片設定同步失敗';
-          UI.showToast(`${prefix}：${err.message}。請在後台再按一次儲存`, 'error');
-          return false;
-        }
-      },
-
       // mode: 'manual'（按鈕）| 'auto'（後台修改後自動）| 'boot'（開機初始化，不跳提示）
       async pushToCloud(mode = 'manual', parts = ['questions', 'config']) {
         if (!this.isConfigured()) {
@@ -2988,7 +2932,7 @@ function json_(obj) {
           const skipped = [];
           if (parts.includes('questions')) payload.questions = StorageManager.getQuestions();
           if (parts.includes('config')) payload.config = this.buildSafeConfig(skipped);
-          const r = await this.sendSheetSync(payload);
+          const r = await this.postGas(payload);
           this.lastStatus = { ok: true, time: new Date() };
           if (mode === 'manual') {
             UI.showToast(`✅ 已寫入 Google Sheet（題庫 ${r.questions ?? '—'} 題）${skipped.length ? `；${skipped.length} 個本機暫存素材未同步` : ''}`, 'success');
