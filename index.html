@@ -2,12 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="醫療大挑戰" />
-  <meta name="theme-color" content="#e0f2fe" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>彰基智慧醫療大挑戰 | Smart Medical Challenge</title>
 
   <!-- Google Fonts -->
@@ -74,7 +69,6 @@
       overflow: hidden;
     }
 
-    /* 3D 卡通立體按鈕系統 */
     .btn-3d {
       position: relative;
       border-radius: 1.35rem;
@@ -125,7 +119,6 @@
       box-shadow: 0 2px 0 #C2410C, 0 6px 12px rgba(249, 115, 22, 0.3);
     }
 
-    /* 3D 遊戲舞台卡片 */
     .stage-card {
       background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(14px);
@@ -137,7 +130,6 @@
         inset 0 2px 8px rgba(255, 255, 255, 0.9);
     }
 
-    /* 選項作答結果樣式 */
     .option-correct {
       background: linear-gradient(180deg, #4ADE80 0%, #16A34A 100%) !important;
       border-color: #bbf7d0 !important;
@@ -156,7 +148,6 @@
       filter: grayscale(35%);
     }
 
-    /* 動畫 Keyframes */
     @keyframes mascotIdleFloat {
       0%, 100% { transform: translateY(0px) scale(1, 1); }
       50% { transform: translateY(-10px) scale(1.02, 0.98); }
@@ -195,10 +186,6 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); }
     }
-    @keyframes floatUpFade {
-      0% { opacity: 1; transform: translateY(0) scale(0.9); }
-      100% { opacity: 0; transform: translateY(-55px) scale(1.25); }
-    }
     @keyframes titleShine {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -212,7 +199,6 @@
     .anim-question-in { animation: questionEntrance 0.48s var(--ease-bounce) forwards; }
     .anim-combo-pop { animation: comboPop 0.45s var(--ease-bounce) forwards; }
     .anim-pulse-urgent { animation: pulseUrgent 0.55s ease-in-out infinite; }
-    .anim-score-float { animation: floatUpFade 1.1s ease-out forwards; }
 
     .gradient-title-text {
       background: linear-gradient(90deg, #0284C7, #0D9488, #F97316, #0284C7);
@@ -226,13 +212,11 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 999px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 999px; }
 
-    /* ===== v3 新增樣式 ===== */
     .float-badge{position:absolute;width:clamp(44px,7.5vh,84px);height:clamp(44px,7.5vh,84px);border-radius:9999px;background:#fff;
       box-shadow:0 8px 20px rgba(2,132,199,.25);display:flex;align-items:center;justify-content:center;
       font-size:clamp(1.2rem,3.6vh,2.5rem);animation:floatIcon 3.6s ease-in-out infinite;border:3px solid #e0f2fe;z-index:5}
     @keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-16px) rotate(6deg)}}
 
-    /* 答案按鈕：加大，長輩友善 */
     .opt-btn{min-height:clamp(92px,15.5vh,176px);padding:clamp(.8rem,2vh,1.6rem) clamp(1rem,2.2vw,2.2rem);
       gap:clamp(.9rem,1.8vw,1.8rem);border-radius:1.8rem;width:100%;text-align:left;justify-content:flex-start}
     .opt-letter{width:clamp(52px,9vh,96px);height:clamp(52px,9vh,96px);border-radius:1.2rem;background:rgba(255,255,255,.25);
@@ -243,32 +227,28 @@
     .option-correct{animation:correctPulse .55s ease-in-out 3}
     @keyframes correctPulse{0%,100%{transform:scale(1.03)}50%{transform:scale(1.09)}}
 
-    /* 倒數最後 5 秒：放大 + 震動 */
     .timer-urgent{border-color:#fb7185 !important;background:#fff1f2 !important;
       box-shadow:0 0 0 10px rgba(244,63,94,.22),0 0 60px rgba(244,63,94,.6) !important}
     @keyframes timerPanic{
-      0%,100%{transform:scale(1.25) translate(0,0) rotate(0deg)}
-      12%{transform:scale(1.35) translate(-5px,3px) rotate(-3deg)}
-      25%{transform:scale(1.24) translate(6px,-4px) rotate(3deg)}
-      37%{transform:scale(1.38) translate(-6px,-2px) rotate(-2deg)}
-      50%{transform:scale(1.25) translate(5px,4px) rotate(2deg)}
-      62%{transform:scale(1.40) translate(-4px,-4px) rotate(-3deg)}
-      75%{transform:scale(1.24) translate(6px,2px) rotate(3deg)}
-      87%{transform:scale(1.35) translate(-5px,-3px) rotate(-2deg)}}
+      0%,100%{transform:scale(1.32) translate(0,0) rotate(0deg)}
+      12%{transform:scale(1.44) translate(-5px,3px) rotate(-3deg)}
+      25%{transform:scale(1.30) translate(6px,-4px) rotate(3deg)}
+      37%{transform:scale(1.46) translate(-6px,-2px) rotate(-2deg)}
+      50%{transform:scale(1.32) translate(5px,4px) rotate(2deg)}
+      62%{transform:scale(1.48) translate(-4px,-4px) rotate(-3deg)}
+      75%{transform:scale(1.30) translate(6px,2px) rotate(3deg)}
+      87%{transform:scale(1.44) translate(-5px,-3px) rotate(-2deg)}}
     .anim-timer-panic{animation:timerPanic .5s linear infinite;z-index:20}
     @keyframes numTick{0%{transform:scale(1.5)}100%{transform:scale(1)}}
     .anim-num-tick{animation:numTick .35s ease-out}
 
-    /* 垂直關卡進度條 */
     .rail-marker{position:absolute;left:50%;transform:translate(-50%,50%);width:clamp(34px,5.2vh,52px);height:clamp(34px,5.2vh,52px);
       border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:900;
       font-size:clamp(1rem,2.6vh,1.6rem);z-index:2;transition:all .4s var(--ease-bounce)}
     .rail-marker.done{background:#10b981;color:#fff;border:3px solid #a7f3d0}
-    .rail-marker.current{background:#f97316;color:#fff;border:4px solid #fed7aa;box-shadow:0 0 0 6px rgba(249,115,22,.25);animation:markerPulse 1s ease-in-out infinite}
-    @keyframes markerPulse{0%,100%{transform:translate(-50%,50%) scale(1)}50%{transform:translate(-50%,50%) scale(1.15)}}
+    .rail-marker.current{background:#f97316;color:#fff;border:4px solid #fed7aa;box-shadow:0 0 0 6px rgba(249,115,22,.25);animation:pulseUrgent 1s ease-in-out infinite}
     .rail-marker.todo{background:#fff;color:#94a3b8;border:3px solid #cbd5e1}
 
-    /* 答對慶祝 */
     .celebrate-sun{position:absolute;width:150vmin;height:150vmin;border-radius:50%;opacity:0;
       background:repeating-conic-gradient(from 0deg,rgba(250,204,21,.65) 0 9deg,rgba(255,255,255,0) 9deg 18deg);
       -webkit-mask-image:radial-gradient(circle,#000 8%,transparent 68%);mask-image:radial-gradient(circle,#000 8%,transparent 68%)}
@@ -292,109 +272,13 @@
       0%{transform:translate(-50%,-50%) scale(0);opacity:0}
       30%{opacity:1;transform:translate(calc(-50% + var(--dx)*.5),calc(-50% + var(--dy)*.5)) scale(1.3)}
       100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) - 30px)) scale(.4) rotate(180deg);opacity:0}}
-
-    /* ===== v4 ===== */
-    .logo-free img{filter:drop-shadow(0 4px 10px rgba(15,23,42,.18))}
-    .title-line2{display:flex;font-size:1.45em;line-height:1.1;gap:.04em;margin-top:.05em}
-    .title-char{display:inline-block;background:linear-gradient(180deg,#FDE047 0%,#F97316 55%,#EF4444 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
-      filter:drop-shadow(0 .05em 0 #9a3412) drop-shadow(0 .1em .12em rgba(0,0,0,.22));
-      animation:charBounce 1.9s ease-in-out infinite;transform-origin:50% 85%}
-    .title-char:nth-child(2){animation-delay:.18s}
-    .title-char:nth-child(3){animation-delay:.36s}
-    @keyframes charBounce{0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}25%{transform:translateY(-.14em) rotate(3deg) scale(1.1)}50%{transform:translateY(0) rotate(-2deg) scale(1)}}
-    .title-spark{position:absolute;font-size:.42em;animation:twinkle 1.8s ease-in-out infinite;pointer-events:none}
-    @keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.45}50%{transform:scale(1.25) rotate(25deg);opacity:1}}
-
-    /* ===== v5：多裝置版型（桌機 / iPad / Android 平板 / 手機；直式、橫式皆可） ===== */
-    :root{
-      --mascot:clamp(90px,min(36vh,22vw),460px);
-      --timer:clamp(84px,min(25vh,17vw),310px);
-    }
-    @media (orientation:portrait){
-      :root{--mascot:clamp(110px,min(20vh,34vw),320px);--timer:clamp(100px,min(18vh,32vw),270px)}
-    }
-    html{-webkit-text-size-adjust:100%;overscroll-behavior:none}
-    body{overscroll-behavior:none;touch-action:manipulation;-webkit-touch-callout:none}
-    body.game-viewport-lock{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:hidden}
-    #appRoot{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-    @media (hover:none){.btn-3d:hover:not(:active){transform:none;filter:none}}
-
-    /* 首頁 */
-    .home-section{padding:clamp(.5rem,2vh,2rem) clamp(.75rem,2.5vw,2rem);max-width:1920px;overflow-y:auto}
-    .home-main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(.75rem,3vh,2rem);padding:.25rem 0}
-    .home-mascot{width:clamp(180px,min(42vh,78vw),560px);height:clamp(180px,min(42vh,78vw),560px)}
-    .home-title{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:48rem}
-    .home-h1{font-size:clamp(2rem,min(10vw,7vh),6.5rem);margin-bottom:clamp(.75rem,3vh,2.2rem)}
-    .home-start{padding:clamp(.7rem,2.4vh,2.2rem) clamp(1.8rem,6vw,5.5rem);font-size:clamp(1.5rem,min(7vw,5.5vh),3.8rem)}
-    .title-line2{justify-content:center}
-    .logo-img-home{height:clamp(40px,min(11vh,9vw),128px);max-width:44vw;object-fit:contain}
-    .logo-img-game{height:clamp(30px,min(8.5vh,7vw),96px);max-width:28vw;object-fit:contain}
-    .logo-icon-home{width:clamp(40px,min(10vh,9vw),88px);height:clamp(40px,min(10vh,9vw),88px);font-size:clamp(1.1rem,min(4.2vh,4vw),2.4rem)}
-    .logo-title-home{font-size:clamp(.95rem,min(3.4vh,3.4vw),1.9rem)}
-    .logo-sub-home{font-size:clamp(.6rem,min(1.9vh,1.9vw),.9rem)}
-    .logo-icon-game{width:clamp(26px,7vh,60px);height:clamp(26px,7vh,60px);font-size:clamp(.85rem,3.2vh,1.8rem)}
-    .logo-title-game{font-size:clamp(.72rem,2.6vh,1.4rem);max-width:24vw}
-    .logo-sub-game{font-size:clamp(.45rem,1.5vh,.72rem);max-width:24vw}
-    .logo-bar{padding:clamp(.25rem,1vh,.75rem) clamp(.6rem,2vw,1.75rem);gap:clamp(.5rem,1.5vw,1.5rem);min-width:0}
-    .pause-btn{white-space:nowrap;padding:clamp(.4rem,1.4vh,1.1rem) clamp(.8rem,1.8vw,2rem);font-size:clamp(.95rem,min(2.4vh,3.4vw),1.9rem)}
-    @media (max-width:520px){.logo-img-game{max-width:23vw}.pause-label{display:none}}
-    @media (orientation:landscape){
-      .home-section{overflow:hidden}
-      .home-main{flex-direction:row;gap:clamp(1rem,5vw,5rem)}
-      .home-mascot{width:clamp(130px,min(56vh,40vw),720px);height:clamp(130px,min(56vh,40vw),720px)}
-      .home-title{align-items:flex-start;text-align:left}
-      .home-h1{font-size:clamp(1.8rem,min(5.6vw,11vh),6.5rem)}
-      .home-start{font-size:clamp(1.3rem,min(3.6vw,7vh),3.8rem)}
-      .title-line2{justify-content:flex-start}
-    }
-    @media (orientation:landscape) and (max-height:430px){
-      .home-section{overflow-y:auto}
-      .home-badge{display:none}
-    }
-
-    /* 挑戰頁 */
-    .game-section{gap:clamp(.4rem,1.4vw,1.5rem);padding:clamp(.4rem,1.6vh,1.5rem) clamp(.5rem,1.6vw,1.5rem);max-width:1920px;overflow-y:auto}
-    .game-col{gap:clamp(.35rem,1.3vh,1rem)}
-    .q-card{padding:clamp(.5rem,1.8vh,2rem) clamp(.9rem,3vw,3.5rem)}
-    .q-text{font-size:clamp(1.3rem,min(4.6vw,3.2vh),3rem)}
-    .stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,1.8vh,2rem);align-items:center}
-    .stage-mascot{grid-column:1;grid-row:1}
-    .stage-timer{grid-column:2;grid-row:1}
-    .stage-options{grid-column:1 / -1;grid-row:2;gap:clamp(.45rem,1.5vh,1.4rem)}
-    .mascot-box{width:var(--mascot);height:var(--mascot);max-width:100%}
-    .timer-box{width:var(--timer);height:var(--timer)}
-    .timer-num{font-size:calc(var(--timer)*.36)}
-    .timer-label{font-size:calc(var(--timer)*.085)}
-    .rail-box{width:clamp(64px,8.5vw,136px)}
-    .rail-count{font-size:clamp(1.2rem,min(4.5vh,3.2vw),3rem)}
-    .rail-track{width:clamp(34px,5.8vh,56px);min-height:90px}
-    .opt-btn{min-height:clamp(72px,11.5vh,150px)}
-    .opt-letter{width:clamp(40px,min(9vh,9vw),96px);height:clamp(40px,min(9vh,9vw),96px);font-size:clamp(1.4rem,min(5vh,6vw),3.4rem)}
-    .opt-text{font-size:clamp(1.3rem,min(4.4vw,3.6vh),2.7rem)}
-    @media (orientation:landscape){
-      .game-section{overflow-y:auto}
-      .q-text{font-size:clamp(1.15rem,min(3vw,5vh),3.3rem)}
-      .stage-grid{grid-template-columns:minmax(0,1fr) minmax(0,2.3fr) minmax(0,1fr);gap:clamp(.5rem,1.8vw,1.6rem)}
-      .stage-mascot{grid-column:1;grid-row:1}
-      .stage-options{grid-column:2;grid-row:1}
-      .stage-timer{grid-column:3;grid-row:1}
-      .opt-btn{min-height:clamp(56px,15.5vh,176px)}
-      .opt-text{font-size:clamp(1.1rem,min(2.6vw,4.6vh),2.7rem)}
-    }
-    @media (orientation:landscape) and (min-height:430px){.game-section{overflow:hidden}}
-    .rail-marker{width:clamp(28px,4.8vh,48px);height:clamp(28px,4.8vh,48px);font-size:clamp(.8rem,2.2vh,1.5rem)}
   </style>
 </head>
 <body class="game-viewport-lock">
 
-  <!-- 動態醫療科技嘉年華背景 Canvas -->
   <canvas id="bgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
-
-  <!-- 全螢幕煙火與紙花粒子特效 Canvas -->
   <canvas id="fxCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-40"></canvas>
 
-  <!-- 答對慶祝大字動畫 -->
   <div id="celebrateOverlay" class="fixed inset-0 z-[35] pointer-events-none hidden items-center justify-center overflow-hidden">
     <div class="celebrate-sun"></div>
     <div class="celebrate-ring"></div>
@@ -402,20 +286,7 @@
     <div id="celebrateText" class="celebrate-text"></div>
   </div>
 
-  <!-- 暫停畫面 -->
-  <div id="pauseOverlay" class="fixed inset-0 z-[45] hidden items-center justify-center bg-slate-900/75 backdrop-blur-md p-4">
-    <div class="stage-card w-full max-w-2xl p-8 sm:p-12 text-center">
-      <div class="w-24 h-24 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center text-5xl mx-auto mb-4"><i class="fa-solid fa-pause"></i></div>
-      <h2 class="text-4xl sm:text-5xl font-black text-slate-800 mb-2">挑戰暫停中</h2>
-      <p class="text-lg sm:text-xl font-bold text-slate-500 mb-8">時間已停止，準備好了就按「繼續挑戰」</p>
-      <div class="flex flex-col gap-4">
-        <button onclick="GameEngine.resumeGame()" class="btn-3d btn-3d-orange w-full py-6 text-3xl sm:text-4xl"><i class="fa-solid fa-play"></i><span>繼續挑戰</span></button>
-        <button onclick="GameEngine.confirmQuit()" class="btn-3d btn-3d-blue w-full py-4 text-xl sm:text-2xl"><i class="fa-solid fa-house"></i><span>結束本次挑戰・返回首頁</span></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 全域訊息提示 Toast (僅在後台或系統操作使用) -->
+  <!-- 全域訊息提示 Toast（包含上傳進度顯示） -->
   <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- 自訂確認對話框 Modal -->
@@ -433,39 +304,26 @@
     </div>
   </div>
 
-  <!-- ==========================================================================
-       右下角低調「設定」齒輪按鈕 (全遊戲頁面常駐，點擊輸入密碼進入後台)
-       ========================================================================== -->
-  <button id="fullscreenBtn" onclick="FullscreenHelper.toggle()" aria-label="全螢幕"
-    class="fixed z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200"
-    style="bottom:max(1rem,env(safe-area-inset-bottom));left:max(1rem,env(safe-area-inset-left))">
-    <i class="fa-solid fa-expand"></i>
-  </button>
-
+  <!-- 右下角低調「設定」齒輪按鈕 -->
   <button id="cornerSettingsTrigger" onclick="AdminModule.openLogin()" aria-label="設定"
-    style="bottom:max(1rem,env(safe-area-inset-bottom));left:max(4.25rem,calc(env(safe-area-inset-left) + 3.25rem))"
-    class="fixed z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200 hover:rotate-90">
+    class="fixed bottom-4 right-4 z-30 w-11 h-11 rounded-full bg-white/65 hover:bg-white/95 backdrop-blur-md text-slate-500 hover:text-sky-700 shadow-md border border-white/80 flex items-center justify-center text-lg transition-all duration-200 hover:rotate-90">
     <i class="fa-solid fa-gear"></i>
   </button>
 
-  <!-- ==========================================================================
-       主應用程式容器 (App Shell)
-       ========================================================================== -->
   <div id="appRoot" class="relative z-10 w-full h-full flex flex-col">
 
     <!-- ========================================================================
-         1. 首頁 (HOME SCREEN)：雙 LOGO 置中放大、Q 版人物放大
+         1. 首頁 (HOME SCREEN)
          ======================================================================== -->
-    <section id="screenHome" class="home-section w-full h-full flex flex-col justify-between gap-2 mx-auto">
+    <section id="screenHome" class="w-full h-full flex flex-col justify-between gap-2 p-4 sm:p-6 lg:p-8 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
       <header class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 shrink-0">
-        <div id="homeLogo1Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
+        <div id="homeLogo1Container" class="flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 sm:px-9 py-3 sm:py-4 rounded-3xl shadow-lg border-2 border-white"></div>
         <div class="hidden sm:block w-1.5 h-14 lg:h-20 rounded-full bg-gradient-to-b from-sky-300 to-teal-300"></div>
-        <div id="homeLogo2Container" class="flex items-center gap-4 px-2 sm:px-4 py-1 logo-free"></div>
+        <div id="homeLogo2Container" class="flex items-center gap-4 bg-white/90 backdrop-blur-md px-6 sm:px-9 py-3 sm:py-4 rounded-3xl shadow-lg border-2 border-white"></div>
       </header>
 
-      <main class="home-main flex-1 min-h-0">
-        <!-- 超大 Q 版吉祥物 -->
-        <div class="home-mascot relative flex items-center justify-center shrink-0">
+      <main class="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-20 py-2">
+        <div class="relative flex items-center justify-center shrink-0" style="width:clamp(260px,56vh,720px);height:clamp(260px,56vh,720px);max-width:90vw">
           <div class="absolute inset-[-8%] rounded-full bg-gradient-to-br from-sky-300/45 via-teal-200/35 to-amber-200/45 blur-2xl"></div>
           <span class="float-badge" style="top:2%;left:-4%;color:#0284C7"><i class="fa-solid fa-stethoscope"></i></span>
           <span class="float-badge" style="top:8%;right:-4%;color:#EF4444;animation-delay:.6s"><i class="fa-solid fa-heart-pulse"></i></span>
@@ -477,20 +335,15 @@
           </div>
         </div>
 
-        <!-- 標題與開始按鈕 -->
-        <div class="home-title">
-          <div class="home-badge inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
+        <div class="text-center lg:text-left max-w-3xl flex flex-col items-center lg:items-start">
+          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
             <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
             SMART MEDICAL CHALLENGE
           </div>
-          <h1 class="home-h1 relative w-fit font-black tracking-tight leading-none">
-            <span class="gradient-title-text block leading-tight pb-1">彰基智慧醫療</span>
-            <span class="title-line2" aria-label="大挑戰"><span class="title-char">大</span><span class="title-char">挑</span><span class="title-char">戰</span></span>
-            <span class="title-spark" style="top:48%;right:4%">✨</span>
-            <span class="title-spark" style="top:78%;right:15%;animation-delay:.6s">⭐</span>
-            <span class="title-spark" style="top:-6%;left:-3%;animation-delay:1.1s">✨</span>
+          <h1 class="font-black tracking-tight leading-tight mb-9 gradient-title-text drop-shadow-sm" style="font-size:clamp(2.6rem,5.6vw,6.5rem)">
+            彰基智慧醫療大挑戰
           </h1>
-          <button onclick="GameEngine.startNewGame()" class="home-start btn-3d btn-3d-orange rounded-[2rem] group">
+          <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange rounded-[2rem] w-full sm:w-auto group" style="padding:clamp(1.1rem,3vh,2.4rem) clamp(2.5rem,6vw,6rem);font-size:clamp(1.8rem,3.8vw,3.8rem)">
             <i class="fa-solid fa-play text-amber-200 group-hover:scale-125 transition-transform"></i>
             <span>開始挑戰</span>
           </button>
@@ -500,32 +353,24 @@
     </section>
 
     <!-- ========================================================================
-         2. 遊戲答題舞台：題目在上、答案置中、右側垂直進度條
+         2. 遊戲答題舞台
          ======================================================================== -->
-    <section id="screenGame" class="game-section hidden w-full h-full flex-row mx-auto">
-      <!-- 左側主區 -->
-      <div class="game-col flex-1 min-w-0 min-h-0 flex flex-col">
-        <!-- 左上：雙 LOGO（放大） + 連擊徽章 -->
-        <header class="flex items-center justify-between gap-2 shrink-0 min-w-0">
-          <div class="logo-bar flex items-center bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white">
-            <div id="gameLogo1Container" class="flex items-center min-w-0"></div>
-            <div class="w-0.5 bg-slate-200 shrink-0" style="height:clamp(24px,6vh,56px)"></div>
-            <div id="gameLogo2Container" class="flex items-center min-w-0"></div>
+    <section id="screenGame" class="hidden w-full h-full flex-row gap-3 sm:gap-5 p-3 sm:p-5 lg:p-6 max-w-[1920px] mx-auto overflow-y-auto lg:overflow-hidden">
+      <div class="flex-1 min-w-0 min-h-0 flex flex-col gap-3 sm:gap-4">
+        <header class="flex items-center justify-between gap-3 shrink-0">
+          <div class="flex items-center gap-3 sm:gap-6 bg-white/90 backdrop-blur-md px-4 sm:px-7 py-2 sm:py-3 rounded-3xl shadow-md border-2 border-white">
+            <div id="gameLogo1Container" class="flex items-center"></div>
+            <div class="w-0.5 h-10 sm:h-14 bg-slate-200"></div>
+            <div id="gameLogo2Container" class="flex items-center"></div>
           </div>
-          <div class="flex items-center gap-3 sm:gap-4">
-            <div id="hudComboBadge" class="hidden px-5 sm:px-8 py-2 sm:py-3 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-display font-black text-xl sm:text-3xl shadow-lg border-2 border-yellow-200 items-center gap-2">
-              <i class="fa-solid fa-fire text-yellow-200"></i>
-              <span id="hudComboText">COMBO x2</span>
-            </div>
-            <button id="pauseBtn" onclick="GameEngine.pauseGame()" aria-label="暫停" class="pause-btn btn-3d btn-3d-blue shrink-0">
-              <i class="fa-solid fa-pause"></i><span class="pause-label">暫停</span>
-            </button>
+          <div id="hudComboBadge" class="hidden px-5 sm:px-8 py-2 sm:py-3 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-display font-black text-xl sm:text-3xl shadow-lg border-2 border-yellow-200 items-center gap-2">
+            <i class="fa-solid fa-fire text-yellow-200"></i>
+            <span id="hudComboText">COMBO x2</span>
           </div>
         </header>
 
-        <!-- 題目（最上方） -->
-        <div id="questionCard" class="q-card stage-card shrink-0 w-full flex flex-col justify-center relative overflow-hidden">
-          <h2 id="questionText" class="q-text font-black text-slate-800 leading-snug tracking-tight text-center">
+        <div id="questionCard" class="stage-card shrink-0 w-full px-6 py-5 sm:px-10 sm:py-7 lg:px-14 lg:py-8 flex flex-col justify-center relative overflow-hidden">
+          <h2 id="questionText" class="font-black text-slate-800 leading-snug tracking-tight text-center" style="font-size:clamp(1.6rem,3vw,3.3rem)">
             題目載入中...
           </h2>
           <div id="comboCelebrationBanner" class="hidden mt-4 py-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-display font-black text-center text-xl sm:text-3xl shadow-lg anim-combo-pop">
@@ -533,20 +378,17 @@
           </div>
         </div>
 
-        <!-- 中央舞台：吉祥物（左）｜ A B C 答案（置中）｜ 倒數計時（右） -->
-        <main id="gameStageMain" class="stage-grid flex-1 min-h-0">
-          <!-- 吉祥物 -->
-          <div class="stage-mascot relative flex items-center justify-center">
+        <main id="gameStageMain" class="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-[1fr_minmax(0,2.3fr)_1fr] gap-4 lg:gap-8 items-center">
+          <div class="relative col-start-1 row-start-1 flex items-center justify-center">
             <div id="feedbackBanner" class="hidden absolute -top-4 sm:-top-6 whitespace-nowrap px-5 py-2 rounded-2xl font-black text-xl sm:text-3xl shadow-lg border-2 z-20 anim-combo-pop">
               答對了！
             </div>
-            <div id="gameMascotWrapper" class="mascot-box flex items-center justify-center anim-mascot-idle">
+            <div id="gameMascotWrapper" class="flex items-center justify-center anim-mascot-idle" style="width:clamp(170px,38vh,460px);height:clamp(170px,38vh,460px);max-width:100%">
               <div id="gameMascotContainer" class="w-full h-full flex items-center justify-center drop-shadow-xl"></div>
             </div>
           </div>
 
-          <!-- 答案 A / B / C -->
-          <div id="optionsContainer" class="stage-options flex flex-col w-full">
+          <div id="optionsContainer" class="col-span-2 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-start-1 flex flex-col gap-3 sm:gap-5 w-full">
             <button id="optionBtnA" onclick="GameEngine.submitAnswer('A')" class="btn-3d btn-3d-blue opt-btn">
               <span class="opt-letter">A</span>
               <span id="optionTextA" class="opt-text">選項 A</span>
@@ -561,29 +403,27 @@
             </button>
           </div>
 
-          <!-- 倒數計時器（放大；最後 5 秒縮放震動） -->
-          <div class="stage-timer flex items-center justify-center">
-            <div id="timerWrapper" class="timer-box relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100">
+          <div class="col-start-2 row-start-1 lg:col-start-3 flex items-center justify-center">
+            <div id="timerWrapper" class="relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100" style="width:clamp(140px,28vh,310px);height:clamp(140px,28vh,310px)">
               <svg class="w-full h-full -rotate-90 transform p-2" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" stroke-width="11" />
                 <circle id="timerCircleProgress" cx="60" cy="60" r="52" fill="none" stroke="#0284C7" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.72" stroke-dashoffset="0" class="transition-all duration-200" />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="timer-label font-black text-slate-400">TIME</span>
-                <span id="timerNumberText" class="timer-num font-display font-black text-slate-800 leading-none">15</span>
+                <span class="font-black text-slate-400" style="font-size:clamp(.85rem,2.2vh,1.5rem)">TIME</span>
+                <span id="timerNumberText" class="font-display font-black text-slate-800 leading-none" style="font-size:clamp(3.4rem,11vh,8rem)">15</span>
               </div>
             </div>
           </div>
         </main>
       </div>
 
-      <!-- 最右側：垂直關卡進度條 -->
-      <aside id="progressRail" class="rail-box shrink-0 flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
+      <aside id="progressRail" class="shrink-0 w-[92px] sm:w-[116px] lg:w-[136px] flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
         <div class="font-black text-slate-700 text-center leading-tight" style="font-size:clamp(.95rem,2.2vh,1.4rem)">關卡進度</div>
-        <div class="rail-count font-display font-black text-sky-600 leading-none text-center">
+        <div class="font-display font-black text-sky-600 leading-none text-center" style="font-size:clamp(1.6rem,4.5vh,3rem)">
           <span id="hudQuestionCurrent">1</span><span class="text-slate-400" style="font-size:.6em"> / <span id="hudQuestionTotal">3</span></span>
         </div>
-        <div class="rail-track relative flex-1">
+        <div class="relative flex-1 min-h-[140px] w-11 sm:w-14">
           <div class="absolute inset-0 bg-slate-200 rounded-full shadow-inner overflow-hidden">
             <div id="hudProgressBar" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sky-400 via-teal-400 to-emerald-400 rounded-full transition-all duration-700" style="height:33.3%"></div>
           </div>
@@ -593,11 +433,10 @@
     </section>
 
     <!-- ========================================================================
-         3. 成績結算舞台 (RESULT STAGE - 過關慶祝 & 驟死淘汰換下一位)
+         3. 成績結算舞台
          ======================================================================== -->
-    <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto overflow-y-auto">
+    <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto">
       <div class="stage-card w-full p-6 sm:p-10 text-center relative overflow-hidden">
-        <!-- 獎盃 / 狀態圖示與星級 -->
         <div class="flex flex-col items-center justify-center mb-4">
           <div id="resultStarsRow" class="flex items-center gap-3 text-3xl sm:text-5xl text-amber-400 mb-2 drop-shadow">
             <i class="fa-solid fa-star"></i>
@@ -616,7 +455,6 @@
           恭喜連續答對 3 題全數過關！
         </p>
 
-        <!-- 精簡數據儀表板（已移除最終總分） -->
         <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
           <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
             <div class="text-xs sm:text-sm font-black text-emerald-600">過關題數</div>
@@ -632,7 +470,6 @@
           </div>
         </div>
 
-        <!-- 換下一位 / 重新挑戰按鈕 -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange px-9 py-4 text-xl sm:text-2xl w-full sm:w-auto">
             <i class="fa-solid fa-user-plus"></i>
@@ -647,7 +484,7 @@
     </section>
 
     <!-- ========================================================================
-         4. 管理後台密碼驗證彈窗 (不顯示任何密碼提示)
+         4. 管理後台密碼驗證彈窗
          ======================================================================== -->
     <section id="adminLoginModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-md z-50 items-center justify-center p-4">
       <div class="stage-card max-w-md w-full p-7">
@@ -685,7 +522,6 @@
          5. 全功能管理後台 (ADMIN BACKOFFICE SCREEN)
          ======================================================================== -->
     <section id="screenAdmin" class="hidden w-full min-h-screen bg-slate-100 text-slate-800 flex-col">
-      <!-- 後台頂部導覽列 -->
       <header class="bg-slate-900 text-white px-4 sm:px-8 py-4 shadow-lg sticky top-0 z-30 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl font-black">
@@ -693,7 +529,7 @@
           </div>
           <div>
             <h1 class="text-lg sm:text-xl font-black">彰基智慧醫療大挑戰 · 系統管理後台</h1>
-            <p class="text-xs text-slate-400">GitHub Pages + GAS 雲端資料庫 · 雙 LOGO · MP3 音效替換 · 三題驟死制</p>
+            <p class="text-xs text-slate-400">雲端媒體自動存檔 · 跨設備即時同步 · 雙 LOGO · MP3 音效 · 三題驟死制</p>
           </div>
         </div>
 
@@ -704,7 +540,6 @@
         </div>
       </header>
 
-      <!-- 後台主內容區 -->
       <div class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         <!-- 統計儀表板 -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -721,8 +556,8 @@
             <div id="statTimeLimit" class="text-3xl font-display font-black text-orange-500 mt-1">15 秒</div>
           </div>
           <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-            <div class="text-xs font-black text-slate-400">GAS 雲端連線狀態</div>
-            <div id="statGasStatus" class="text-sm font-black text-slate-600 mt-2.5">本機模式 (未綁定 GAS)</div>
+            <div class="text-xs font-black text-slate-400">雲端資料庫狀態</div>
+            <div id="statCloudStatus" class="text-sm font-black text-emerald-600 mt-2.5">已自動連線雲端</div>
           </div>
         </div>
 
@@ -740,8 +575,8 @@
           <button onclick="AdminModule.switchTab('rules')" id="tabBtnRules" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
             <i class="fa-solid fa-sliders mr-1.5 text-indigo-600"></i>4. 遊戲規則與備份
           </button>
-          <button onclick="AdminModule.switchTab('gas')" id="tabBtnGas" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
-            <i class="fa-brands fa-google-drive mr-1.5 text-emerald-600"></i>5. GAS 雲端資料庫串接
+          <button onclick="AdminModule.switchTab('cloud')" id="tabBtnCloud" class="px-4 py-2.5 rounded-xl font-black text-sm bg-white text-slate-700 hover:bg-slate-200">
+            <i class="fa-solid fa-cloud-arrow-up mr-1.5 text-emerald-600"></i>5. 雲端資料庫同步
           </button>
         </div>
 
@@ -749,7 +584,6 @@
              TAB 1: 題庫管理 & Excel 匯入匯出
              ================================================================== -->
         <div id="adminTabQuestions" class="space-y-6">
-          <!-- 新增 / 編輯題目表單 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <h2 id="questionFormTitle" class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
               <i class="fa-solid fa-circle-plus text-sky-600"></i> 新增智慧醫療題目
@@ -799,7 +633,6 @@
             </form>
           </div>
 
-          <!-- Excel 批次匯入 / 匯出區塊 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
               <div>
@@ -820,7 +653,6 @@
               </div>
             </div>
 
-            <!-- 匯入解析預覽區 -->
             <div id="excelPreviewContainer" class="hidden mt-4 space-y-3 border-t border-slate-200 pt-4">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
@@ -843,7 +675,6 @@
             </div>
           </div>
 
-          <!-- 題庫列表與搜尋 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <h3 class="text-lg font-black text-slate-800">現有題庫列表</h3>
@@ -852,20 +683,10 @@
                 <input type="text" id="adminSearchInput" oninput="AdminModule.renderQuestionList()" placeholder="搜尋題目或選項..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none" />
               </div>
             </div>
-            <div class="flex flex-wrap items-center gap-3 mb-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
-              <span class="text-sm font-black text-slate-600">已選取 <span id="bulkSelectedCount" class="text-rose-600">0</span> 題</span>
-              <button id="bulkDeleteBtn" onclick="AdminModule.deleteSelected()" disabled class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm opacity-40 cursor-not-allowed">
-                <i class="fa-solid fa-trash-can mr-1.5"></i>刪除選取
-              </button>
-              <button onclick="AdminModule.clearAllQuestions()" class="px-4 py-2 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border-2 border-rose-300 font-black text-sm ml-auto">
-                <i class="fa-solid fa-broom mr-1.5"></i>一鍵清空全部題庫
-              </button>
-            </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr class="bg-slate-100 text-slate-600 font-black border-b border-slate-200">
-                    <th class="p-3 w-12"><input type="checkbox" id="selectAllQuestions" onchange="AdminModule.toggleSelectAll(this.checked)" class="w-5 h-5 accent-rose-600 cursor-pointer" title="全選目前列表" /></th>
                     <th class="p-3 w-12">#</th>
                     <th class="p-3">題目內容</th>
                     <th class="p-3">選項 (A / B / C)</th>
@@ -880,15 +701,14 @@
         </div>
 
         <!-- ==================================================================
-             TAB 2: 雙主要 LOGO 與 Q 版吉祥物設定
+             TAB 2: 雙主要 LOGO 與 Q 版吉祥物設定（自動上傳 Google Drive）
              ================================================================== -->
         <div id="adminTabBranding" class="hidden space-y-6">
-          <!-- 雙主要 LOGO 設定 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
-                <h2 class="text-lg font-black text-slate-800">雙主要 LOGO 任意替換設定</h2>
-                <p class="text-xs font-bold text-slate-500">支援一般圖片網址、Google Drive 圖片分享連結（自動轉直連）或直接上傳本機圖片檔</p>
+                <h2 class="text-lg font-black text-slate-800">雙主要 LOGO 替換設定（自動上傳 Google Drive 並跨電腦同步）</h2>
+                <p class="text-xs font-bold text-slate-500">點擊「上傳圖片」會自動存進 Google Drive 並寫入雲端資料庫，所有電腦重新整理後皆可同步看到最新 LOGO！</p>
               </div>
               <button onclick="LogoManager.resetDefaults()" class="text-xs font-black text-sky-600 hover:underline">恢復預設雙 LOGO</button>
             </div>
@@ -898,15 +718,15 @@
               <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between">
                   <span class="font-black text-sky-800 text-base">主要 LOGO 1（首頁置中偏左 / 挑戰頁左上角）</span>
-                  <label class="px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                  <label class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs cursor-pointer shadow">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳至雲端
                     <input type="file" accept="image/*" onchange="LogoManager.handleImageUpload(event, 1)" class="hidden" />
                   </label>
                 </div>
                 <div class="h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2" id="adminPreviewLogo1"></div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">圖片網址 (留空則使用預設圖示與文字)</label>
-                  <input type="text" id="settingLogo1Url" oninput="LogoManager.updatePreview(1)" placeholder="貼上圖片網址或 Google Drive 分享連結..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  <label class="block text-xs font-bold text-slate-600 mb-1">雲端圖片直連網址 (自動產生，亦可手動貼上)</label>
+                  <input type="text" id="settingLogo1Url" oninput="LogoManager.updatePreview(1)" placeholder="上傳圖片後自動填入雲端網址..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white" />
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
@@ -924,15 +744,15 @@
               <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between">
                   <span class="font-black text-teal-800 text-base">主要 LOGO 2（首頁置中偏右 / 挑戰頁左上角）</span>
-                  <label class="px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                  <label class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-black text-xs cursor-pointer shadow">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳至雲端
                     <input type="file" accept="image/*" onchange="LogoManager.handleImageUpload(event, 2)" class="hidden" />
                   </label>
                 </div>
                 <div class="h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2" id="adminPreviewLogo2"></div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">圖片網址 (留空則使用預設圖示與文字)</label>
-                  <input type="text" id="settingLogo2Url" oninput="LogoManager.updatePreview(2)" placeholder="貼上圖片網址或 Google Drive 分享連結..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+                  <label class="block text-xs font-bold text-slate-600 mb-1">雲端圖片直連網址 (自動產生，亦可手動貼上)</label>
+                  <input type="text" id="settingLogo2Url" oninput="LogoManager.updatePreview(2)" placeholder="上傳圖片後自動填入雲端網址..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white" />
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
@@ -948,83 +768,68 @@
             </div>
 
             <button onclick="LogoManager.saveLogos()" class="btn-3d btn-3d-blue px-8 py-3 text-base">
-              <i class="fa-solid fa-floppy-disk"></i> 儲存並套用雙 LOGO 設定
+              <i class="fa-solid fa-floppy-disk"></i> 儲存並同步雙 LOGO 設定
             </button>
           </div>
 
           <!-- Q 版吉祥物三態圖片設定 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 class="text-lg font-black text-slate-800">Q 版 3D 醫療吉祥物圖片設定</h3>
+              <h3 class="text-lg font-black text-slate-800">Q 版 3D 醫療吉祥物圖片設定（自動上傳 Google Drive）</h3>
               <button onclick="MascotManager.resetToDefault()" class="text-xs font-black text-sky-600 hover:underline">恢復預設 3D 吉祥物</button>
             </div>
-            <p class="text-xs font-bold text-slate-500">每個位置都可以「貼上雲端連結」或「直接上傳圖片」（上傳的圖片會自動壓縮並存在本機瀏覽器；若要多台設備共用，請改用 Google Drive 連結）。</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-xs font-bold">
+            <p class="text-xs font-bold text-slate-500">選擇圖片後將自動上傳至 Google Drive 並同步至雲端資料庫，各台展場電腦皆會顯示您的最新吉祥物！</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-bold">
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="font-black text-indigo-800 text-sm">首頁人物圖片</span>
-                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
-                    <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Home')" class="hidden" />
-                  </label>
-                </div>
-                <div id="adminPreviewMascotHome" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotHome" oninput="MascotManager.updatePreview('Home')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
-                <p class="text-[11px] text-slate-400">只在首頁顯示；留空則沿用「遊戲待機圖片」</p>
-              </div>
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="font-black text-sky-800 text-sm">遊戲待機圖片</span>
-                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                <div class="flex items-center justify-between">
+                  <span class="font-black text-sky-800 text-sm">待機圖片</span>
+                  <label class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs cursor-pointer shadow">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳至雲端
                     <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Idle')" class="hidden" />
                   </label>
                 </div>
                 <div id="adminPreviewMascotIdle" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotIdle" oninput="MascotManager.updatePreview('Idle')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
-                <p class="text-[11px] text-slate-400">進入遊戲後才出現的待機人物</p>
+                <input type="text" id="settingMascotIdle" oninput="MascotManager.updatePreview('Idle')" placeholder="上傳後自動填入雲端直連網址" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white" />
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center justify-between">
                   <span class="font-black text-emerald-800 text-sm">答對開心圖片</span>
-                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                  <label class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs cursor-pointer shadow">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳至雲端
                     <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Happy')" class="hidden" />
                   </label>
                 </div>
                 <div id="adminPreviewMascotHappy" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotHappy" oninput="MascotManager.updatePreview('Happy')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
-                <p class="text-[11px] text-slate-400">答對時顯示</p>
+                <input type="text" id="settingMascotHappy" oninput="MascotManager.updatePreview('Happy')" placeholder="上傳後自動填入雲端直連網址" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white" />
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center justify-between">
                   <span class="font-black text-orange-800 text-sm">答錯鼓勵圖片</span>
-                  <label class="shrink-0 px-3 py-1.5 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-800 font-black text-xs cursor-pointer">
-                    <i class="fa-solid fa-upload mr-1"></i>上傳圖片
+                  <label class="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-black text-xs cursor-pointer shadow">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳至雲端
                     <input type="file" accept="image/*" onchange="MascotManager.handleImageUpload(event, 'Sad')" class="hidden" />
                   </label>
                 </div>
                 <div id="adminPreviewMascotSad" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotSad" oninput="MascotManager.updatePreview('Sad')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
-                <p class="text-[11px] text-slate-400">答錯或時間到時顯示</p>
+                <input type="text" id="settingMascotSad" oninput="MascotManager.updatePreview('Sad')" placeholder="上傳後自動填入雲端直連網址" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white" />
               </div>
             </div>
             <button onclick="MascotManager.saveUrls()" class="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-sm shadow">
-              儲存吉祥物圖片設定
+              儲存並同步吉祥物圖片設定
             </button>
           </div>
         </div>
 
         <!-- ==================================================================
-             TAB 3: MP3 音樂與倒數音效替換管理
+             TAB 3: MP3 音樂與倒數音效替換管理（自動上傳 Google Drive）
              ================================================================== -->
         <div id="adminTabAudio" class="hidden space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
-                <h2 class="text-lg font-black text-slate-800">MP3 音樂與音效替換中心（支援 Google Drive 音訊連結）</h2>
+                <h2 class="text-lg font-black text-slate-800">MP3 音樂與音效替換中心（自動上傳 Google Drive 並跨電腦同步）</h2>
                 <p class="text-xs font-bold text-slate-500 mt-1">
-                  可貼上任何 MP3/WAV 網址、Google Drive 分享連結（系統自動轉換直連），或上傳本機 MP3 測試；留空則自動使用內建 Web Audio 合成音效。
+                  點擊「上傳 MP3」會自動將音訊存檔至 Google Drive 並寫入雲端資料庫（建議單檔 15MB 以內）；留空則使用內建合成音效。
                 </p>
               </div>
               <div class="flex items-center gap-3">
@@ -1037,7 +842,6 @@
               </div>
             </div>
 
-            <!-- 音量控制滑桿 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <div>
                 <div class="flex justify-between text-sm font-black text-slate-700 mb-1">
@@ -1055,17 +859,14 @@
               </div>
             </div>
 
-            <!-- 8 大獨立可替換音訊槽位列表 -->
-            <div id="audioSlotsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- 由 SoundEngine.renderAdminSlots() 動態生成 -->
-            </div>
+            <div id="audioSlotsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
             <div class="flex justify-end gap-3 pt-2">
               <button onclick="SoundEngine.stopAllPreview()" class="px-5 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 font-black text-sm text-slate-700">
                 <i class="fa-solid fa-stop mr-1.5"></i>停止試聽
               </button>
               <button onclick="SoundEngine.saveCustomAudioUrls()" class="btn-3d btn-3d-orange px-8 py-3 text-base">
-                <i class="fa-solid fa-floppy-disk"></i> 儲存所有音樂與音效設定
+                <i class="fa-solid fa-floppy-disk"></i> 儲存並同步所有音樂與音效設定
               </button>
             </div>
           </div>
@@ -1117,11 +918,10 @@
               </button>
             </div>
 
-            <!-- 系統資料備份與還原 -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
               <h3 class="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">完整設定與題庫備份還原</h3>
               <p class="text-xs font-bold text-slate-500 leading-relaxed">
-                可將目前的題庫、雙 LOGO、吉祥物、MP3 音樂連結與規則設定匯出為 JSON 備份檔，方便在不同展場設備間快速轉移。
+                可將目前的題庫、雙 LOGO、吉祥物、MP3 音樂連結與規則設定匯出為 JSON 備份檔，方便在本機留存備份。
               </p>
               <div class="flex flex-wrap gap-3">
                 <button onclick="StorageManager.exportBackupJson()" class="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-sm">
@@ -1141,407 +941,29 @@
         </div>
 
         <!-- ==================================================================
-             TAB 5: GitHub Pages + GAS + Google Sheet / Drive 雲端架構
+             TAB 5: 雲端資料庫手動同步（無任何 GAS 網址輸入框或程式碼）
              ================================================================== -->
-        <div id="adminTabGas" class="hidden space-y-6">
+        <div id="adminTabCloud" class="hidden space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
             <div class="border-b border-slate-100 pb-3">
               <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
-                <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫橋接設定
+                <i class="fa-solid fa-cloud text-emerald-600"></i> 雲端資料庫跨設備同步控制
               </h2>
               <p class="text-xs font-bold text-slate-500 mt-1">
-                填入 GAS 部署網址後：題庫與設定會自動同步到 Google Sheet；在後台上傳的 LOGO、吉祥物、MP3 會自動存進 Google Drive 素材資料夾，所有裝置開啟網頁時自動從 Drive 取用。
+                每次開啟網頁或更換圖片/音樂時，系統均會自動與雲端資料庫同步。若您在其他電腦剛修改過題庫，亦可手動點擊下方按鈕立即同步。
               </p>
             </div>
 
-            <div class="space-y-3">
-              <label class="block text-sm font-black text-slate-700">GAS Web App 執行網址 (https://script.google.com/macros/s/.../exec)</label>
-              <div class="flex flex-col sm:flex-row gap-3">
-                <input type="url" id="settingGasUrl" placeholder="貼上您的 Google Apps Script Web App URL..." class="flex-1 px-4 py-3 rounded-xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-none font-bold text-sm" />
-                <button onclick="GASConnector.saveUrlAndTest()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm shadow shrink-0">
-                  <i class="fa-solid fa-plug mr-1.5"></i>儲存並測試連線
-                </button>
-              </div>
-            </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <button onclick="GASConnector.pullFromCloud()" class="p-4 rounded-2xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 text-sky-900 font-black text-sm flex items-center justify-center gap-2 transition">
-                <i class="fa-solid fa-cloud-arrow-down text-xl text-sky-600"></i>
-                <span>從 Google Sheet 拉取最新題庫與設定</span>
+              <button onclick="CloudSync.pullFromCloud()" class="p-5 rounded-2xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 text-sky-900 font-black text-base flex items-center justify-center gap-3 transition shadow-sm">
+                <i class="fa-solid fa-cloud-arrow-down text-2xl text-sky-600"></i>
+                <span>從雲端拉取最新題庫、圖片與音樂</span>
               </button>
-              <button onclick="GASConnector.pushToCloud()" class="p-4 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-900 font-black text-sm flex items-center justify-center gap-2 transition">
-                <i class="fa-solid fa-cloud-arrow-up text-xl text-amber-600"></i>
-                <span>將目前題庫與設定推送備份至 Google Sheet</span>
-              </button>
-            </div>
-            <button onclick="GASConnector.diagnose(false)" class="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 text-slate-800 font-black text-sm flex items-center justify-center gap-2 transition">
-              <i class="fa-solid fa-stethoscope text-slate-500"></i> 診斷連線與 Drive 寫入（會建立並清除一個測試檔）
-            </button>
-            <div id="gasDiagResult" class="hidden bg-white border-2 border-slate-200 rounded-2xl px-4 py-2"></div>
-          </div>
-
-          <!-- 完整 GAS Code.gs 程式碼複製區 -->
-          <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-lg space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 class="text-base font-black text-amber-400">Google Apps Script 後端橋接程式碼 (Code.gs)</h3>
-                <p class="text-xs text-slate-400">請在 Google 試算表點選「擴充功能 → Apps Script」，貼上以下完整程式碼，先執行一次 setup 授權，再部署為「網頁應用程式 (權限：所有人)」。</p>
-              </div>
-              <button onclick="GASConnector.copyGasCode()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-1.5">
-                <i class="fa-solid fa-copy"></i> 一鍵複製 Code.gs
+              <button onclick="CloudSync.pushToCloud()" class="p-5 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-900 font-black text-base flex items-center justify-center gap-3 transition shadow-sm">
+                <i class="fa-solid fa-cloud-arrow-up text-2xl text-amber-600"></i>
+                <span>將目前題庫與設定推送至雲端</span>
               </button>
             </div>
-
-            <pre id="gasCodeBlock" class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-300 overflow-x-auto max-h-80 custom-scrollbar font-mono leading-relaxed">/**
- * 彰基智慧醫療大挑戰 - Google Apps Script 後端 v3
- *
- * 功能：
- *  1. 題庫 / 設定同步（Google 試算表：Questions、Config、Logs 三個工作表，自動建立）
- *  2. 素材自動上傳：後台上傳的圖片、MP3 會自動存進 Google Drive 指定資料夾
- *  3. 素材代理讀取：網頁透過本程式讀取 Drive 檔案（不再受「連結直連被 Google 擋住」影響）
- *  4. 連線診斷（後台「診斷連線」按鈕使用）
- *
- * 【第一次使用】編輯器上方函式選單選「setup」按「執行」，依畫面完成授權。
- * 【部署】網頁應用程式以「我」的身分執行；存取權設為「所有人」。
- * 【修改程式後】部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。
- */
-
-// ★ 選填：貼上你自己建立的 Drive 資料夾 ID（資料夾網址 .../folders/ 後面那一串）。
-//   留空 = 自動在「我的雲端硬碟」建立名為下方 FOLDER_NAME 的資料夾。
-const FOLDER_ID = '1q8Y_nNdExN9ACUehnkZePazBGneKlX8d';
-const FOLDER_NAME = '彰基智慧醫療大挑戰_素材';
-
-const VERSION = 'v3.0';
-const MAX_FILE_BYTES = 20 * 1024 * 1024;
-const Q_HEADERS = ['ID', '題目', 'A選項', 'B選項', 'C選項', '正確答案'];
-const C_HEADERS = ['Key', 'Value'];
-const L_HEADERS = ['時間', '總分', '答對題數', '挑戰結果'];
-
-/* ------------------------------------------------------------------ 入口 */
-
-function setup() {
-  const ss = getSS_();
-  ensureSheets_(ss);
-  const folder = getFolder_();
-  Logger.log('試算表：' + ss.getUrl());
-  Logger.log('素材資料夾：' + folder.getUrl());
-}
-
-function doGet(e) {
-  try {
-    const p = (e &amp;&amp; e.parameter) || {};
-    if (p.action === 'bridge') return bridgePage_(p);
-    if (p.action === 'ping') return json_(pingInfo_());
-    if (p.action === 'file') return json_(readFile_(p.id));
-    return json_(readAll_());
-  } catch (err) {
-    return json_({ status: 'error', message: errMsg_(err) });
-  }
-}
-
-function doPost(e) {
-  let lock = null;
-  try {
-    const payload = JSON.parse((e &amp;&amp; e.postData &amp;&amp; e.postData.contents) || '{}');
-    const action = payload.action;
-
-    if (action === 'PING') {
-      PropertiesService.getScriptProperties().setProperty('LAST_PING', new Date().toISOString());
-      return json_({ status: 'ok', version: VERSION, time: new Date().toISOString() });
-    }
-
-    if (action === 'UPLOAD_ASSET') {
-      return json_(uploadAsset_(payload));
-    }
-
-    if (action === 'CHECK_DRIVE_WRITE') {
-      const folder = getFolder_();
-      const testFile = folder.createFile('upload_check_' + Date.now() + '.txt', 'write-check', MimeType.PLAIN_TEXT);
-      const id = testFile.getId();
-      testFile.setTrashed(true);
-      return json_({ status: 'ok', folderUrl: folder.getUrl(), testFileId: id });
-    }
-
-    lock = LockService.getScriptLock();
-    lock.waitLock(20000);
-    const ss = getSS_();
-    ensureSheets_(ss);
-
-    if (action === 'SYNC_UP') {
-      let qCount = null;
-      let cCount = null;
-      if (Array.isArray(payload.questions)) {
-        const rows = payload.questions.map(function (q) {
-          return [str_(q.id), str_(q.question), str_(q.optionA), str_(q.optionB), str_(q.optionC), str_(q.answer)];
-        });
-        writeTable_(ss.getSheetByName('Questions'), Q_HEADERS, rows);
-        qCount = rows.length;
-      }
-      if (payload.config &amp;&amp; typeof payload.config === 'object') {
-        // 與現有設定合併（保留你在試算表手動加的欄位）
-        const merged = readConfig_(ss);
-        Object.keys(payload.config).forEach(function (k) {
-          const v = payload.config[k];
-          const s = (v !== null &amp;&amp; typeof v === 'object') ? JSON.stringify(v) : str_(v);
-          if (s.length &lt; 49000) merged[k] = s;
-        });
-        const rows = Object.keys(merged).map(function (k) { return [k, merged[k]]; });
-        writeTable_(ss.getSheetByName('Config'), C_HEADERS, rows);
-        cCount = rows.length;
-      }
-      return json_({ status: 'ok', questions: qCount, config: cCount, sheetUrl: ss.getUrl() });
-    }
-
-    if (action === 'LOG_RESULT') {
-      ss.getSheetByName('Logs').appendRow([new Date(), payload.score, payload.correctCount, payload.outcome]);
-      return json_({ status: 'ok' });
-    }
-
-    return json_({ status: 'error', message: '未知的 action：' + action });
-  } catch (err) {
-    return json_({ status: 'error', message: errMsg_(err) });
-  } finally {
-    if (lock) { try { lock.releaseLock(); } catch (x) {} }
-  }
-}
-
-/* GitHub Pages 跨網域通訊：GAS HTML Service 在內嵌頁用 google.script.run
-   取得真正的回應，再用 postMessage 回傳。不可把任意網頁傳來的 token 當密鑰。 */
-function bridgePage_(p) {
-  const origin = String(p.origin || '');
-  const channel = String(p.channel || '');
-  if (!/^https:\/\/[^\s/?#]+(?::\d+)?$/.test(origin) || !/^[a-zA-Z0-9_-]{16,100}$/.test(channel)) {
-    throw new Error('橋接來源或通道格式不正確');
-  }
-  const safe = function (v) { return JSON.stringify(v).replace(/&lt;/g, '\\u003c'); };
-  const html = '&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;/head&gt;&lt;body&gt;' +
-    '&lt;script&gt;"use strict";const origin=' + safe(origin) + ',channel=' + safe(channel) + ';' +
-    'function send(value){window.top.postMessage(Object.assign({smcBridge:channel},value),origin)}' +
-    'window.addEventListener("message",function(e){' +
-    'if(e.source!==window.top||e.origin!==origin||!e.data||e.data.smcBridge!==channel||e.data.type!=="request")return;' +
-    'var id=e.data.id;' +
-    'google.script.run.withSuccessHandler(function(r){send({type:"response",id:id,result:r})})' +
-    '.withFailureHandler(function(err){send({type:"response",id:id,error:String(err&amp;&amp;err.message||err)})})' +
-    '.bridgeRequest(e.data.request);' +
-    '});send({type:"ready"});&lt;\/script&gt;&lt;/body&gt;&lt;/html&gt;';
-  return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
-function bridgeRequest(req) {
-  if (!req || typeof req !== 'object') throw new Error('要求格式錯誤');
-  if (req.method === 'GET') {
-    const allowed = { ping: true, file: true, all: true };
-    if (!allowed[req.action]) throw new Error('不支援的讀取操作');
-    const output = doGet({ parameter: { action: req.action, id: req.id || '' } });
-    return JSON.parse(output.getContent());
-  }
-  if (req.method === 'POST') {
-    const allowed = { PING: true, UPLOAD_ASSET: true, SYNC_UP: true, LOG_RESULT: true, CHECK_DRIVE_WRITE: true };
-    if (!allowed[req.payload &amp;&amp; req.payload.action]) throw new Error('不支援的寫入操作');
-    const output = doPost({ postData: { contents: JSON.stringify(req.payload) } });
-    return JSON.parse(output.getContent());
-  }
-  throw new Error('不支援的要求');
-}
-
-/* ------------------------------------------------------------------ 讀取 */
-
-function readAll_() {
-  const ss = getSS_();
-  ensureSheets_(ss);
-  const qRows = ss.getSheetByName('Questions').getDataRange().getValues();
-  const questions = [];
-  for (let i = 1; i &lt; qRows.length; i++) {
-    if (!qRows[i][1]) continue;
-    questions.push({
-      id: String(qRows[i][0] || 'q_' + i),
-      question: String(qRows[i][1]),
-      optionA: String(qRows[i][2]),
-      optionB: String(qRows[i][3]),
-      optionC: String(qRows[i][4]),
-      answer: String(qRows[i][5]).trim().toUpperCase()
-    });
-  }
-  return { status: 'ok', version: VERSION, questions: questions, config: readConfig_(ss) };
-}
-
-function readConfig_(ss) {
-  const rows = ss.getSheetByName('Config').getDataRange().getValues();
-  const cfg = {};
-  for (let i = 1; i &lt; rows.length; i++) {
-    if (rows[i][0]) cfg[String(rows[i][0])] = String(rows[i][1] === null || rows[i][1] === undefined ? '' : rows[i][1]);
-  }
-  return cfg;
-}
-
-function pingInfo_() {
-  const ss = getSS_();
-  ensureSheets_(ss);
-  const info = {
-    status: 'ok',
-    version: VERSION,
-    sheetName: ss.getName(),
-    sheetUrl: ss.getUrl(),
-    questionRows: Math.max(0, ss.getSheetByName('Questions').getLastRow() - 1),
-    configRows: Math.max(0, ss.getSheetByName('Config').getLastRow() - 1),
-    logRows: Math.max(0, ss.getSheetByName('Logs').getLastRow() - 1),
-    lastPing: PropertiesService.getScriptProperties().getProperty('LAST_PING') || ''
-  };
-  try {
-    const folder = getFolder_();
-    info.folderName = folder.getName();
-    info.folderUrl = folder.getUrl();
-    let n = 0;
-    const it = folder.getFiles();
-    while (it.hasNext() &amp;&amp; n &lt; 500) { it.next(); n++; }
-    info.folderFiles = n;
-  } catch (err) {
-    info.driveError = errMsg_(err);
-  }
-  return info;
-}
-
-/* ------------------------------------------------------------------ Drive 素材 */
-
-function uploadAsset_(payload) {
-  const mime = String(payload.mime || '');
-  if (!/^(image|audio)\//.test(mime)) throw new Error('只支援圖片或音訊檔案（收到：' + mime + '）');
-  if (!payload.data) throw new Error('沒有收到檔案內容');
-
-  const bytes = Utilities.base64Decode(payload.data);
-  if (bytes.length &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
-
-  const slot = String(payload.slot || 'asset').replace(/[^\w-]/g, '');
-  const safeName = String(payload.name || 'file').replace(/[\\/:*?"&lt;&gt;|]/g, '_');
-  const stamp = Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyyMMdd-HHmmss');
-  const blob = Utilities.newBlob(bytes, mime, slot + '_' + stamp + '_' + safeName);
-
-  const folder = getFolder_();
-  const file = folder.createFile(blob);
-  if (!isAllowedFile_(file)) throw new Error('建立檔案後未能驗證素材資料夾');
-  let shared = true;
-  try {
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  } catch (err) {
-    shared = false; // 組織政策不允許公開時略過；網頁仍可透過本程式讀取
-  }
-  return {
-    status: 'ok',
-    id: file.getId(),
-    name: file.getName(),
-    size: bytes.length,
-    shared: shared,
-    url: file.getUrl(),
-    folderUrl: folder.getUrl()
-  };
-}
-
-function readFile_(id) {
-  if (!id) throw new Error('缺少檔案 ID');
-  const file = DriveApp.getFileById(id);
-  if (!isAllowedFile_(file)) {
-    throw new Error('此檔案不在素材資料夾內，且未開放「知道連結的任何人」，基於安全無法讀取');
-  }
-  if (file.getSize() &gt; MAX_FILE_BYTES) throw new Error('檔案超過 20MB 上限');
-  const blob = file.getBlob();
-  return {
-    status: 'ok',
-    id: id,
-    name: file.getName(),
-    mime: fixMime_(blob.getContentType(), file.getName()),
-    data: Utilities.base64Encode(blob.getBytes())
-  };
-}
-
-function isAllowedFile_(file) {
-  try {
-    const acc = file.getSharingAccess();
-    if (acc === DriveApp.Access.ANYONE_WITH_LINK || acc === DriveApp.Access.ANYONE) return true;
-  } catch (err) {}
-  const folderId = getFolder_().getId();
-  const parents = file.getParents();
-  while (parents.hasNext()) {
-    if (parents.next().getId() === folderId) return true;
-  }
-  return false;
-}
-
-function fixMime_(mime, name) {
-  if (mime &amp;&amp; mime !== 'application/octet-stream') return mime;
-  const ext = String(name).split('.').pop().toLowerCase();
-  const map = { mp3: 'audio/mpeg', m4a: 'audio/mp4', wav: 'audio/wav', ogg: 'audio/ogg', aac: 'audio/aac',
-                png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
-  return map[ext] || mime || 'application/octet-stream';
-}
-
-/* ------------------------------------------------------------------ 工具 */
-
-function getSS_() {
-  // 從試算表「擴充功能 → Apps Script」開啟的腳本：直接用綁定的試算表
-  let ss = SpreadsheetApp.getActiveSpreadsheet();
-  if (ss) return ss;
-  // 獨立腳本（沒綁定試算表）：自動建立一份並記住
-  const props = PropertiesService.getScriptProperties();
-  const id = props.getProperty('SHEET_ID');
-  if (id) {
-    try { return SpreadsheetApp.openById(id); } catch (err) {}
-  }
-  ss = SpreadsheetApp.create('彰基智慧醫療大挑戰資料庫');
-  props.setProperty('SHEET_ID', ss.getId());
-  return ss;
-}
-
-function getFolder_() {
-  if (FOLDER_ID) {
-    try { return DriveApp.getFolderById(FOLDER_ID); }
-    catch (err) { throw new Error('找不到 FOLDER_ID 指定的資料夾，請確認 ID 正確且此帳號有權限：' + FOLDER_ID); }
-  }
-  const props = PropertiesService.getScriptProperties();
-  const saved = props.getProperty('FOLDER_ID');
-  if (saved) {
-    try { return DriveApp.getFolderById(saved); } catch (err) {}
-  }
-  const it = DriveApp.getFoldersByName(FOLDER_NAME);
-  const folder = it.hasNext() ? it.next() : DriveApp.createFolder(FOLDER_NAME);
-  props.setProperty('FOLDER_ID', folder.getId());
-  return folder;
-}
-
-function ensureSheets_(ss) {
-  getSheet_(ss, 'Questions', Q_HEADERS);
-  getSheet_(ss, 'Config', C_HEADERS);
-  getSheet_(ss, 'Logs', L_HEADERS);
-  const blank = ss.getSheetByName('Sheet1') || ss.getSheetByName('工作表1');
-  if (blank &amp;&amp; ss.getSheets().length &gt; 1 &amp;&amp; blank.getLastRow() === 0) ss.deleteSheet(blank);
-}
-
-function getSheet_(ss, name, headers) {
-  let sheet = ss.getSheetByName(name);
-  if (!sheet) {
-    sheet = ss.insertSheet(name);
-    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sheet.setFrozenRows(1);
-  }
-  return sheet;
-}
-
-// 整張表一次寫入，並設為純文字格式（避免 = + 開頭的題目被當成公式）
-function writeTable_(sheet, headers, rows) {
-  sheet.clearContents();
-  const all = [headers].concat(rows);
-  const range = sheet.getRange(1, 1, all.length, headers.length);
-  range.setNumberFormat('@');
-  range.setValues(all);
-  sheet.setFrozenRows(1);
-}
-
-function str_(v) { return (v === null || v === undefined) ? '' : String(v); }
-function errMsg_(err) { return String((err &amp;&amp; err.message) || err); }
-
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
-</pre>
           </div>
         </div>
       </div>
@@ -1553,234 +975,39 @@ function json_(obj) {
        ========================================================================== -->
   <script>
     /* ========================================================================
-       輔助函式：Google Drive 分享網址自動轉換為可嵌入直連網址
+       【系統核心設定】請將下方引號內替換為您的 Google Apps Script 部署網址 (/exec)
+       ======================================================================== */
+    const HARDCODED_GAS_URL = 'https://script.google.com/macros/s/請在此貼上您的GAS部署ID/exec';
+
+    /* ========================================================================
+       輔助函式：Google Drive 分享網址轉換 & 檔案讀取
        ======================================================================== */
     function normalizeDriveMediaUrl(url, mediaType = 'image') {
       if (!url) return '';
-      const trimmed = String(url).trim();
-      if (!trimmed) return '';
-      if (/^(data:|blob:)/i.test(trimmed)) return trimmed;
-      const id = DriveAssets.extractId(trimmed);
-      if (!id) return trimmed;
-      return DriveAssets.resolve(id, mediaType);
+      const trimmed = url.trim();
+      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        const fileId = match[1];
+        return mediaType === 'image'
+          ? `https://lh3.googleusercontent.com/d/${fileId}`
+          : `https://drive.google.com/uc?export=download&id=${fileId}`;
+      }
+      return trimmed;
     }
 
-    /* ========================================================================
-       Google Drive 素材管理：透過 GAS 代理讀取 Drive 檔案，並快取在瀏覽器 (IndexedDB)
-       值的格式：gdrive:檔案ID（後台上傳後自動產生），或貼上任何 Drive 分享連結
-       ======================================================================== */
-    const DriveAssets = {
-      cache: {},
-      loading: {},
-      failed: {},
-      db: null,
-      renderTimer: null,
-
-      extractId(value) {
-        const v = String(value || '').trim();
-        let m = v.match(/^gdrive:([\w-]{10,})$/);
-        if (m) return m[1];
-        m = v.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/)
-          || v.match(/drive\.google\.com\/(?:open|uc|thumbnail)\?(?:[^#]*&)?id=([\w-]{10,})/)
-          || v.match(/drive\.usercontent\.google\.com\/download\?(?:[^#]*&)?id=([\w-]{10,})/)
-          || v.match(/lh3\.googleusercontent\.com\/d\/([\w-]{10,})/);
-        return m ? m[1] : null;
-      },
-
-      directUrl(id, type) {
-        return type === 'image'
-          ? `https://drive.google.com/thumbnail?id=${id}&sz=w1600`
-          : `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
-      },
-
-      // 同步回傳可用網址；尚在載入時回傳 ''（載入完成後會自動重繪畫面）
-      resolve(id, type) {
-        if (this.cache[id]) return this.cache[id];
-        if (!GASConnector.isConfigured() || this.failed[id]) return this.directUrl(id, type);
-        this.load(id);
-        return '';
-      },
-
-      openDb() {
-        if (this.db) return Promise.resolve(this.db);
-        return new Promise(resolve => {
-          try {
-            const req = indexedDB.open('cch_drive_assets', 1);
-            req.onupgradeneeded = () => req.result.createObjectStore('files');
-            req.onsuccess = () => { this.db = req.result; resolve(this.db); };
-            req.onerror = () => resolve(null);
-          } catch (e) { resolve(null); }
-        });
-      },
-
-      async dbGet(id) {
-        const db = await this.openDb();
-        if (!db) return null;
-        return new Promise(resolve => {
-          try {
-            const r = db.transaction('files').objectStore('files').get(id);
-            r.onsuccess = () => resolve(r.result || null);
-            r.onerror = () => resolve(null);
-          } catch (e) { resolve(null); }
-        });
-      },
-
-      async dbPut(id, blob) {
-        const db = await this.openDb();
-        if (!db) return;
-        try { db.transaction('files', 'readwrite').objectStore('files').put(blob, id); } catch (e) {}
-      },
-
-      seed(id, blob) {
-        this.cache[id] = URL.createObjectURL(blob);
-        this.dbPut(id, blob);
-      },
-
-      load(id) {
-        if (this.loading[id]) return this.loading[id];
-        this.loading[id] = (async () => {
-          try {
-            let blob = await this.dbGet(id);
-            if (!blob) {
-              blob = await this.fetchFromGas(id);
-              await this.dbPut(id, blob);
-            }
-            this.cache[id] = URL.createObjectURL(blob);
-          } catch (err) {
-            console.warn('Drive 素材讀取失敗，改用直連網址：', id, err.message);
-            this.failed[id] = true;
-          } finally {
-            delete this.loading[id];
-            this.scheduleRerender();
-          }
-        })();
-        return this.loading[id];
-      },
-
-      async fetchFromGas(id) {
-        const j = await GASConnector.getGas(`action=file&id=${encodeURIComponent(id)}`);
-        const bin = atob(j.data);
-        const bytes = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        return new Blob([bytes], { type: j.mime || 'application/octet-stream' });
-      },
-
-      scheduleRerender() {
-        clearTimeout(this.renderTimer);
-        this.renderTimer = setTimeout(() => {
-          try {
-            LogoManager.renderAll();
-            MascotManager.renderAll();
-            LogoManager.updatePreview(1);
-            LogoManager.updatePreview(2);
-            MascotManager.updateAllPreviews();
-          } catch (e) {}
-        }, 80);
-      },
-
-      preloadAll() {
-        const s = StorageManager.getSettings();
-        const vals = [s.logo1Url, s.logo2Url, s.mascotHome, s.mascotIdle, s.mascotHappy, s.mascotSad, ...Object.values(s.audioUrls || {})];
-        vals.forEach(v => { const id = this.extractId(v); if (id && GASConnector.isConfigured()) this.load(id); });
-      }
-    };
-
-    /* 後台上傳：圖片 / MP3 → 自動存進 Drive 素材資料夾 */
-    const AssetUploader = {
-      readBase64(file) {
-        return new Promise((resolve, reject) => {
-          const r = new FileReader();
-          r.onerror = () => reject(new Error('檔案讀取失敗'));
-          r.onload = () => resolve(String(r.result).split(',')[1] || '');
-          r.readAsDataURL(file);
-        });
-      },
-      b64ToBlob(b64, mime) {
-        const bin = atob(b64);
-        const bytes = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        return new Blob([bytes], { type: mime });
-      },
-      async upload(b64, mime, name, slot) {
-        const r = await GASConnector.postGas({ action: 'UPLOAD_ASSET', slot, name, mime, data: b64 });
-        DriveAssets.seed(r.id, this.b64ToBlob(b64, mime));
-        return r;
-      },
-      async uploadImage(file, slot, maxSize) {
-        const dataUrl = await fileToCompressedDataUrl(file, maxSize);
-        const m = dataUrl.match(/^data:([^;,]+);base64,(.*)$/);
-        if (!m) throw new Error('圖片轉檔失敗');
-        const ext = m[1].split('/')[1].replace('+xml', '');
-        const base = file.name.replace(/\.[^.]+$/, '') || 'image';
-        const r = await this.upload(m[2], m[1], `${base}.${ext}`, slot);
-        return r.id;
-      },
-      async uploadAudio(file, slot) {
-        if (file.size > 12 * 1024 * 1024) throw new Error('音檔超過 12MB，請先壓縮（建議 128kbps MP3）');
-        const b64 = await this.readBase64(file);
-        const r = await this.upload(b64, file.type || 'audio/mpeg', file.name, slot);
-        return r.id;
-      }
-    };
-
-    /* 全螢幕輔助（iPad / Android 平板 / 桌機） */
-    const FullscreenHelper = {
-      isStandalone() {
-        return window.matchMedia('(display-mode: fullscreen)').matches
-          || window.matchMedia('(display-mode: standalone)').matches
-          || window.navigator.standalone === true;
-      },
-      isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); },
-      canRequest() { const el = document.documentElement; return !!(el.requestFullscreen || el.webkitRequestFullscreen); },
-      request() {
-        const el = document.documentElement;
-        try {
-          const p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-          if (p && p.catch) p.catch(() => {});
-        } catch (e) {}
-      },
-      exit() {
-        try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {}
-      },
-      toggle() {
-        if (this.isFull()) this.exit();
-        else if (this.canRequest()) this.request();
-        else UI.showToast('此瀏覽器不支援一鍵全螢幕：請點 Safari 的「分享」→「加入主畫面」，之後從主畫面圖示開啟即為全螢幕', 'info');
-      },
-      updateButton() {
-        const btn = document.getElementById('fullscreenBtn');
-        if (!btn) return;
-        btn.classList.toggle('hidden', this.isStandalone());
-        btn.innerHTML = `<i class="fa-solid ${this.isFull() ? 'fa-compress' : 'fa-expand'}"></i>`;
-      },
-      init() {
-        ['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => this.updateButton()));
-        this.updateButton();
-        // 禁止 iOS 雙指縮放手勢
-        ['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
-      }
-    };
-
-    /* 上傳圖片自動縮放壓縮（避免塞爆 localStorage）；SVG / GIF 原樣保留 */
-    function fileToCompressedDataUrl(file, maxSize = 800) {
+    function fileToBase64Payload(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onerror = () => reject(new Error('檔案讀取失敗'));
         reader.onload = (e) => {
-          if (/svg|gif/.test(file.type)) return resolve(e.target.result);
-          const img = new Image();
-          img.onerror = () => reject(new Error('圖片格式無法讀取'));
-          img.onload = () => {
-            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
-            const c = document.createElement('canvas');
-            c.width = Math.max(1, Math.round(img.width * scale));
-            c.height = Math.max(1, Math.round(img.height * scale));
-            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-            let out = c.toDataURL('image/webp', 0.88);
-            if (!out.startsWith('data:image/webp')) out = c.toDataURL('image/png');
-            resolve(out);
-          };
-          img.src = e.target.result;
+          const dataUrl = e.target.result;
+          const commaIdx = dataUrl.indexOf(',');
+          const base64Data = commaIdx !== -1 ? dataUrl.slice(commaIdx + 1) : dataUrl;
+          resolve({
+            base64Data,
+            mimeType: file.type || 'application/octet-stream',
+            fileName: `${Date.now()}_${file.name}`
+          });
         };
         reader.readAsDataURL(file);
       });
@@ -1890,30 +1117,25 @@ function json_(obj) {
 
     const StorageManager = {
       KEYS: {
-        QUESTIONS: 'cch_smc_questions_v2',
-        SETTINGS: 'cch_smc_settings_v2',
-        LAST_DRAWN: 'cch_smc_last_drawn_v2'
+        QUESTIONS: 'cch_smc_questions_v3',
+        SETTINGS: 'cch_smc_settings_v3',
+        LAST_DRAWN: 'cch_smc_last_drawn_v3'
       },
 
       defaultSettings: {
-        questionsPerGame: 3, // 三題驟死制
+        questionsPerGame: 3,
         timePerQuestion: 15,
         controlMode: 'HYBRID',
         adminPasswordHash: 'cch8730',
-        gasWebAppUrl: '',
-        // 雙主要 LOGO
         logo1Url: '',
         logo1Title: '彰基智慧醫療創新展館',
         logo1Sub: 'CHANGHUA CHRISTIAN HOSPITAL',
         logo2Url: '',
         logo2Title: '智慧醫療科技嘉年華',
         logo2Sub: 'AI & DIGITAL HEALTH EXPO',
-        // Q 版吉祥物
-        mascotHome: '',
         mascotIdle: '',
         mascotHappy: '',
         mascotSad: '',
-        // 8 大可替換 MP3 音樂與音效網址
         audioUrls: {
           bgmHome: '',
           bgmGame: '',
@@ -1939,7 +1161,7 @@ function json_(obj) {
         try {
           const raw = localStorage.getItem(this.KEYS.QUESTIONS);
           const parsed = raw ? JSON.parse(raw) : DEFAULT_QUESTIONS;
-          return Array.isArray(parsed) ? parsed : DEFAULT_QUESTIONS;
+          return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_QUESTIONS;
         } catch (e) {
           return DEFAULT_QUESTIONS;
         }
@@ -1948,7 +1170,6 @@ function json_(obj) {
       saveQuestions(list) {
         localStorage.setItem(this.KEYS.QUESTIONS, JSON.stringify(list));
         DualScreenSync.broadcastState();
-        GASConnector.scheduleAutoPush('questions');
       },
 
       getSettings() {
@@ -1969,11 +1190,10 @@ function json_(obj) {
         try {
           localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(settings));
         } catch (err) {
-          UI.showToast('瀏覽器儲存空間不足，請改用較小的圖片或 Google Drive 連結', 'error');
+          UI.showToast('本機暫存空間已滿，建議使用雲端同步模式', 'error');
           return false;
         }
         DualScreenSync.broadcastState();
-        GASConnector.scheduleAutoPush('config');
         return true;
       },
 
@@ -2026,7 +1246,8 @@ function json_(obj) {
             LogoManager.renderAll();
             MascotManager.renderAll();
             AdminModule.refreshAllViews();
-            UI.showToast(`還原成功！載入 ${data.questions.length} 題題庫與設定`, 'success');
+            CloudSync.pushToCloud(true);
+            UI.showToast(`還原成功並已同步至雲端！載入 ${data.questions.length} 題`, 'success');
           } catch (err) {
             UI.showToast('備份檔格式錯誤：' + err.message, 'error');
           }
@@ -2042,13 +1263,161 @@ function json_(obj) {
           s.questionsPerGame = 3;
           this.saveSettings(s);
           AdminModule.refreshAllViews();
-          UI.showToast('已恢復為出廠預設題庫！', 'success');
+          CloudSync.pushToCloud(true);
+          UI.showToast('已恢復為出廠預設題庫並同步至雲端！', 'success');
         });
       }
     };
 
     /* ========================================================================
-       MODULE 2: 雙主要 LOGO 管理系統 (LogoManager)
+       MODULE 2: 雲端資料庫與 Google Drive 自動上傳引擎 (CloudSync)
+       ======================================================================== */
+    const CloudSync = {
+      isConfigured() {
+        return Boolean(HARDCODED_GAS_URL && HARDCODED_GAS_URL.startsWith('https://script.google.com/macros/s/') && !HARDCODED_GAS_URL.includes('請在此貼上'));
+      },
+
+      async syncOnBoot() {
+        if (!this.isConfigured()) return;
+        try {
+          const res = await fetch(HARDCODED_GAS_URL, { method: 'GET' });
+          const data = await res.json();
+          if (data && data.status === 'ok') {
+            if (Array.isArray(data.questions) && data.questions.length > 0) {
+              StorageManager.saveQuestions(data.questions);
+            }
+            if (data.config && typeof data.config === 'object') {
+              const merged = { ...StorageManager.getSettings(), ...data.config };
+              if (typeof data.config.audioUrls === 'string') {
+                try { merged.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
+              }
+              StorageManager.saveSettings(merged);
+            }
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+          }
+        } catch (err) {
+          console.warn('雲端啟動自動同步略過:', err);
+        }
+      },
+
+      async uploadMediaToDrive(file, mediaCategory, configKey, subKey = null) {
+        if (!this.isConfigured()) {
+          UI.showToast('尚未設定雲端連線網址，無法自動上傳至 Google Drive', 'error');
+          return null;
+        }
+        // GAS 單次 POST Payload 上限約 50MB，建議檔案小於 18MB 避免 Base64 膨脹超限
+        if (file.size > 18 * 1024 * 1024) {
+          UI.showToast('檔案超過 18MB，請壓縮後再上傳至雲端！', 'error');
+          return null;
+        }
+
+        UI.showToast(`正在上傳「${file.name}」至 Google Drive，請稍候...`, 'info');
+        try {
+          const payload = await fileToBase64Payload(file);
+          const res = await fetch(HARDCODED_GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'UPLOAD_MEDIA',
+              mediaCategory,
+              configKey,
+              subKey,
+              fileName: payload.fileName,
+              mimeType: payload.mimeType,
+              base64Data: payload.base64Data
+            })
+          });
+          const data = await res.json();
+          if (data && data.status === 'ok' && data.url) {
+            UI.showToast('已自動存檔至 Google Drive 並同步至雲端！', 'success');
+            return data.url;
+          } else {
+            throw new Error(data?.message || '雲端回傳異常');
+          }
+        } catch (err) {
+          UI.showToast('上傳至 Google Drive 失敗：' + err.message, 'error');
+          return null;
+        }
+      },
+
+      async pullFromCloud() {
+        if (!this.isConfigured()) {
+          UI.showToast('尚未設定雲端連線網址！', 'error');
+          return;
+        }
+        UI.showToast('正在從雲端拉取最新題庫、圖片與音樂...', 'info');
+        try {
+          const res = await fetch(HARDCODED_GAS_URL);
+          const data = await res.json();
+          if (data && data.status === 'ok') {
+            if (Array.isArray(data.questions) && data.questions.length > 0) {
+              StorageManager.saveQuestions(data.questions);
+            }
+            if (data.config) {
+              const current = StorageManager.getSettings();
+              const nextSettings = { ...current, ...data.config };
+              if (typeof data.config.audioUrls === 'string') {
+                try { nextSettings.audioUrls = JSON.parse(data.config.audioUrls); } catch {}
+              }
+              StorageManager.saveSettings(nextSettings);
+            }
+            LogoManager.renderAll();
+            MascotManager.renderAll();
+            AdminModule.refreshAllViews();
+            UI.showToast(`雲端同步完成！已載入 ${data.questions?.length || 0} 題與最新媒體`, 'success');
+          } else {
+            throw new Error('回傳格式非預期');
+          }
+        } catch (err) {
+          UI.showToast('雲端拉取失敗，請確認網路與權限設定', 'error');
+        }
+      },
+
+      async pushToCloud(silent = false) {
+        if (!this.isConfigured()) {
+          if (!silent) UI.showToast('尚未設定雲端連線網址！', 'error');
+          return;
+        }
+        if (!silent) UI.showToast('正在推送題庫與設定至雲端...', 'info');
+        try {
+          const s = StorageManager.getSettings();
+          const safeConfig = { ...s };
+          delete safeConfig.adminPasswordHash;
+
+          await fetch(HARDCODED_GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'SYNC_UP',
+              questions: StorageManager.getQuestions(),
+              config: safeConfig
+            })
+          });
+          if (!silent) UI.showToast('題庫與設定已成功同步至雲端！', 'success');
+        } catch (err) {
+          if (!silent) UI.showToast('雲端推送失敗：' + err.message, 'error');
+        }
+      },
+
+      logGameResult(score, correctCount, outcome) {
+        if (!this.isConfigured()) return;
+        fetch(HARDCODED_GAS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'LOG_RESULT',
+            score,
+            correctCount,
+            outcome
+          })
+        }).catch(() => {});
+      }
+    };
+
+    /* ========================================================================
+       MODULE 3: 雙主要 LOGO 管理系統 (LogoManager)
        ======================================================================== */
     const LogoManager = {
       renderAll() {
@@ -2064,8 +1433,8 @@ function json_(obj) {
         if (!el) return;
         const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'image');
         const S = {
-          home:  { img: 'logo-img-home', icon: 'logo-icon-home rounded-2xl', sub: 'logo-sub-home', title: 'logo-title-home' },
-          game:  { img: 'logo-img-game', icon: 'logo-icon-game rounded-2xl', sub: 'logo-sub-game truncate', title: 'logo-title-game truncate' },
+          home:  { img: 'h-16 sm:h-24 lg:h-28 max-w-[320px] sm:max-w-[460px]', icon: 'w-14 h-14 sm:w-20 sm:h-20 text-2xl sm:text-4xl rounded-2xl', sub: 'text-xs sm:text-sm', title: 'text-lg sm:text-2xl lg:text-3xl' },
+          game:  { img: 'h-14 sm:h-20 lg:h-24 max-w-[220px] sm:max-w-[340px]', icon: 'w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl rounded-2xl', sub: 'text-[10px] sm:text-xs', title: 'text-base sm:text-xl lg:text-2xl' },
           admin: { img: 'h-14 max-w-[220px]', icon: 'w-10 h-10 text-xl rounded-xl', sub: 'text-[10px]', title: 'text-sm' }
         }[size] || {};
 
@@ -2096,30 +1465,18 @@ function json_(obj) {
 
       async handleImageUpload(event, slotNum) {
         const file = event.target.files[0];
-        event.target.value = '';
         if (!file) return;
-        const input = document.getElementById(`settingLogo${slotNum}Url`);
-        if (GASConnector.isConfigured()) {
-          try {
-            UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            const id = await AssetUploader.uploadImage(file, `logo${slotNum}`, 700);
-            input.value = `gdrive:${id}`;
-            this.updatePreview(slotNum);
-            this.saveLogos();
-            UI.showToast(`✅ LOGO ${slotNum} 已上傳到 Drive 並自動套用`, 'success');
-            return;
-          } catch (e) {
-            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
-            return;
-          }
-        }
-        try {
-          input.value = await fileToCompressedDataUrl(file, 700);
+        const configKey = `logo${slotNum}Url`;
+        const driveUrl = await CloudSync.uploadMediaToDrive(file, 'image', configKey);
+        if (driveUrl) {
+          document.getElementById(`settingLogo${slotNum}Url`).value = driveUrl;
+          const s = StorageManager.getSettings();
+          s[configKey] = driveUrl;
+          StorageManager.saveSettings(s);
           this.updatePreview(slotNum);
-          UI.showToast(`已載入 LOGO ${slotNum}（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按儲存套用`, 'info');
-        } catch (e) {
-          UI.showToast(e.message, 'error');
+          this.renderAll();
         }
+        event.target.value = '';
       },
 
       saveLogos() {
@@ -2132,7 +1489,8 @@ function json_(obj) {
         s.logo2Sub = document.getElementById('settingLogo2Sub').value.trim();
         StorageManager.saveSettings(s);
         this.renderAll();
-        UI.showToast('雙主要 LOGO 已儲存並即時更新！', 'success');
+        CloudSync.pushToCloud(true);
+        UI.showToast('雙主要 LOGO 已儲存並同步至雲端！', 'success');
       },
 
       resetDefaults() {
@@ -2149,11 +1507,11 @@ function json_(obj) {
     };
 
     /* ========================================================================
-       MODULE 3: Q 版 3D 醫療吉祥物系統 (MascotManager)
+       MODULE 4: Q 版 3D 醫療吉祥物系統 (MascotManager)
        ======================================================================== */
     const MascotManager = {
       renderAll() {
-        this.renderTo('homeMascotContainer', 'home');
+        this.renderTo('homeMascotContainer', 'idle');
         this.renderTo('gameMascotContainer', 'idle');
       },
 
@@ -2221,7 +1579,7 @@ function json_(obj) {
         const container = document.getElementById(elementId);
         if (!container) return;
 
-        const rawUrl = mood === 'happy' ? s.mascotHappy : mood === 'sad' ? s.mascotSad : mood === 'home' ? (s.mascotHome || s.mascotIdle) : s.mascotIdle;
+        const rawUrl = mood === 'happy' ? s.mascotHappy : mood === 'sad' ? s.mascotSad : s.mascotIdle;
         const resolvedUrl = normalizeDriveMediaUrl(rawUrl, 'image');
 
         if (resolvedUrl) {
@@ -2242,10 +1600,9 @@ function json_(obj) {
       },
 
       FIELDS: {
-        Home:  { input: 'settingMascotHome',  preview: 'adminPreviewMascotHome',  mood: 'idle' },
-        Idle:  { input: 'settingMascotIdle',  preview: 'adminPreviewMascotIdle',  mood: 'idle' },
-        Happy: { input: 'settingMascotHappy', preview: 'adminPreviewMascotHappy', mood: 'happy' },
-        Sad:   { input: 'settingMascotSad',   preview: 'adminPreviewMascotSad',   mood: 'sad' }
+        Idle:  { input: 'settingMascotIdle',  preview: 'adminPreviewMascotIdle',  mood: 'idle',  configKey: 'mascotIdle' },
+        Happy: { input: 'settingMascotHappy', preview: 'adminPreviewMascotHappy', mood: 'happy', configKey: 'mascotHappy' },
+        Sad:   { input: 'settingMascotSad',   preview: 'adminPreviewMascotSad',   mood: 'sad',   configKey: 'mascotSad' }
       },
 
       updatePreview(key) {
@@ -2265,45 +1622,32 @@ function json_(obj) {
 
       async handleImageUpload(event, key) {
         const file = event.target.files[0];
-        event.target.value = '';
         if (!file) return;
-        const input = document.getElementById(this.FIELDS[key].input);
-        if (GASConnector.isConfigured()) {
-          try {
-            UI.showToast('正在上傳到 Google Drive 素材資料夾…', 'info');
-            const id = await AssetUploader.uploadImage(file, `mascot${key}`, 800);
-            input.value = `gdrive:${id}`;
-            this.updatePreview(key);
-            this.saveUrls();
-            UI.showToast('✅ 吉祥物圖片已上傳到 Drive 並自動套用', 'success');
-            return;
-          } catch (e) {
-            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
-            return;
-          }
-        }
-        try {
-          input.value = await fileToCompressedDataUrl(file, 800);
+        const f = this.FIELDS[key];
+        const driveUrl = await CloudSync.uploadMediaToDrive(file, 'image', f.configKey);
+        if (driveUrl) {
+          document.getElementById(f.input).value = driveUrl;
+          const s = StorageManager.getSettings();
+          s[f.configKey] = driveUrl;
+          StorageManager.saveSettings(s);
           this.updatePreview(key);
-          UI.showToast('圖片已載入（僅存本機；連接 GAS 後請重新選擇檔案上傳 Drive）。請按「儲存吉祥物圖片設定」', 'info');
-        } catch (e) {
-          UI.showToast(e.message, 'error');
+          this.renderAll();
         }
+        event.target.value = '';
       },
 
       saveUrls() {
         const s = StorageManager.getSettings();
-        s.mascotHome = document.getElementById('settingMascotHome').value.trim();
         s.mascotIdle = document.getElementById('settingMascotIdle').value.trim();
         s.mascotHappy = document.getElementById('settingMascotHappy').value.trim();
         s.mascotSad = document.getElementById('settingMascotSad').value.trim();
         StorageManager.saveSettings(s);
         this.renderAll();
-        UI.showToast('吉祥物圖片設定已儲存！', 'success');
+        CloudSync.pushToCloud(true);
+        UI.showToast('吉祥物圖片設定已儲存並同步至雲端！', 'success');
       },
 
       resetToDefault() {
-        document.getElementById('settingMascotHome').value = '';
         document.getElementById('settingMascotIdle').value = '';
         document.getElementById('settingMascotHappy').value = '';
         document.getElementById('settingMascotSad').value = '';
@@ -2313,8 +1657,7 @@ function json_(obj) {
     };
 
     /* ========================================================================
-       MODULE 4: 雙引擎音效系統 (MP3 / Google Drive 直連 + Web Audio API 備援)
-       支援 8 種獨立替換音訊，包含「倒數計時音效/緊張音樂」
+       MODULE 5: 雙引擎音效系統 (SoundEngine)
        ======================================================================== */
     const SoundEngine = {
       ctx: null,
@@ -2323,7 +1666,6 @@ function json_(obj) {
       bgmVolume: 0.50,
       sfxVolume: 0.85,
       isMuted: false,
-      paused: false,
 
       activeBgmAudio: null,
       activeCountdownAudio: null,
@@ -2391,7 +1733,6 @@ function json_(obj) {
         UI.showToast(this.isMuted ? '已切換為靜音' : '已開啟音效與音樂', 'info');
       },
 
-      // 嘗試播放自訂 MP3 URL，失敗時執行 fallbackFn
       playCustomOrFallback(slotKey, fallbackFn, isBgm = false) {
         if (this.isMuted) return;
         this.unlock();
@@ -2468,7 +1809,7 @@ function json_(obj) {
         const tempoMs = mode === 'HOME' ? 340 : 270;
 
         this.synthBgmInterval = setInterval(() => {
-          if (this.isMuted || this.paused || !this.ctx || this.ctx.state !== 'running') return;
+          if (this.isMuted || !this.ctx || this.ctx.state !== 'running') return;
           const seq = mode === 'HOME' ? homeNotes : gameNotes;
           const note = seq[this.stepIndex % seq.length];
           this.playTone(note, 0.22, mode === 'HOME' ? 'triangle' : 'sine', 0, this.bgmGain);
@@ -2499,18 +1840,6 @@ function json_(obj) {
         }
       },
 
-      pauseAll() {
-        this.paused = true;
-        if (this.activeBgmAudio) this.activeBgmAudio.pause();
-        this.stopCountdownAudio();
-      },
-
-      resumeAll() {
-        if (!this.paused) return;
-        this.paused = false;
-        if (this.activeBgmAudio) this.activeBgmAudio.play().catch(() => {});
-      },
-
       playClick() {
         this.playCustomOrFallback('sfxClick', () => {
           this.playTone(620, 0.08, 'triangle', 0, this.sfxGain, 880);
@@ -2534,7 +1863,6 @@ function json_(obj) {
         });
       },
 
-      // 倒數音效：若有設定自訂 MP3 倒數音軌，於剩餘 5 秒啟動連續播放；若無則於最後 3 秒播放滴答音
       handleCountdownTick(secondsLeft) {
         const settings = StorageManager.getSettings();
         const hasCustomCountdown = Boolean(settings.audioUrls?.sfxCountdown?.trim());
@@ -2576,7 +1904,6 @@ function json_(obj) {
         });
       },
 
-      // 後台 MP3 管理介面渲染與試聽
       renderAdminSlots() {
         const settings = StorageManager.getSettings();
         const container = document.getElementById('audioSlotsList');
@@ -2589,9 +1916,9 @@ function json_(obj) {
               <div class="flex items-center justify-between gap-2">
                 <span class="font-black text-slate-800 text-sm">${slot.label}</span>
                 <div class="flex items-center gap-1.5">
-                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer" title="上傳音檔（已連接 GAS 時會自動存入 Drive 資料夾並套用）">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> 上傳
-                    <input type="file" accept="audio/*" onchange="SoundEngine.handleLocalAudioUpload(event, '${slot.key}')" class="hidden" />
+                  <label class="px-3 py-1 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-black text-xs cursor-pointer shadow" title="自動上傳 MP3 至 Google Drive">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳 MP3
+                    <input type="file" accept="audio/*" onchange="SoundEngine.handleCloudAudioUpload(event, '${slot.key}')" class="hidden" />
                   </label>
                   <button type="button" onclick="SoundEngine.previewSlot('${slot.key}')" class="px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-xs">
                     <i class="fa-solid fa-play mr-1"></i>試聽
@@ -2599,33 +1926,24 @@ function json_(obj) {
                 </div>
               </div>
               <input type="text" id="audioInput_${slot.key}" value="${AdminModule.escapeHtml(val)}"
-                placeholder="按「上傳」自動存 Drive，或貼上 MP3 / Drive 連結（留空用內建音效）"
+                placeholder="上傳 MP3 後自動填入雲端網址 (留空用內建音效)"
                 class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white" />
             </div>
           `;
         }).join('');
       },
 
-      async handleLocalAudioUpload(event, slotKey) {
+      async handleCloudAudioUpload(event, slotKey) {
         const file = event.target.files[0];
-        event.target.value = '';
         if (!file) return;
-        const input = document.getElementById(`audioInput_${slotKey}`);
-        if (GASConnector.isConfigured()) {
-          try {
-            UI.showToast(`正在上傳「${file.name}」到 Google Drive…`, 'info');
-            const id = await AssetUploader.uploadAudio(file, slotKey);
-            input.value = `gdrive:${id}`;
-            this.saveCustomAudioUrls();
-            UI.showToast('✅ 音訊已上傳到 Drive 並自動套用', 'success');
-            return;
-          } catch (e) {
-            UI.showToast(`Drive 上傳失敗：${e.message}；原設定未變更`, 'error');
-            return;
-          }
+        const driveUrl = await CloudSync.uploadMediaToDrive(file, 'audio', 'audioUrls', slotKey);
+        if (driveUrl) {
+          document.getElementById(`audioInput_${slotKey}`).value = driveUrl;
+          const s = StorageManager.getSettings();
+          s.audioUrls[slotKey] = driveUrl;
+          StorageManager.saveSettings(s);
         }
-        input.value = URL.createObjectURL(file);
-        UI.showToast(`已載入本機音訊「${file.name}」（僅本次有效；連接 GAS 後上傳會自動存入 Drive）`, 'info');
+        event.target.value = '';
       },
 
       previewSlot(slotKey) {
@@ -2638,13 +1956,9 @@ function json_(obj) {
           this.previewAudioEl = new Audio(resolvedUrl);
           this.previewAudioEl.volume = this.sfxVolume;
           this.previewAudioEl.play().catch(() => {
-            UI.showToast('無法直接播放此網址，請確認 Google Drive 權限已設為「知道連結的任何人均可檢視」', 'error');
+            UI.showToast('音訊載入中或瀏覽器阻擋自動播放，請再試一次', 'error');
           });
-        } else if (inputVal) {
-          UI.showToast('音檔載入中，請 2～3 秒後再按試聽', 'info');
-          return;
         } else {
-          // 試聽內建合成音效
           if (slotKey === 'sfxClick') this.playClick();
           else if (slotKey === 'sfxCorrect') this.playCorrect();
           else if (slotKey === 'sfxWrong') this.playWrong();
@@ -2669,7 +1983,8 @@ function json_(obj) {
           if (el) s.audioUrls[slot.key] = el.value.trim();
         });
         StorageManager.saveSettings(s);
-        UI.showToast('所有 MP3 音樂與音效網址已儲存！', 'success');
+        CloudSync.pushToCloud(true);
+        UI.showToast('所有 MP3 音樂與音效網址已儲存並同步至雲端！', 'success');
       },
 
       resetAllCustomAudio() {
@@ -2682,403 +1997,6 @@ function json_(obj) {
     };
 
     /* ========================================================================
-       MODULE 5: GitHub Pages + Google Apps Script (GAS) 雲端資料庫橋接器
-       ======================================================================== */
-    const GASConnector = {
-      suppress: false,
-      autoTimer: null,
-      pendingParts: new Set(),
-      lastStatus: null,
-
-      getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
-      isConfigured() { return !!this.getUrl(); },
-
-      // GAS 的 ContentService 不提供 GitHub Pages 可讀的跨網域回應。
-      // 用隱藏的 HTML Service iframe 和 google.script.run 交換結果。
-      bridgeFrame: null,
-      bridgeUrl: '',
-      bridgeWindow: null,
-      bridgeOrigin: '',
-      bridgeChannel: '',
-      bridgeReady: null,
-      bridgePending: new Map(),
-      bridgeSequence: 0,
-      bridgeListenerInstalled: false,
-
-      receiveBridgeMessage(event) {
-        const msg = event.data;
-        if (!msg || msg.smcBridge !== this.bridgeChannel ||
-            !/^https:\/\/(?:[a-z0-9-]+\.)*(?:googleusercontent\.com|google\.com)$/i.test(event.origin)) return;
-        if (msg.type === 'ready' && !this.bridgeWindow) {
-          this.bridgeWindow = event.source;
-          this.bridgeOrigin = event.origin;
-          if (this.bridgeReady && this.bridgeReady.resolve) this.bridgeReady.resolve();
-          return;
-        }
-        if (event.source !== this.bridgeWindow || event.origin !== this.bridgeOrigin) return;
-        if (msg.type === 'response') {
-          const pending = this.bridgePending.get(msg.id);
-          if (!pending) return;
-          this.bridgePending.delete(msg.id);
-          clearTimeout(pending.timer);
-          if (msg.error) pending.reject(new Error(msg.error));
-          else pending.resolve(msg.result);
-        }
-      },
-
-      async ensureBridge() {
-        const url = this.getUrl();
-        if (!/^https:\/\/script\.google\.com\/(?:a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/.test(url)) {
-          throw new Error('請填入有效的 GAS Web App /exec 網址');
-        }
-        if (this.bridgeReady && this.bridgeUrl === url) return this.bridgeReady.promise;
-        if (!this.bridgeListenerInstalled) {
-          window.addEventListener('message', event => this.receiveBridgeMessage(event));
-          this.bridgeListenerInstalled = true;
-        }
-        if (this.bridgeFrame) this.bridgeFrame.remove();
-        for (const pending of this.bridgePending.values()) {
-          clearTimeout(pending.timer);
-          pending.reject(new Error('GAS 網址已變更，請重新操作'));
-        }
-        this.bridgePending.clear();
-        this.bridgeWindow = null;
-        this.bridgeOrigin = '';
-        this.bridgeUrl = url;
-        this.bridgeChannel = (crypto.randomUUID ? crypto.randomUUID() :
-          Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
-        const frame = document.createElement('iframe');
-        frame.title = 'Google Apps Script 雲端橋接';
-        frame.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
-        this.bridgeFrame = frame;
-        const ready = {};
-        ready.promise = new Promise((resolve, reject) => {
-          const timer = setTimeout(() => reject(new Error('GAS 橋接逾時：請確認已部署新版、執行身分為「我」、存取權為「所有人」')), 30000);
-          ready.resolve = () => { clearTimeout(timer); resolve(); };
-          frame.onerror = () => { clearTimeout(timer); reject(new Error('無法載入 GAS 橋接頁')); };
-        });
-        this.bridgeReady = ready;
-        document.body.appendChild(frame);
-        frame.src = url + '?action=bridge&origin=' + encodeURIComponent(location.origin) +
-          '&channel=' + encodeURIComponent(this.bridgeChannel);
-        try { await ready.promise; }
-        catch (err) {
-          if (this.bridgeFrame === frame) {
-            frame.remove();
-            this.bridgeFrame = null;
-            this.bridgeReady = null;
-          }
-          throw err;
-        }
-      },
-
-      async bridgeCall(request) {
-        await this.ensureBridge();
-        const id = ++this.bridgeSequence;
-        return new Promise((resolve, reject) => {
-          const timer = setTimeout(() => {
-            this.bridgePending.delete(id);
-            reject(new Error('GAS 執行逾時，請到 Apps Script「執行項目」檢查錯誤'));
-          }, 90000);
-          this.bridgePending.set(id, { resolve, reject, timer });
-          try {
-            this.bridgeWindow.postMessage({ smcBridge: this.bridgeChannel, type: 'request', id, request }, this.bridgeOrigin);
-          } catch (err) {
-            clearTimeout(timer);
-            this.bridgePending.delete(id);
-            reject(err);
-          }
-        });
-      },
-
-      async getGas(params = '') {
-        const p = new URLSearchParams(params);
-        const j = await this.bridgeCall({ method: 'GET', action: p.get('action') || 'all', id: p.get('id') || '' });
-        if (!j || j.status !== 'ok') throw new Error(j?.message || 'GAS 回傳錯誤');
-        return j;
-      },
-
-      async postGas(payload) {
-        const j = await this.bridgeCall({ method: 'POST', payload });
-        if (!j || j.status !== 'ok') throw new Error(j?.message || 'GAS 回傳錯誤');
-        return j;
-      },
-
-      // 試算表回傳的設定值一律是字串：依預設值型別還原（避免 "false" 變成 true）
-      coerceConfig(cfg) {
-        const defs = StorageManager.defaultSettings;
-        const out = {};
-        Object.keys(cfg).forEach(k => {
-          if (k === 'gasWebAppUrl' || k === 'adminPasswordHash') return;
-          const v = cfg[k];
-          const d = defs[k];
-          if (k === 'audioUrls') {
-            try { out.audioUrls = typeof v === 'string' ? JSON.parse(v) : v; } catch (e) {}
-          } else if (typeof d === 'number') {
-            const n = Number(v);
-            out[k] = (v === '' || isNaN(n)) ? d : n;
-          } else if (typeof d === 'boolean') {
-            out[k] = v === true || v === 'true';
-          } else {
-            out[k] = v;
-          }
-        });
-        return out;
-      },
-
-      applyCloud(data) {
-        this.suppress = true;
-        try {
-          if (Array.isArray(data.questions) && data.questions.length > 0) {
-            StorageManager.saveQuestions(data.questions);
-          }
-          if (data.config && typeof data.config === 'object') {
-            const current = StorageManager.getSettings();
-            const cloud = this.coerceConfig(data.config);
-            StorageManager.saveSettings({
-              ...current,
-              ...cloud,
-              audioUrls: { ...current.audioUrls, ...(cloud.audioUrls || {}) }
-            });
-          }
-        } finally {
-          this.suppress = false;
-        }
-        LogoManager.renderAll();
-        MascotManager.renderAll();
-        DriveAssets.preloadAll();
-      },
-
-      async syncOnBoot() {
-        if (!this.isConfigured()) return;
-        try {
-          const data = await this.getGas();
-          this.applyCloud(data);
-          this.lastStatus = { ok: true, time: new Date() };
-          // 試算表還是空的：把本機題庫自動寫進去，初始化資料庫
-          if (!(data.questions || []).length && StorageManager.getQuestions().length) {
-            await this.pushToCloud('boot', ['questions', 'config']);
-          }
-        } catch (err) {
-          this.lastStatus = { ok: false, error: err.message };
-          console.warn('GAS 開機同步失敗：', err.message);
-        }
-      },
-
-      saveUrlAndTest() {
-        const url = document.getElementById('settingGasUrl').value.trim();
-        const s = StorageManager.getSettings();
-        s.gasWebAppUrl = url;
-        this.suppress = true;
-        StorageManager.saveSettings(s);
-        this.suppress = false;
-        AdminModule.refreshAllViews();
-
-        if (!url) {
-          UI.showToast('已清除 GAS 網址，切換為本機儲存模式', 'info');
-          return;
-        }
-        this.diagnose(true);
-      },
-
-      async pullFromCloud() {
-        if (!this.isConfigured()) {
-          UI.showToast('請先輸入 GAS Web App URL！', 'error');
-          return;
-        }
-        UI.showToast('正在從 Google Sheet 拉取最新資料...', 'info');
-        try {
-          const data = await this.getGas();
-          this.applyCloud(data);
-          AdminModule.refreshAllViews();
-          this.lastStatus = { ok: true, time: new Date() };
-          UI.showToast(`雲端同步成功！已載入 ${data.questions.length} 題題庫與設定`, 'success');
-        } catch (err) {
-          this.lastStatus = { ok: false, error: err.message };
-          UI.showToast('拉取失敗：' + err.message, 'error');
-        }
-      },
-
-      buildSafeConfig(skipped) {
-        const cfg = { ...StorageManager.getSettings() };
-        delete cfg.adminPasswordHash;
-        delete cfg.gasWebAppUrl;
-        // blob: 只在本次瀏覽器有效、過大的 data: 超過試算表儲存格上限，都不送出
-        const bad = v => typeof v === 'string' && (v.startsWith('blob:') || (v.startsWith('data:') && v.length > 45000));
-        Object.keys(cfg).forEach(k => {
-          if (k === 'audioUrls') {
-            const a = {};
-            Object.keys(cfg.audioUrls || {}).forEach(ak => {
-              if (bad(cfg.audioUrls[ak])) skipped.push(ak); else a[ak] = cfg.audioUrls[ak];
-            });
-            cfg.audioUrls = a;
-          } else if (bad(cfg[k])) {
-            delete cfg[k];
-            skipped.push(k);
-          }
-        });
-        return cfg;
-      },
-
-      // mode: 'manual'（按鈕）| 'auto'（後台修改後自動）| 'boot'（開機初始化，不跳提示）
-      async pushToCloud(mode = 'manual', parts = ['questions', 'config']) {
-        if (!this.isConfigured()) {
-          if (mode !== 'boot') UI.showToast('請先輸入 GAS Web App URL！', 'error');
-          return false;
-        }
-        if (mode === 'manual') UI.showToast('正在推送題庫與設定至 Google Sheet...', 'info');
-        try {
-          const payload = { action: 'SYNC_UP' };
-          const skipped = [];
-          if (parts.includes('questions')) payload.questions = StorageManager.getQuestions();
-          if (parts.includes('config')) payload.config = this.buildSafeConfig(skipped);
-          const r = await this.postGas(payload);
-          this.lastStatus = { ok: true, time: new Date() };
-          if (mode === 'manual') {
-            UI.showToast(`✅ 已寫入 Google Sheet（題庫 ${r.questions ?? '—'} 題）${skipped.length ? `；${skipped.length} 個本機暫存素材未同步` : ''}`, 'success');
-          } else if (mode === 'auto') {
-            UI.showToast('☁️ 已自動同步到 Google Sheet', 'success');
-          }
-          return true;
-        } catch (err) {
-          this.lastStatus = { ok: false, error: err.message };
-          if (mode !== 'boot') UI.showToast('同步失敗：' + err.message, 'error');
-          return false;
-        }
-      },
-
-      // 後台修改題庫 / 設定後 2 秒自動同步到 Google Sheet
-      scheduleAutoPush(part) {
-        if (this.suppress || !this.isConfigured()) return;
-        if (typeof GameEngine === 'undefined' || GameEngine.currentScreen !== 'ADMIN') return;
-        this.pendingParts.add(part);
-        clearTimeout(this.autoTimer);
-        this.autoTimer = setTimeout(() => {
-          const parts = [...this.pendingParts];
-          this.pendingParts.clear();
-          this.pushToCloud('auto', parts);
-        }, 2000);
-      },
-
-      logGameResult(score, correctCount, outcome) {
-        if (!this.isConfigured()) return;
-        this.postGas({ action: 'LOG_RESULT', score, correctCount, outcome }).catch(err => {
-          console.warn('成績紀錄失敗：', err.message);
-        });
-      },
-
-      explainError(msg) {
-        const m = String(msg || '');
-        if (/Cannot read properties of null|getSheetByName|getActiveSpreadsheet/i.test(m)) {
-          return '腳本沒有綁定試算表（舊版程式碼的問題）。請改貼新版 Code.gs 並「新增版本」重新部署。';
-        }
-        if (/permission|authoriz|授權|權限/i.test(m)) {
-          return m + ' → 請在 Apps Script 編輯器選 setup 函式按「執行」並同意授權，再「新增版本」重新部署。';
-        }
-        return m;
-      },
-
-      explainNetwork(err) {
-        const m = String((err && err.message) || err);
-        if (/Failed to fetch|NetworkError|Load failed/i.test(m)) {
-          return '瀏覽器連不到 GAS。常見原因：①部署時「誰可以存取」沒選「所有人」 ②網址貼錯或不完整 ③目前網路擋住 script.google.com。';
-        }
-        return m;
-      },
-
-      // 連線診斷：逐步檢查並用白話說明問題在哪
-      async diagnose(autoSync = false) {
-        const box = document.getElementById('gasDiagResult');
-        if (!box) return;
-        const esc = s => AdminModule.escapeHtml(String(s));
-        const steps = [];
-        const add = (ok, title, detail = '', link = '') => steps.push({ ok, title, detail, link });
-        const render = (busy = false) => {
-          box.classList.remove('hidden');
-          box.innerHTML = steps.map(s => `
-            <div class="flex gap-2 py-2 border-b border-slate-100 last:border-0">
-              <div class="text-lg leading-none">${s.ok === true ? '✅' : s.ok === 'warn' ? '⚠️' : '❌'}</div>
-              <div class="min-w-0">
-                <div class="font-black text-slate-800 text-sm">${esc(s.title)}</div>
-                ${s.detail ? `<div class="text-xs font-bold text-slate-500 mt-0.5 break-words">${esc(s.detail)}</div>` : ''}
-                ${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener" class="text-xs font-black text-sky-600 underline">開啟</a>` : ''}
-              </div>
-            </div>`).join('') + (busy ? '<div class="text-xs font-bold text-slate-400 pt-2">檢查中…</div>' : '');
-        };
-
-        box.classList.remove('hidden');
-        box.innerHTML = '<div class="text-xs font-bold text-slate-400">檢查中…</div>';
-        const url = this.getUrl();
-        let info = null;
-
-        if (!url) {
-          add(false, '尚未填寫 GAS 網址', '請在上方欄位貼上以 /exec 結尾的 Web App 網址');
-          render();
-          return;
-        }
-        if (!/^https:\/\/script\.google\.com\/(a\/[^/]+\/)?macros\/s\/[\w-]+\/exec$/.test(url)) {
-          add(false, '網址格式看起來不對', '正確格式：https://script.google.com/macros/s/長串英數字/exec。若結尾是 /dev 是「測試版網址」，請改用「部署 → 管理部署作業」裡的網頁應用程式網址。');
-        } else {
-          add(true, '網址格式正確');
-        }
-        render(true);
-
-        try {
-          const r = await this.getGas('action=ping');
-          if (r.status !== 'ok') {
-            add(false, 'GAS 程式執行出錯', this.explainError(r.message));
-          } else if (!r.version) {
-            add(false, '你部署的還是舊版 Code.gs', '舊版沒有 Drive 上傳與診斷功能。請把新版 Code.gs 全部貼上取代、存檔，然後：部署 → 管理部署作業 → 編輯(鉛筆) → 版本選「新版本」→ 部署。');
-          } else {
-            info = r;
-            add(true, `已連上 GAS（程式版本 ${r.version}）`);
-            add(true, `試算表：${r.sheetName}`, `題庫 ${r.questionRows} 題｜設定 ${r.configRows} 筆｜成績 ${r.logRows} 筆`, r.sheetUrl);
-            if (r.driveError) {
-              add(false, 'Drive 素材資料夾無法使用', this.explainError(r.driveError));
-            } else {
-              add(true, `Drive 素材資料夾：${r.folderName}`, `目前 ${r.folderFiles} 個檔案`, r.folderUrl);
-            }
-          }
-        } catch (err) {
-          add(false, '無法連上 GAS', this.explainNetwork(err));
-        }
-
-        if (info) {
-          render(true);
-          try {
-            await this.postGas({ action: 'PING' });
-            add(true, 'GAS 寫入測試成功');
-            const driveTest = await this.postGas({ action: 'CHECK_DRIVE_WRITE' });
-            add(true, 'Drive 資料夾寫入測試成功', '測試檔已移至垃圾桶', driveTest.folderUrl);
-          } catch (err) {
-            add(false, 'GAS 或 Drive 寫入測試失敗', this.explainError(err.message));
-          }
-          const local = StorageManager.getQuestions().length;
-          add(info.questionRows > 0 ? true : 'warn',
-            `雲端題庫 ${info.questionRows} 題 ／ 本機題庫 ${local} 題`,
-            info.questionRows === 0 ? '雲端還是空的，按下方「推送」即可把本機題庫寫進試算表。' : '');
-        }
-        render();
-
-        if (autoSync && info) {
-          if (info.questionRows > 0) await this.pullFromCloud();
-          else if (StorageManager.getQuestions().length) await this.pushToCloud('manual');
-        }
-      },
-
-      copyGasCode() {
-        const codeText = document.getElementById('gasCodeBlock').textContent;
-        const textarea = document.createElement('textarea');
-        textarea.value = codeText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        UI.showToast('Code.gs 程式碼已複製到剪貼簿！', 'success');
-      }
-    };
-
-    /* ========================================================================
        MODULE 6: 展場雙螢幕即時同步引擎 (DualScreenSync)
        ======================================================================== */
     const DualScreenSync = {
@@ -3087,7 +2005,7 @@ function json_(obj) {
 
       init() {
         if ('BroadcastChannel' in window) {
-          this.channel = new BroadcastChannel('cch_smart_medical_expo_sync_v2');
+          this.channel = new BroadcastChannel('cch_smart_medical_expo_sync_v3');
           this.channel.onmessage = (event) => {
             const msg = event.data;
             if (!msg || !msg.type) return;
@@ -3168,8 +2086,7 @@ function json_(obj) {
       },
 
       spawnConfetti(intensity = 1) {
-        if (this.particles.length > 350) return;
-        const count = Math.floor(26 * intensity);
+        const count = Math.floor(65 * intensity);
         const colors = ['#0284C7', '#2DD4BF', '#F97316', '#FACC15', '#EC4899', '#22C55E'];
         const cx = this.fxCanvas.width / 2;
         const cy = this.fxCanvas.height * 0.45;
@@ -3194,12 +2111,11 @@ function json_(obj) {
         }
       },
 
-      // 左右下角彩帶大砲
       spawnCannons(level = 1) {
-        if (this.particles.length > 350) return;
+        if (this.particles.length > 1200) return;
         const w = this.fxCanvas.width, h = this.fxCanvas.height;
         const colors = ['#0284C7', '#2DD4BF', '#F97316', '#FACC15', '#EC4899', '#22C55E'];
-        const per = 10 + level * 5;
+        const per = 26 + level * 14;
         [{ x: w * 0.03, base: -62 }, { x: w * 0.97, base: -118 }].forEach(c => {
           for (let i = 0; i < per; i++) {
             const ang = ((c.base + (Math.random() - 0.5) * 34) * Math.PI) / 180;
@@ -3208,33 +2124,31 @@ function json_(obj) {
               x: c.x, y: h - 10, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, gravity: 0.38,
               size: 8 + Math.random() * 8, color: colors[i % colors.length],
               rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 16,
-              shape: i % 4 === 0 ? 'star' : 'rect', life: 1.0, decay: 0.012 + Math.random() * 0.006
+              shape: i % 4 === 0 ? 'star' : 'rect', life: 1.0, decay: 0.008 + Math.random() * 0.006
             });
           }
         });
       },
 
-      // 表情符號雨
       spawnEmojiRain(level = 1) {
-        if (this.particles.length > 350) return;
+        if (this.particles.length > 1200) return;
         const w = this.fxCanvas.width;
         const emojis = ['🎉', '⭐', '✨', '💖', '🎈', '👏', '🌟', '💙'];
-        const n = 4 + level * 2;
+        const n = 10 + level * 8;
         for (let i = 0; i < n; i++) {
           this.particles.push({
             x: Math.random() * w, y: -30 - Math.random() * 220,
             vx: (Math.random() - 0.5) * 2, vy: 2 + Math.random() * 3, gravity: 0.04,
             size: 12 + Math.random() * 10, color: '#ffffff', rotation: 0, rotSpeed: (Math.random() - 0.5) * 4,
-            shape: 'emoji', char: emojis[i % emojis.length], life: 1.0, decay: 0.006
+            shape: 'emoji', char: emojis[i % emojis.length], life: 1.0, decay: 0.0035
           });
         }
       },
 
-      // 煙火
       spawnFirework(x, y) {
         const colors = ['#FACC15', '#F97316', '#EC4899', '#38BDF8', '#22C55E', '#A78BFA'];
         const col = colors[Math.floor(Math.random() * colors.length)];
-        const n = 22;
+        const n = 46;
         for (let i = 0; i < n; i++) {
           const ang = (i / n) * Math.PI * 2;
           const sp = 4 + Math.random() * 4;
@@ -3274,7 +2188,7 @@ function json_(obj) {
         ctx.lineWidth = 3;
         ctx.beginPath();
         const baseY = h * 0.86;
-        this.ecgOffset = (this.ecgOffset + 4.4) % 320;
+        this.ecgOffset = (this.ecgOffset + 2.2) % 320;
         for (let x = 0; x < w; x += 6) {
           const localX = (x + this.ecgOffset) % 320;
           let dy = 0;
@@ -3289,7 +2203,7 @@ function json_(obj) {
         ctx.stroke();
 
         this.bgItems.forEach(item => {
-          item.y += item.speedY * 2;
+          item.y += item.speedY;
           if (item.y < -30) { item.y = h + 30; item.x = Math.random() * w; }
           ctx.save();
           ctx.globalAlpha = item.alpha;
@@ -3339,16 +2253,8 @@ function json_(obj) {
       },
 
       loop() {
-        // 背景降為約 30fps；沒有粒子時不重繪特效層，減少 CPU / GPU 負擔
-        this.frame = (this.frame || 0) + 1;
-        if (this.frame % 2 === 0) this.drawBg();
-        if (this.particles.length > 0) {
-          this.drawFx();
-          this.hadFx = true;
-        } else if (this.hadFx) {
-          this.fxCtx.clearRect(0, 0, this.fxCanvas.width, this.fxCanvas.height);
-          this.hadFx = false;
-        }
+        this.drawBg();
+        this.drawFx();
         requestAnimationFrame(() => this.loop());
       }
     };
@@ -3383,11 +2289,11 @@ function json_(obj) {
         const host = document.getElementById(elId)?.parentElement;
         if (!host) return;
         const chars = ['✨', '⭐', '💫', '🌟'];
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 12; i++) {
           const s = document.createElement('span');
           s.className = 'sparkle-pop';
           s.textContent = chars[i % chars.length];
-          const ang = (i / 8) * Math.PI * 2;
+          const ang = (i / 12) * Math.PI * 2;
           const dist = 110 + Math.random() * 90;
           s.style.setProperty('--dx', `${Math.cos(ang) * dist}px`);
           s.style.setProperty('--dy', `${Math.sin(ang) * dist}px`);
@@ -3404,27 +2310,28 @@ function json_(obj) {
           : level === 2 ? '連續答對！🔥'
           : this.praises[Math.floor(Math.random() * this.praises.length)];
         this.show(text, level);
-        BackgroundAndFX.spawnConfetti(0.8 + level * 0.3);
+        BackgroundAndFX.spawnConfetti(1 + level * 0.5);
         BackgroundAndFX.spawnCannons(level);
         BackgroundAndFX.spawnEmojiRain(level);
         if (level >= 2) {
           const w = window.innerWidth, h = window.innerHeight;
           setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.25, h * 0.3), 250);
-          if (level >= 3) setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.75, h * 0.35), 500);
+          setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.75, h * 0.35), 500);
+          if (level >= 3) setTimeout(() => BackgroundAndFX.spawnFirework(w * 0.5, h * 0.22), 750);
         }
         this.sparklesAround('gameMascotWrapper');
       },
 
       celebrateVictory() {
         this.show('🏆 全數過關！', 3, 2800);
-        BackgroundAndFX.spawnConfetti(1.8);
-        BackgroundAndFX.spawnCannons(2);
-        BackgroundAndFX.spawnEmojiRain(2);
+        BackgroundAndFX.spawnConfetti(2.5);
+        BackgroundAndFX.spawnCannons(3);
+        BackgroundAndFX.spawnEmojiRain(3);
         const w = window.innerWidth, h = window.innerHeight;
-        [400, 1100, 1900, 2800].forEach((ms, i) => {
+        [400, 900, 1400, 1900, 2500, 3200].forEach((ms, i) => {
           setTimeout(() => {
             BackgroundAndFX.spawnFirework(w * (0.15 + Math.random() * 0.7), h * (0.15 + Math.random() * 0.35));
-            if (i === 1) BackgroundAndFX.spawnCannons(1);
+            if (i % 2 === 0) BackgroundAndFX.spawnCannons(2);
           }, ms);
         });
       }
@@ -3432,7 +2339,6 @@ function json_(obj) {
 
     /* ========================================================================
        MODULE 8: 核心三題驟死制遊戲引擎 (GameEngine)
-       規則：總共 3 題，錯一題或超時即刻結束本次遊戲，換下一位挑戰！
        ======================================================================== */
     const GameEngine = {
       currentScreen: 'HOME',
@@ -3447,8 +2353,6 @@ function json_(obj) {
       timerInterval: null,
       isAnswered: false,
       nextStepTimeout: null,
-      isPaused: false,
-      pendingNext: null,
 
       switchScreen(screenName) {
         this.currentScreen = screenName;
@@ -3466,7 +2370,6 @@ function json_(obj) {
         targetEl.classList.remove('hidden');
         targetEl.classList.add('flex');
 
-        // 後台畫面隱藏右下角齒輪並解除 100vh 鎖定；遊戲畫面保持右下角低調齒輪
         const cornerBtn = document.getElementById('cornerSettingsTrigger');
         if (screenName === 'ADMIN') {
           document.body.classList.remove('game-viewport-lock');
@@ -3495,17 +2398,7 @@ function json_(obj) {
           DualScreenSync.sendRemoteCommand('REMOTE_START');
         }
 
-        try {
-          if (navigator.maxTouchPoints > 0 && !FullscreenHelper.isFull() && !FullscreenHelper.isStandalone() && FullscreenHelper.canRequest()) FullscreenHelper.request();
-        } catch (e) {}
         const allQuestions = StorageManager.getQuestions();
-        if (!allQuestions.length) {
-          UI.showToast('題庫是空的，請先到後台新增或匯入題目！', 'error');
-          return;
-        }
-        this.isPaused = false;
-        this.pendingNext = null;
-        this.hidePauseOverlay();
         const settings = StorageManager.getSettings();
         const totalDraw = Math.max(1, Number(settings.questionsPerGame) || 3);
 
@@ -3527,7 +2420,6 @@ function json_(obj) {
       loadCurrentQuestion() {
         clearInterval(this.timerInterval);
         clearTimeout(this.nextStepTimeout);
-        this.pendingNext = null;
         SoundEngine.stopCountdownAudio();
 
         this.isAnswered = false;
@@ -3600,7 +2492,6 @@ function json_(obj) {
         circleEl.style.strokeDashoffset = circumference * (1 - safeTime / this.timeLimit);
 
         if (safeTime <= 5 && safeTime > 0) {
-          // 最後 5 秒：整個計時器放大 + 縮放震動 + 紅色警示
           circleEl.setAttribute('stroke', '#EF4444');
           numEl.classList.add('text-rose-600');
           wrapperEl.classList.add('timer-urgent', 'anim-timer-panic');
@@ -3613,48 +2504,6 @@ function json_(obj) {
         }
       },
 
-      scheduleNext(fn, ms) {
-        this.pendingNext = { fn, remaining: ms, startedAt: Date.now() };
-        return setTimeout(() => { this.pendingNext = null; fn(); }, ms);
-      },
-
-      pauseGame() {
-        if (this.currentScreen !== 'GAME' || this.isPaused) return;
-        this.isPaused = true;
-        clearInterval(this.timerInterval);
-        if (this.pendingNext) {
-          clearTimeout(this.nextStepTimeout);
-          this.pendingNext.remaining = Math.max(0, this.pendingNext.remaining - (Date.now() - this.pendingNext.startedAt));
-        }
-        SoundEngine.pauseAll();
-        const ov = document.getElementById('pauseOverlay');
-        ov.classList.remove('hidden'); ov.classList.add('flex');
-      },
-
-      hidePauseOverlay() {
-        const ov = document.getElementById('pauseOverlay');
-        ov.classList.add('hidden'); ov.classList.remove('flex');
-      },
-
-      resumeGame() {
-        if (!this.isPaused) return;
-        this.isPaused = false;
-        this.hidePauseOverlay();
-        SoundEngine.resumeAll();
-        if (this.pendingNext) {
-          const { fn, remaining } = this.pendingNext;
-          this.nextStepTimeout = this.scheduleNext(fn, remaining);
-        } else if (!this.isAnswered) {
-          this.startQuestionTimer();
-        }
-      },
-
-      confirmQuit() {
-        UI.showConfirm('結束本次挑戰', '確定要放棄這一場並返回首頁嗎？', () => {
-          this.goToHome();
-        });
-      },
-
       stopTimerPanic() {
         const numEl = document.getElementById('timerNumberText');
         const wrapperEl = document.getElementById('timerWrapper');
@@ -3663,7 +2512,7 @@ function json_(obj) {
       },
 
       submitAnswer(choice, fromRemote = false) {
-        if (this.isAnswered || this.isPaused || this.currentScreen !== 'GAME') return;
+        if (this.isAnswered || this.currentScreen !== 'GAME') return;
 
         if (DualScreenSync.role === 'IPAD_REMOTE' && !fromRemote) {
           DualScreenSync.sendRemoteCommand('REMOTE_ANSWER', { choice });
@@ -3709,8 +2558,7 @@ function json_(obj) {
 
           DualScreenSync.broadcastState();
 
-          // 答對後進入下一題；若 3 題全對則完美過關
-          this.nextStepTimeout = this.scheduleNext(() => {
+          this.nextStepTimeout = setTimeout(() => {
             this.currentIndex++;
             if (this.currentIndex < this.sessionQuestions.length) {
               this.loadCurrentQuestion();
@@ -3720,7 +2568,6 @@ function json_(obj) {
           }, 2400);
 
         } else {
-          // 驟死制：錯一題直接結束本次遊戲！
           this.combo = 0;
           this.updateComboHud();
 
@@ -3736,7 +2583,7 @@ function json_(obj) {
 
           DualScreenSync.broadcastState();
 
-          this.nextStepTimeout = this.scheduleNext(() => {
+          this.nextStepTimeout = setTimeout(() => {
             this.finishGame(false, 'WRONG');
           }, 1900);
         }
@@ -3765,8 +2612,7 @@ function json_(obj) {
 
         DualScreenSync.broadcastState();
 
-        // 驟死制：超時同樣直接結束本次遊戲
-        this.nextStepTimeout = this.scheduleNext(() => {
+        this.nextStepTimeout = setTimeout(() => {
           this.finishGame(false, 'TIMEOUT');
         }, 1900);
       },
@@ -3798,7 +2644,6 @@ function json_(obj) {
         }
       },
 
-      // 垂直進度條：填滿高度 + 每一關的圓形標記
       renderProgress(index, total) {
         const bar = document.getElementById('hudProgressBar');
         const steps = document.getElementById('hudProgressSteps');
@@ -3824,7 +2669,6 @@ function json_(obj) {
         const starsRow = document.getElementById('resultStarsRow');
 
         if (isCleared) {
-          // 三題全數過關！
           SoundEngine.playVictoryFanfare();
           document.getElementById('resultRankTitle').textContent = '醫療智慧大師 · 完美過關！';
           document.getElementById('resultRankSubtitle').textContent = `太厲害了！連續答對全部 ${total} 道智慧醫療關卡！`;
@@ -3838,9 +2682,8 @@ function json_(obj) {
           }).join('');
 
           CelebrationFX.celebrateVictory();
-          GASConnector.logGameResult(this.score, `${this.correctCount}/${total}`, 'CLEARED');
+          CloudSync.logGameResult(this.score, `${this.correctCount}/${total}`, 'CLEARED');
         } else {
-          // 驟死淘汰結束本次遊戲，準備換下一位
           document.getElementById('resultRankTitle').textContent = failReason === 'TIMEOUT' ? '時間到 · 挑戰結束' : '差一點點 · 挑戰結束';
           document.getElementById('resultRankSubtitle').textContent = `本次共答對 ${this.correctCount} 題，歡迎下一位挑戰者上場！`;
 
@@ -3853,7 +2696,7 @@ function json_(obj) {
             return `<i class="fa-solid fa-star ${active} ${size}"></i>`;
           }).join('');
 
-          GASConnector.logGameResult(this.score, `${this.correctCount}/${total}`, failReason || 'ELIMINATED');
+          CloudSync.logGameResult(this.score, `${this.correctCount}/${total}`, failReason || 'ELIMINATED');
         }
 
         document.getElementById('resultCorrectCount').textContent = `${this.correctCount} / ${total}`;
@@ -3876,10 +2719,6 @@ function json_(obj) {
       goToHome() {
         clearInterval(this.timerInterval);
         clearTimeout(this.nextStepTimeout);
-        this.pendingNext = null;
-        this.isPaused = false;
-        this.hidePauseOverlay();
-        SoundEngine.resumeAll();
         this.switchScreen('HOME');
         SoundEngine.startBgm('HOME');
       },
@@ -3904,9 +2743,6 @@ function json_(obj) {
        MODULE 9: 管理後台控制器與 Excel 匯入驗證 (AdminModule & ExcelManager)
        ======================================================================== */
     const AdminModule = {
-      selectedIds: new Set(),
-      currentFilteredIds: [],
-
       openLogin() {
         SoundEngine.playClick();
         document.getElementById('adminPasswordInput').value = '';
@@ -3945,7 +2781,7 @@ function json_(obj) {
       },
 
       switchTab(tabName) {
-        ['questions', 'branding', 'audio', 'rules', 'gas'].forEach(name => {
+        ['questions', 'branding', 'audio', 'rules', 'cloud'].forEach(name => {
           const cap = name.charAt(0).toUpperCase() + name.slice(1);
           const panel = document.getElementById(`adminTab${cap}`);
           const btn = document.getElementById(`tabBtn${cap}`);
@@ -3966,11 +2802,10 @@ function json_(obj) {
         document.getElementById('statTotalQuestions').textContent = questions.length;
         document.getElementById('statDrawCount').textContent = `${settings.questionsPerGame} 題驟死制`;
         document.getElementById('statTimeLimit').textContent = `${settings.timePerQuestion} 秒`;
-        document.getElementById('statGasStatus').textContent = settings.gasWebAppUrl
-          ? '已綁定 GAS 雲端試算表'
-          : '本機儲存模式';
+        document.getElementById('statCloudStatus').textContent = CloudSync.isConfigured()
+          ? '已自動連線雲端資料庫'
+          : '尚未設定雲端網址';
 
-        // 填充 LOGO 與吉祥物設定
         document.getElementById('settingLogo1Url').value = settings.logo1Url || '';
         document.getElementById('settingLogo1Title').value = settings.logo1Title || '';
         document.getElementById('settingLogo1Sub').value = settings.logo1Sub || '';
@@ -3980,21 +2815,17 @@ function json_(obj) {
         LogoManager.updatePreview(1);
         LogoManager.updatePreview(2);
 
-        document.getElementById('settingMascotHome').value = settings.mascotHome || '';
         document.getElementById('settingMascotIdle').value = settings.mascotIdle || '';
         document.getElementById('settingMascotHappy').value = settings.mascotHappy || '';
         document.getElementById('settingMascotSad').value = settings.mascotSad || '';
         MascotManager.updateAllPreviews();
 
-        // 填充 MP3 音訊槽位
         SoundEngine.renderAdminSlots();
 
-        // 填充規則與 GAS 設定
         document.getElementById('settingQuestionCount').value = settings.questionsPerGame;
         document.getElementById('settingTimePerQuestion').value = settings.timePerQuestion;
         document.getElementById('settingControlMode').value = settings.controlMode;
         document.getElementById('settingDisplayRole').value = DualScreenSync.role;
-        document.getElementById('settingGasUrl').value = settings.gasWebAppUrl || '';
 
         const lastDrawn = StorageManager.getLastDrawnRecord();
         document.getElementById('lastDrawnRecordLabel').textContent = lastDrawn ? lastDrawn.timestamp : '尚未進行遊戲';
@@ -4014,17 +2845,13 @@ function json_(obj) {
           q.optionC.toLowerCase().includes(keyword)
         );
 
-        this.currentFilteredIds = filtered.map(q => q.id);
-
         if (filtered.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-bold">${questions.length === 0 ? '題庫是空的，請新增或匯入題目' : '查無符合條件的題目'}</td></tr>`;
-          this.updateBulkUi();
+          tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold">查無符合條件的題目</td></tr>`;
           return;
         }
 
         tbody.innerHTML = filtered.map((q, idx) => `
           <tr class="hover:bg-slate-50 transition">
-            <td class="p-3"><input type="checkbox" class="w-5 h-5 accent-rose-600 cursor-pointer" ${this.selectedIds.has(q.id) ? 'checked' : ''} onchange="AdminModule.toggleSelect('${q.id}', this.checked)" /></td>
             <td class="p-3 font-display font-black text-slate-400">${idx + 1}</td>
             <td class="p-3 font-bold text-slate-800 max-w-md">${this.escapeHtml(q.question)}</td>
             <td class="p-3 text-xs space-y-1">
@@ -4047,58 +2874,6 @@ function json_(obj) {
             </td>
           </tr>
         `).join('');
-        this.updateBulkUi();
-      },
-
-      toggleSelect(id, checked) {
-        checked ? this.selectedIds.add(id) : this.selectedIds.delete(id);
-        this.updateBulkUi();
-      },
-
-      toggleSelectAll(checked) {
-        this.currentFilteredIds.forEach(id => checked ? this.selectedIds.add(id) : this.selectedIds.delete(id));
-        this.renderQuestionList();
-      },
-
-      updateBulkUi() {
-        const n = this.selectedIds.size;
-        const cnt = document.getElementById('bulkSelectedCount');
-        const btn = document.getElementById('bulkDeleteBtn');
-        const all = document.getElementById('selectAllQuestions');
-        if (cnt) cnt.textContent = n;
-        if (btn) {
-          btn.disabled = n === 0;
-          btn.classList.toggle('opacity-40', n === 0);
-          btn.classList.toggle('cursor-not-allowed', n === 0);
-        }
-        if (all) {
-          const ids = this.currentFilteredIds;
-          const sel = ids.filter(id => this.selectedIds.has(id)).length;
-          all.checked = ids.length > 0 && sel === ids.length;
-          all.indeterminate = sel > 0 && sel < ids.length;
-        }
-      },
-
-      deleteSelected() {
-        const ids = [...this.selectedIds];
-        if (!ids.length) return;
-        UI.showConfirm('批次刪除題目', `確定要一次刪除選取的 ${ids.length} 道題目嗎？此動作無法復原。`, () => {
-          StorageManager.saveQuestions(StorageManager.getQuestions().filter(q => !this.selectedIds.has(q.id)));
-          this.selectedIds.clear();
-          this.refreshAllViews();
-          UI.showToast(`已刪除 ${ids.length} 道題目`, 'info');
-        });
-      },
-
-      clearAllQuestions() {
-        const total = StorageManager.getQuestions().length;
-        if (!total) { UI.showToast('題庫已經是空的', 'info'); return; }
-        UI.showConfirm('清空整個題庫', `確定要一次刪除全部 ${total} 道題目嗎？此動作無法復原（之後可匯入 Excel 或重置為預設題庫）。`, () => {
-          StorageManager.saveQuestions([]);
-          this.selectedIds.clear();
-          this.refreshAllViews();
-          UI.showToast('題庫已全部清空', 'info');
-        });
       },
 
       saveQuestionForm(event) {
@@ -4116,16 +2891,17 @@ function json_(obj) {
         if (editId) {
           const idx = questions.findIndex(item => item.id === editId);
           if (idx !== -1) questions[idx] = { ...questions[idx], question, optionA, optionB, optionC, answer };
-          UI.showToast('題目已更新！', 'success');
+          UI.showToast('題目已更新並同步至雲端！', 'success');
         } else {
           questions.unshift({
             id: 'q_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
             question, optionA, optionB, optionC, answer
           });
-          UI.showToast('新題目已新增！', 'success');
+          UI.showToast('新題目已新增並同步至雲端！', 'success');
         }
 
         StorageManager.saveQuestions(questions);
+        CloudSync.pushToCloud(true);
         this.resetQuestionForm();
         this.refreshAllViews();
       },
@@ -4152,10 +2928,15 @@ function json_(obj) {
 
       deleteQuestion(id) {
         const questions = StorageManager.getQuestions();
+        if (questions.length <= 1) {
+          UI.showToast('題庫至少須保留 1 道題目！', 'error');
+          return;
+        }
         UI.showConfirm('刪除題目', '確定要刪除此題目嗎？', () => {
           StorageManager.saveQuestions(questions.filter(q => q.id !== id));
+          CloudSync.pushToCloud(true);
           this.refreshAllViews();
-          UI.showToast('題目已刪除', 'info');
+          UI.showToast('題目已刪除並同步至雲端', 'info');
         });
       },
 
@@ -4165,7 +2946,7 @@ function json_(obj) {
 
         let qCount = parseInt(document.getElementById('settingQuestionCount').value, 10);
         if (isNaN(qCount) || qCount < 1) qCount = 3;
-        if (qCount > questions.length) qCount = Math.max(1, questions.length);
+        if (qCount > questions.length) qCount = questions.length;
 
         let tLimit = parseInt(document.getElementById('settingTimePerQuestion').value, 10);
         if (isNaN(tLimit) || tLimit < 5) tLimit = 15;
@@ -4180,8 +2961,9 @@ function json_(obj) {
         }
 
         StorageManager.saveSettings(settings);
+        CloudSync.pushToCloud(true);
         this.refreshAllViews();
-        UI.showToast('遊戲規則設定已保存！', 'success');
+        UI.showToast('遊戲規則設定已保存並同步至雲端！', 'success');
       },
 
       escapeHtml(str) {
@@ -4311,7 +3093,8 @@ function json_(obj) {
           answer: r.answer
         }));
         StorageManager.saveQuestions([...current, ...added]);
-        UI.showToast(`成功匯入 ${added.length} 題新題目！`, 'success');
+        CloudSync.pushToCloud(true);
+        UI.showToast(`成功匯入 ${added.length} 題新題目並同步至雲端！`, 'success');
         this.stagedValidRows = [];
         document.getElementById('excelPreviewContainer').classList.add('hidden');
         AdminModule.refreshAllViews();
@@ -4331,7 +3114,7 @@ function json_(obj) {
         el.className = `${bgClass} text-white px-5 py-3 rounded-2xl shadow-xl border-2 font-black text-sm flex items-center gap-2 anim-combo-pop`;
         el.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info'}"></i><span>${message}</span>`;
         container.appendChild(el);
-        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2600);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 2800);
       },
 
       showConfirm(title, message, onConfirm) {
@@ -4353,13 +3136,7 @@ function json_(obj) {
       const tag = document.activeElement?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
-      if (GameEngine.currentScreen === 'GAME' && (e.key === 'Escape' || e.key.toUpperCase() === 'P')) {
-        e.preventDefault();
-        GameEngine.isPaused ? GameEngine.resumeGame() : GameEngine.pauseGame();
-        return;
-      }
-
-      if (GameEngine.currentScreen === 'GAME' && !GameEngine.isAnswered && !GameEngine.isPaused) {
+      if (GameEngine.currentScreen === 'GAME' && !GameEngine.isAnswered) {
         const settings = StorageManager.getSettings();
         if (settings.controlMode === 'TOUCH_ONLY') return;
         const key = e.key.toUpperCase();
@@ -4376,11 +3153,8 @@ function json_(obj) {
       MascotManager.renderAll();
       DualScreenSync.init();
       BackgroundAndFX.init();
-      FullscreenHelper.init();
-      DriveAssets.preloadAll();
-      GASConnector.syncOnBoot();
+      CloudSync.syncOnBoot();
     });
   </script>
 </body>
 </html>
-
