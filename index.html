@@ -74,6 +74,98 @@
       overflow: hidden;
     }
 
+    /* ========================================================================
+       開機 GAS 雲端讀取進度條特效樣式
+       ======================================================================== */
+    #bootLoaderOverlay {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.24), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(45, 212, 191, 0.24), transparent 45%),
+        linear-gradient(135deg, #07192d 0%, #0b2942 52%, #083344 100%);
+      transition: opacity 0.55s var(--ease-smooth), transform 0.55s var(--ease-smooth), visibility 0.55s;
+    }
+
+    #bootLoaderOverlay.boot-exit {
+      opacity: 0;
+      transform: scale(1.04);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .boot-grid-bg {
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+      background-size: 44px 44px;
+      animation: bootGridDrift 18s linear infinite;
+    }
+
+    @keyframes bootGridDrift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(44px, 44px); }
+    }
+
+    .boot-radar-ring {
+      position: absolute;
+      inset: -14px;
+      border-radius: 9999px;
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      animation: bootRadarPulse 2.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .boot-radar-ring:nth-child(2) {
+      animation-delay: 1.05s;
+      border-color: rgba(45, 212, 191, 0.45);
+    }
+
+    @keyframes bootRadarPulse {
+      0% { transform: scale(0.92); opacity: 0.85; }
+      100% { transform: scale(1.42); opacity: 0; }
+    }
+
+    .boot-bar-fill {
+      position: relative;
+      height: 100%;
+      width: 0%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #0284C7 0%, #2DD4BF 48%, #FACC15 80%, #FB923C 100%);
+      box-shadow: 0 0 24px rgba(45, 212, 191, 0.65), inset 0 2px 4px rgba(255, 255, 255, 0.55);
+      transition: width 0.28s var(--ease-smooth);
+      overflow: hidden;
+    }
+
+    .boot-bar-shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        110deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.15) 35%,
+        rgba(255, 255, 255, 0.65) 50%,
+        rgba(255, 255, 255, 0.15) 65%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: bootShimmerMove 1.35s linear infinite;
+    }
+
+    @keyframes bootShimmerMove {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .boot-ecg-line {
+      stroke-dasharray: 260;
+      stroke-dashoffset: 260;
+      animation: bootEcgDraw 1.8s ease-in-out infinite;
+    }
+
+    @keyframes bootEcgDraw {
+      0% { stroke-dashoffset: 260; opacity: 0.35; }
+      50% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: -260; opacity: 0.35; }
+    }
+
     /* 3D 卡通立體按鈕系統 */
     .btn-3d {
       position: relative;
@@ -378,6 +470,84 @@
   </style>
 </head>
 <body class="game-viewport-lock">
+
+  <!-- ==========================================================================
+       0. 開機 GAS 雲端資料庫與素材讀取進度條遮罩
+       ========================================================================== -->
+  <div id="bootLoaderOverlay" class="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+    <div class="boot-grid-bg absolute inset-0 pointer-events-none"></div>
+
+    <div class="relative z-10 w-full max-w-2xl rounded-[2.2rem] bg-slate-900/75 backdrop-blur-xl border-2 border-sky-300/30 shadow-[0_24px_70px_rgba(0,0,0,0.55)] p-6 sm:p-10 text-white">
+      <!-- 頂部徽章 -->
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-sky-500/20 border border-sky-300/40 text-sky-200 font-black text-xs sm:text-sm tracking-wider">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>GAS CLOUD SYNC &amp; ASSET PRELOADER</span>
+        </div>
+        <span class="text-xs font-black text-teal-300/90">CCH SMART EXPO</span>
+      </div>
+
+      <!-- 核心脈衝圖示與標題 -->
+      <div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 mb-7 text-center sm:text-left">
+        <div class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-sky-400 via-teal-400 to-emerald-500 flex items-center justify-center text-slate-950 text-4xl sm:text-5xl shadow-lg shrink-0">
+          <div class="boot-radar-ring"></div>
+          <div class="boot-radar-ring"></div>
+          <i class="fa-solid fa-cloud-arrow-down relative z-10"></i>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            彰基智慧醫療大挑戰
+          </h2>
+          <p id="bootStatusText" class="text-sm sm:text-base font-bold text-sky-200 mt-1.5">
+            正在連線 Google Apps Script 硬碟資料庫...
+          </p>
+        </div>
+      </div>
+
+      <!-- 動態進度條與百分比 -->
+      <div class="space-y-2.5 mb-6">
+        <div class="flex items-end justify-between gap-4">
+          <span id="bootSubDetail" class="text-xs sm:text-sm font-bold text-slate-300 truncate">
+            準備同步雲端題庫、雙 LOGO 與多媒體素材
+          </span>
+          <div class="font-display font-black text-3xl sm:text-4xl leading-none shrink-0">
+            <span id="bootPercentText" class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-teal-200 to-amber-300">0</span><span class="text-lg sm:text-xl text-amber-300 ml-0.5">%</span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-6 sm:h-7 rounded-full bg-slate-800/90 border-2 border-sky-400/35 p-1 shadow-inner overflow-hidden">
+          <div id="bootProgressBar" class="boot-bar-fill">
+            <div class="boot-bar-shimmer"></div>
+          </div>
+        </div>
+
+        <!-- 底部心電掃描線裝飾 -->
+        <div class="pt-1 opacity-80">
+          <svg viewBox="0 0 400 28" class="w-full h-6 overflow-visible">
+            <path class="boot-ecg-line" fill="none" stroke="#2DD4BF" stroke-width="2.5" stroke-linecap="round"
+              d="M0,14 L95,14 L112,14 L122,4 L134,25 L146,2 L158,22 L168,14 L265,14 L282,14 L292,5 L304,24 L316,4 L328,21 L338,14 L400,14" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- 三階段進度指示 -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-black">
+        <div id="bootStep1" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-sky-500/20 border border-sky-300/40 text-sky-200 transition">
+          <i class="fa-solid fa-spinner fa-spin text-sky-300"></i>
+          <span>1. 連線 GAS 雲端</span>
+        </div>
+        <div id="bootStep2" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-slate-800/70 border border-slate-700 text-slate-400 transition">
+          <i class="fa-regular fa-circle"></i>
+          <span>2. 同步題庫與設定</span>
+        </div>
+        <div id="bootStep3" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-slate-800/70 border border-slate-700 text-slate-400 transition">
+          <i class="fa-regular fa-circle"></i>
+          <span>3. 預載硬碟素材</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 動態醫療科技嘉年華背景 Canvas -->
   <canvas id="bgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
@@ -1102,7 +1272,7 @@
                   <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫自動連線設定
                 </h2>
                 <p class="text-xs font-bold text-slate-500 mt-1">
-                  系統已內建預設 GAS 網址，任何新設備點開 HTML 就會自動連線同步；若在此修改並儲存，則該設備會優先改用新網址。
+                  系統已內建 GAS 網址，任何設備、任何平台點開 HTML 都會自動連線同步，無需登入或手動恢復預設；此處修改僅供「本次開啟」暫時測試，重新整理後自動回到內建網址。
                 </p>
               </div>
               <span id="gasAutoConnectBadge" class="px-3 py-1.5 rounded-full text-xs font-black bg-slate-100 text-slate-600">
@@ -1124,7 +1294,7 @@
                 </button>
               </div>
               <p class="text-xs font-bold text-slate-400">
-                💡 小提示：亦可在網址列後方加上 <code class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">?gas=您的GAS網址</code> 開啟網頁，系統會自動套用並記憶該連結。
+                💡 小提示：亦可在網址列後方加上 <code class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">?gas=您的GAS網址</code> 開啟網頁，僅本次開啟暫時套用。
               </p>
             </div>
 
@@ -1159,6 +1329,105 @@
        （請替換為你的正式 /exec 部署網址）
        ======================================================================== */
     const DEFAULT_GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwREFsynD9kBPQrYiysn7W_TbU5nkLZnQk-AJDf8jOo3sLM_TeOP_LM8EDZV48Ieq9L/exec';
+
+    /* ========================================================================
+       開機 GAS 讀取進度條控制器 (BootLoader)
+       ======================================================================== */
+    const BootLoader = {
+      currentPct: 0,
+      targetPct: 0,
+      rafId: null,
+      done: false,
+      readyCallbacks: [],
+
+      init() {
+        this.setProgress(8, '初始化本機與雲端同步引擎...', '正在建立連線通道');
+        this.startLoop();
+      },
+
+      startLoop() {
+        const tick = () => {
+          if (this.currentPct < this.targetPct) {
+            const diff = this.targetPct - this.currentPct;
+            const step = Math.max(0.65, diff * 0.16);
+            this.currentPct = Math.min(this.targetPct, this.currentPct + step);
+            this.renderBar(this.currentPct);
+          }
+
+          if (this.done && this.currentPct >= 99.6) {
+            this.currentPct = 100;
+            this.renderBar(100);
+            cancelAnimationFrame(this.rafId);
+            this.hideOverlay();
+            return;
+          }
+
+          this.rafId = requestAnimationFrame(tick);
+        };
+        this.rafId = requestAnimationFrame(tick);
+      },
+
+      renderBar(pct) {
+        const rounded = Math.round(pct);
+        const bar = document.getElementById('bootProgressBar');
+        const num = document.getElementById('bootPercentText');
+        if (bar) bar.style.width = `${pct.toFixed(1)}%`;
+        if (num) num.textContent = rounded;
+      },
+
+      setProgress(pct, statusText, detailText = '') {
+        this.targetPct = Math.max(this.targetPct, Math.min(100, pct));
+        const st = document.getElementById('bootStatusText');
+        const sd = document.getElementById('bootSubDetail');
+        if (st && statusText) st.textContent = statusText;
+        if (sd && detailText) sd.textContent = detailText;
+      },
+
+      setStep(stepNum, state) {
+        const el = document.getElementById(`bootStep${stepNum}`);
+        if (!el) return;
+        const icon = el.querySelector('i');
+        if (state === 'active') {
+          el.className = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-sky-500/25 border border-sky-300/60 text-sky-100 transition';
+          if (icon) icon.className = 'fa-solid fa-spinner fa-spin text-sky-300';
+        } else if (state === 'done') {
+          el.className = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 transition';
+          if (icon) icon.className = 'fa-solid fa-circle-check text-emerald-400';
+        } else if (state === 'skip') {
+          el.className = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-amber-200 transition';
+          if (icon) icon.className = 'fa-solid fa-forward-step text-amber-300';
+        }
+      },
+
+      complete() {
+        if (this.done) return;
+        this.done = true;
+        this.setProgress(100, '雲端資料載入完成，準備開始挑戰！', '所有題庫與視覺素材已就緒');
+      },
+
+      hideOverlay() {
+        const ov = document.getElementById('bootLoaderOverlay');
+        if (ov && !ov.classList.contains('boot-exit')) {
+          ov.classList.add('boot-exit');
+          setTimeout(() => {
+            ov.style.display = 'none';
+          }, 600);
+        }
+        const cbs = [...this.readyCallbacks];
+        this.readyCallbacks = [];
+        cbs.forEach(fn => {
+          try { fn(); } catch (e) {}
+        });
+      },
+
+      whenReady(fn) {
+        if (!this.done || this.currentPct < 100) {
+          this.readyCallbacks.push(fn);
+        } else {
+          fn();
+        }
+      }
+    };
 
     function normalizeDriveMediaUrl(url, mediaType = 'image') {
       if (!url) return '';
@@ -1278,10 +1547,23 @@
         }, 80);
       },
 
-      preloadAll() {
+      async preloadAll(onItemProgress = null) {
         const s = StorageManager.getSettings();
         const vals = [s.logo1Url, s.logo2Url, s.mascotHome, s.mascotIdle, s.mascotHappy, s.mascotSad, ...Object.values(s.audioUrls || {})];
-        vals.forEach(v => { const id = this.extractId(v); if (id && GASConnector.isConfigured()) this.load(id); });
+        const ids = [...new Set(vals.map(v => this.extractId(v)).filter(Boolean))];
+        if (!ids.length || !GASConnector.isConfigured()) {
+          if (onItemProgress) onItemProgress(1, 1);
+          return;
+        }
+
+        let completed = 0;
+        const tasks = ids.map(id =>
+          this.load(id).finally(() => {
+            completed++;
+            if (onItemProgress) onItemProgress(completed, ids.length);
+          })
+        );
+        await Promise.allSettled(tasks);
       }
     };
 
@@ -1523,23 +1805,21 @@
         if (!localStorage.getItem(this.KEYS.SETTINGS)) {
           localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(this.defaultSettings));
         } else {
-          // 若舊設備原本沒有填入 gasWebAppUrl，自動補上內建預設 GAS 網址
-          const current = this.getSettings();
-          if (!current.gasWebAppUrl && DEFAULT_GAS_WEB_APP_URL) {
-            current.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
-            localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(current));
+          // ★ 每次開機一律覆蓋成內建 GAS 網址，清除舊裝置殘留的舊網址
+          try {
+            const raw = JSON.parse(localStorage.getItem(this.KEYS.SETTINGS) || '{}');
+            raw.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
+            localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(raw));
+          } catch (e) {
+            localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(this.defaultSettings));
           }
         }
 
-        // 支援網址參數 ?gas=... 自動套用並記憶該設備的 GAS 連結
+        // ?gas=網址 僅「本次開啟」有效，不寫入本機，避免污染其他次開啟
         try {
           const params = new URLSearchParams(window.location.search);
           const urlParamGas = (params.get('gas') || '').trim();
-          if (urlParamGas) {
-            const s = this.getSettings();
-            s.gasWebAppUrl = urlParamGas;
-            localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(s));
-          }
+          if (urlParamGas) GASConnector.sessionOverride = urlParamGas;
         } catch (e) {}
       },
 
@@ -1568,9 +1848,7 @@
             ...parsed,
             audioUrls: { ...this.defaultSettings.audioUrls, ...(parsed.audioUrls || {}) }
           };
-          if (!merged.gasWebAppUrl && DEFAULT_GAS_WEB_APP_URL) {
-            merged.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
-          }
+          merged.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
           return merged;
         } catch (e) {
           return { ...this.defaultSettings };
@@ -2281,10 +2559,11 @@
       autoTimer: null,
       pendingParts: new Set(),
       lastStatus: null,
+      sessionOverride: '',
 
+      // ★ 一律優先使用內建 GAS 網址（僅 ?gas= 或管理端「暫時測試」可於本次覆蓋）
       getUrl() {
-        const saved = (StorageManager.getSettings().gasWebAppUrl || '').trim();
-        return saved || (DEFAULT_GAS_WEB_APP_URL || '').trim();
+        return (this.sessionOverride || DEFAULT_GAS_WEB_APP_URL || '').trim();
       },
 
       isConfigured() {
@@ -2366,7 +2645,6 @@
         }
         LogoManager.renderAll();
         MascotManager.renderAll();
-        DriveAssets.preloadAll();
       },
 
       updateStatusBadge() {
@@ -2407,36 +2685,80 @@
 
       async syncOnBoot() {
         this.updateStatusBadge();
-        if (!this.isConfigured()) return;
+        BootLoader.init();
+
+        if (!this.isConfigured()) {
+          BootLoader.setStep(1, 'skip');
+          BootLoader.setProgress(55, '目前為本機模式，正在載入預設題庫與畫面...', '尚未設定正式 GAS 網址，直接使用本機資料');
+          BootLoader.setStep(2, 'done');
+          BootLoader.setProgress(85, '整理視覺與音效元件...', '準備完成');
+          BootLoader.setStep(3, 'done');
+          setTimeout(() => BootLoader.complete(), 380);
+          return;
+        }
+
+        // 安全逾時保護：避免 GAS 慢速或網路異常時卡住進度條
+        const safetyTimer = setTimeout(() => {
+          BootLoader.setProgress(100, '逾時自動完成載入，正在進入遊戲...', '部分雲端項目將於背景繼續同步');
+          BootLoader.complete();
+        }, 8500);
+
         try {
+          BootLoader.setStep(1, 'active');
+          BootLoader.setProgress(24, '正在連接 GAS 硬碟資料庫...', '請求 Google Apps Script 雲端資料');
           const data = await this.getGas();
+
+          BootLoader.setStep(1, 'done');
+          BootLoader.setStep(2, 'active');
+          BootLoader.setProgress(58, '正在同步題庫、LOGO 與遊戲設定...', `已取得 ${(data.questions || []).length} 筆題庫資料`);
           this.applyCloud(data);
+
           this.lastStatus = { ok: true, time: new Date() };
           this.updateStatusBadge();
           if (GameEngine.currentScreen === 'ADMIN') AdminModule.refreshAllViews();
+
           if (!(data.questions || []).length && StorageManager.getQuestions().length) {
             await this.pushToCloud('boot', ['questions', 'config']);
           }
+          BootLoader.setStep(2, 'done');
+
+          BootLoader.setStep(3, 'active');
+          BootLoader.setProgress(72, '正在預載雲端圖片與音訊素材...', '快取 LOGO、吉祥物與 MP3 音效');
+          await DriveAssets.preloadAll((doneCount, totalCount) => {
+            const assetPct = 72 + Math.round((doneCount / Math.max(1, totalCount)) * 24);
+            BootLoader.setProgress(
+              assetPct,
+              '正在預載雲端圖片與音訊素材...',
+              `素材快取進度：${doneCount} / ${totalCount}`
+            );
+          });
+          BootLoader.setStep(3, 'done');
+          BootLoader.setProgress(98, '即將完成初始化...', '正在開啟挑戰舞台');
         } catch (err) {
           this.lastStatus = { ok: false, error: err.message };
           this.updateStatusBadge();
           console.warn('GAS 開機自動連線失敗：', err.message);
+          BootLoader.setStep(1, 'skip');
+          BootLoader.setStep(2, 'done');
+          BootLoader.setStep(3, 'done');
+          BootLoader.setProgress(95, '雲端連線逾時或暫時無法存取，改用本機快取啟動...', err.message);
+        } finally {
+          clearTimeout(safetyTimer);
+          setTimeout(() => BootLoader.complete(), 260);
         }
       },
 
       restoreDefaultUrl() {
         const input = document.getElementById('settingGasUrl');
         if (input) input.value = DEFAULT_GAS_WEB_APP_URL || '';
+        this.sessionOverride = '';
         this.saveUrlAndTest();
       },
 
       saveUrlAndTest() {
-        const url = document.getElementById('settingGasUrl').value.trim() || DEFAULT_GAS_WEB_APP_URL;
-        const s = StorageManager.getSettings();
-        s.gasWebAppUrl = url;
-        this.suppress = true;
-        StorageManager.saveSettings(s);
-        this.suppress = false;
+        const url = document.getElementById('settingGasUrl').value.trim();
+        // 與內建網址相同或留空 → 使用內建；否則僅本次開啟暫時套用（重新整理後回到內建網址）
+        this.sessionOverride = (url && url !== DEFAULT_GAS_WEB_APP_URL) ? url : '';
         this.lastStatus = null;
         AdminModule.refreshAllViews();
 
@@ -2456,6 +2778,7 @@
         try {
           const data = await this.getGas();
           this.applyCloud(data);
+          DriveAssets.preloadAll();
           this.lastStatus = { ok: true, time: new Date() };
           AdminModule.refreshAllViews();
           UI.showToast(`雲端同步成功！已載入 ${data.questions.length} 題題庫與設定`, 'success');
@@ -3024,6 +3347,11 @@
       },
 
       startNewGame(fromRemote = false) {
+        if (!BootLoader.done) {
+          BootLoader.whenReady(() => this.startNewGame(fromRemote));
+          return;
+        }
+
         SoundEngine.unlock();
         SoundEngine.playClick();
 
@@ -3895,7 +4223,6 @@
       DualScreenSync.init();
       BackgroundAndFX.init();
       FullscreenHelper.init();
-      DriveAssets.preloadAll();
       GASConnector.syncOnBoot();
     });
   </script>
