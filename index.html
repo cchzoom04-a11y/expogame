@@ -226,13 +226,11 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 999px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 999px; }
 
-    /* ===== v3 新增樣式 ===== */
     .float-badge{position:absolute;width:clamp(44px,7.5vh,84px);height:clamp(44px,7.5vh,84px);border-radius:9999px;background:#fff;
       box-shadow:0 8px 20px rgba(2,132,199,.25);display:flex;align-items:center;justify-content:center;
       font-size:clamp(1.2rem,3.6vh,2.5rem);animation:floatIcon 3.6s ease-in-out infinite;border:3px solid #e0f2fe;z-index:5}
     @keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-16px) rotate(6deg)}}
 
-    /* 答案按鈕：加大，長輩友善 */
     .opt-btn{min-height:clamp(92px,15.5vh,176px);padding:clamp(.8rem,2vh,1.6rem) clamp(1rem,2.2vw,2.2rem);
       gap:clamp(.9rem,1.8vw,1.8rem);border-radius:1.8rem;width:100%;text-align:left;justify-content:flex-start}
     .opt-letter{width:clamp(52px,9vh,96px);height:clamp(52px,9vh,96px);border-radius:1.2rem;background:rgba(255,255,255,.25);
@@ -243,7 +241,6 @@
     .option-correct{animation:correctPulse .55s ease-in-out 3}
     @keyframes correctPulse{0%,100%{transform:scale(1.03)}50%{transform:scale(1.09)}}
 
-    /* 倒數最後 5 秒：放大 + 震動 */
     .timer-urgent{border-color:#fb7185 !important;background:#fff1f2 !important;
       box-shadow:0 0 0 10px rgba(244,63,94,.22),0 0 60px rgba(244,63,94,.6) !important}
     @keyframes timerPanic{
@@ -259,7 +256,6 @@
     @keyframes numTick{0%{transform:scale(1.5)}100%{transform:scale(1)}}
     .anim-num-tick{animation:numTick .35s ease-out}
 
-    /* 垂直關卡進度條 */
     .rail-marker{position:absolute;left:50%;transform:translate(-50%,50%);width:clamp(34px,5.2vh,52px);height:clamp(34px,5.2vh,52px);
       border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:900;
       font-size:clamp(1rem,2.6vh,1.6rem);z-index:2;transition:all .4s var(--ease-bounce)}
@@ -268,7 +264,6 @@
     @keyframes markerPulse{0%,100%{transform:translate(-50%,50%) scale(1)}50%{transform:translate(-50%,50%) scale(1.15)}}
     .rail-marker.todo{background:#fff;color:#94a3b8;border:3px solid #cbd5e1}
 
-    /* 答對慶祝 */
     .celebrate-sun{position:absolute;width:150vmin;height:150vmin;border-radius:50%;opacity:0;
       background:repeating-conic-gradient(from 0deg,rgba(250,204,21,.65) 0 9deg,rgba(255,255,255,0) 9deg 18deg);
       -webkit-mask-image:radial-gradient(circle,#000 8%,transparent 68%);mask-image:radial-gradient(circle,#000 8%,transparent 68%)}
@@ -293,7 +288,6 @@
       30%{opacity:1;transform:translate(calc(-50% + var(--dx)*.5),calc(-50% + var(--dy)*.5)) scale(1.3)}
       100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) - 30px)) scale(.4) rotate(180deg);opacity:0}}
 
-    /* ===== v4 ===== */
     .logo-free img{filter:drop-shadow(0 4px 10px rgba(15,23,42,.18))}
     .title-line2{display:flex;font-size:1.45em;line-height:1.1;gap:.04em;margin-top:.05em}
     .title-char{display:inline-block;background:linear-gradient(180deg,#FDE047 0%,#F97316 55%,#EF4444 100%);
@@ -306,7 +300,6 @@
     .title-spark{position:absolute;font-size:.42em;animation:twinkle 1.8s ease-in-out infinite;pointer-events:none}
     @keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.45}50%{transform:scale(1.25) rotate(25deg);opacity:1}}
 
-    /* ===== v5：多裝置版型（桌機 / iPad / Android 平板 / 手機；直式、橫式皆可） ===== */
     :root{
       --mascot:clamp(90px,min(36vh,22vw),460px);
       --timer:clamp(84px,min(25vh,17vw),310px);
@@ -320,7 +313,6 @@
     #appRoot{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
     @media (hover:none){.btn-3d:hover:not(:active){transform:none;filter:none}}
 
-    /* 首頁 */
     .home-section{padding:clamp(.5rem,2vh,2rem) clamp(.75rem,2.5vw,2rem);max-width:1920px;overflow-y:auto}
     .home-main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(.75rem,3vh,2rem);padding:.25rem 0}
     .home-mascot{width:clamp(180px,min(42vh,78vw),560px);height:clamp(180px,min(42vh,78vw),560px)}
@@ -353,7 +345,6 @@
       .home-badge{display:none}
     }
 
-    /* 挑戰頁 */
     .game-section{gap:clamp(.4rem,1.4vw,1.5rem);padding:clamp(.4rem,1.6vh,1.5rem) clamp(.5rem,1.6vw,1.5rem);max-width:1920px;overflow-y:auto}
     .game-col{gap:clamp(.35rem,1.3vh,1rem)}
     .q-card{padding:clamp(.5rem,1.8vh,2rem) clamp(.9rem,3vw,3.5rem)}
@@ -415,7 +406,7 @@
     </div>
   </div>
 
-  <!-- 全域訊息提示 Toast (僅在後台或系統操作使用) -->
+  <!-- 全域訊息提示 Toast -->
   <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- 自訂確認對話框 Modal -->
@@ -454,7 +445,7 @@
   <div id="appRoot" class="relative z-10 w-full h-full flex flex-col">
 
     <!-- ========================================================================
-         1. 首頁 (HOME SCREEN)：雙 LOGO 置中放大、Q 版人物放大
+         1. 首頁 (HOME SCREEN)
          ======================================================================== -->
     <section id="screenHome" class="home-section w-full h-full flex flex-col justify-between gap-2 mx-auto">
       <header class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 shrink-0">
@@ -464,7 +455,6 @@
       </header>
 
       <main class="home-main flex-1 min-h-0">
-        <!-- 超大 Q 版吉祥物 -->
         <div class="home-mascot relative flex items-center justify-center shrink-0">
           <div class="absolute inset-[-8%] rounded-full bg-gradient-to-br from-sky-300/45 via-teal-200/35 to-amber-200/45 blur-2xl"></div>
           <span class="float-badge" style="top:2%;left:-4%;color:#0284C7"><i class="fa-solid fa-stethoscope"></i></span>
@@ -477,7 +467,6 @@
           </div>
         </div>
 
-        <!-- 標題與開始按鈕 -->
         <div class="home-title">
           <div class="home-badge inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-sky-500/15 to-teal-500/15 border border-sky-300 text-sky-800 font-black text-sm sm:text-lg mb-5">
             <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
@@ -500,12 +489,10 @@
     </section>
 
     <!-- ========================================================================
-         2. 遊戲答題舞台：題目在上、答案置中、右側垂直進度條
+         2. 遊戲答題舞台
          ======================================================================== -->
     <section id="screenGame" class="game-section hidden w-full h-full flex-row mx-auto">
-      <!-- 左側主區 -->
       <div class="game-col flex-1 min-w-0 min-h-0 flex flex-col">
-        <!-- 左上：雙 LOGO（放大） + 連擊徽章 -->
         <header class="flex items-center justify-between gap-2 shrink-0 min-w-0">
           <div class="logo-bar flex items-center bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white">
             <div id="gameLogo1Container" class="flex items-center min-w-0"></div>
@@ -523,7 +510,6 @@
           </div>
         </header>
 
-        <!-- 題目（最上方） -->
         <div id="questionCard" class="q-card stage-card shrink-0 w-full flex flex-col justify-center relative overflow-hidden">
           <h2 id="questionText" class="q-text font-black text-slate-800 leading-snug tracking-tight text-center">
             題目載入中...
@@ -533,9 +519,7 @@
           </div>
         </div>
 
-        <!-- 中央舞台：吉祥物（左）｜ A B C 答案（置中）｜ 倒數計時（右） -->
         <main id="gameStageMain" class="stage-grid flex-1 min-h-0">
-          <!-- 吉祥物 -->
           <div class="stage-mascot relative flex items-center justify-center">
             <div id="feedbackBanner" class="hidden absolute -top-4 sm:-top-6 whitespace-nowrap px-5 py-2 rounded-2xl font-black text-xl sm:text-3xl shadow-lg border-2 z-20 anim-combo-pop">
               答對了！
@@ -545,7 +529,6 @@
             </div>
           </div>
 
-          <!-- 答案 A / B / C -->
           <div id="optionsContainer" class="stage-options flex flex-col w-full">
             <button id="optionBtnA" onclick="GameEngine.submitAnswer('A')" class="btn-3d btn-3d-blue opt-btn">
               <span class="opt-letter">A</span>
@@ -561,7 +544,6 @@
             </button>
           </div>
 
-          <!-- 倒數計時器（放大；最後 5 秒縮放震動） -->
           <div class="stage-timer flex items-center justify-center">
             <div id="timerWrapper" class="timer-box relative flex items-center justify-center bg-white rounded-full shadow-xl border-4 border-sky-100">
               <svg class="w-full h-full -rotate-90 transform p-2" viewBox="0 0 120 120">
@@ -577,7 +559,6 @@
         </main>
       </div>
 
-      <!-- 最右側：垂直關卡進度條 -->
       <aside id="progressRail" class="rail-box shrink-0 flex flex-col items-center gap-3 bg-white/90 backdrop-blur-md rounded-3xl shadow-md border-2 border-white py-4 px-2">
         <div class="font-black text-slate-700 text-center leading-tight" style="font-size:clamp(.95rem,2.2vh,1.4rem)">關卡進度</div>
         <div class="rail-count font-display font-black text-sky-600 leading-none text-center">
@@ -593,11 +574,10 @@
     </section>
 
     <!-- ========================================================================
-         3. 成績結算舞台 (RESULT STAGE - 過關慶祝 & 驟死淘汰換下一位)
+         3. 成績結算舞台
          ======================================================================== -->
     <section id="screenResult" class="hidden w-full h-full flex-col items-center justify-center p-4 sm:p-6 max-w-5xl mx-auto overflow-y-auto">
       <div class="stage-card w-full p-6 sm:p-10 text-center relative overflow-hidden">
-        <!-- 獎盃 / 狀態圖示與星級 -->
         <div class="flex flex-col items-center justify-center mb-4">
           <div id="resultStarsRow" class="flex items-center gap-3 text-3xl sm:text-5xl text-amber-400 mb-2 drop-shadow">
             <i class="fa-solid fa-star"></i>
@@ -616,7 +596,6 @@
           恭喜連續答對 3 題全數過關！
         </p>
 
-        <!-- 精簡數據儀表板 -->
         <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
           <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
             <div class="text-xs sm:text-sm font-black text-emerald-600">過關題數</div>
@@ -632,7 +611,6 @@
           </div>
         </div>
 
-        <!-- 換下一位 / 重新挑戰按鈕 -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button onclick="GameEngine.startNewGame()" class="btn-3d btn-3d-orange px-9 py-4 text-xl sm:text-2xl w-full sm:w-auto">
             <i class="fa-solid fa-user-plus"></i>
@@ -682,10 +660,9 @@
     </section>
 
     <!-- ========================================================================
-         5. 全功能管理後台 (ADMIN BACKOFFICE SCREEN)
+         5. 全功能管理後台
          ======================================================================== -->
     <section id="screenAdmin" class="hidden w-full min-h-screen bg-slate-100 text-slate-800 flex-col">
-      <!-- 後台頂部導覽列 -->
       <header class="bg-slate-900 text-white px-4 sm:px-8 py-4 shadow-lg sticky top-0 z-30 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl font-black">
@@ -693,7 +670,7 @@
           </div>
           <div>
             <h1 class="text-lg sm:text-xl font-black">彰基智慧醫療大挑戰 · 系統管理後台</h1>
-            <p class="text-xs text-slate-400">GAS 雲端資料庫自動連線 · 雙 LOGO · MP3 音效替換 · 三題驟死制</p>
+            <p class="text-xs text-slate-400">開機自動連線 GAS 雲端資料庫 · 雙 LOGO · MP3 音效替換 · 三題驟死制</p>
           </div>
         </div>
 
@@ -704,9 +681,7 @@
         </div>
       </header>
 
-      <!-- 後台主內容區 -->
       <div class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        <!-- 統計儀表板 -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
             <div class="text-xs font-black text-slate-400">目前題庫總數</div>
@@ -722,11 +697,10 @@
           </div>
           <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
             <div class="text-xs font-black text-slate-400">GAS 雲端連線狀態</div>
-            <div id="statGasStatus" class="text-sm font-black text-slate-600 mt-2.5">本機模式 (未綁定 GAS)</div>
+            <div id="statGasStatus" class="text-sm font-black text-slate-600 mt-2.5">自動連線中...</div>
           </div>
         </div>
 
-        <!-- 5 大管理分頁頁籤 -->
         <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-3">
           <button onclick="AdminModule.switchTab('questions')" id="tabBtnQuestions" class="px-4 py-2.5 rounded-xl font-black text-sm bg-sky-600 text-white shadow">
             <i class="fa-solid fa-database mr-1.5"></i>1. 題庫管理 & Excel
@@ -745,11 +719,8 @@
           </button>
         </div>
 
-        <!-- ==================================================================
-             TAB 1: 題庫管理 & Excel 匯入匯出
-             ================================================================== -->
+        <!-- TAB 1: 題庫管理 -->
         <div id="adminTabQuestions" class="space-y-6">
-          <!-- 新增 / 編輯題目表單 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <h2 id="questionFormTitle" class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
               <i class="fa-solid fa-circle-plus text-sky-600"></i> 新增智慧醫療題目
@@ -799,7 +770,6 @@
             </form>
           </div>
 
-          <!-- Excel 批次匯入 / 匯出區塊 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
               <div>
@@ -820,7 +790,6 @@
               </div>
             </div>
 
-            <!-- 匯入解析預覽區 -->
             <div id="excelPreviewContainer" class="hidden mt-4 space-y-3 border-t border-slate-200 pt-4">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
@@ -843,7 +812,6 @@
             </div>
           </div>
 
-          <!-- 題庫列表與搜尋 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <h3 class="text-lg font-black text-slate-800">現有題庫列表</h3>
@@ -879,22 +847,18 @@
           </div>
         </div>
 
-        <!-- ==================================================================
-             TAB 2: 雙主要 LOGO 與 Q 版吉祥物設定
-             ================================================================== -->
+        <!-- TAB 2: 雙 LOGO 與吉祥物 -->
         <div id="adminTabBranding" class="hidden space-y-6">
-          <!-- 雙主要 LOGO 設定 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
                 <h2 class="text-lg font-black text-slate-800">雙主要 LOGO 任意替換設定</h2>
-                <p class="text-xs font-bold text-slate-500">支援一般圖片網址、Google Drive 圖片分享連結（自動轉直連）或直接上傳本機圖片檔</p>
+                <p class="text-xs font-bold text-slate-500">支援一般圖片網址、Google Drive 圖片分享連結或直接上傳本機圖片檔</p>
               </div>
               <button onclick="LogoManager.resetDefaults()" class="text-xs font-black text-sky-600 hover:underline">恢復預設雙 LOGO</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <!-- LOGO 1 -->
               <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between">
                   <span class="font-black text-sky-800 text-base">主要 LOGO 1（首頁置中偏左 / 挑戰頁左上角）</span>
@@ -920,7 +884,6 @@
                 </div>
               </div>
 
-              <!-- LOGO 2 -->
               <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between">
                   <span class="font-black text-teal-800 text-base">主要 LOGO 2（首頁置中偏右 / 挑戰頁左上角）</span>
@@ -952,13 +915,12 @@
             </button>
           </div>
 
-          <!-- Q 版吉祥物三態圖片設定 -->
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 class="text-lg font-black text-slate-800">Q 版 3D 醫療吉祥物圖片設定</h3>
               <button onclick="MascotManager.resetToDefault()" class="text-xs font-black text-sky-600 hover:underline">恢復預設 3D 吉祥物</button>
             </div>
-            <p class="text-xs font-bold text-slate-500">每個位置都可以「貼上雲端連結」或「直接上傳圖片」（上傳的圖片會自動壓縮並存在本機瀏覽器；若已連接 GAS，則會自動上傳至 Google Drive 素材資料夾供所有設備共用）。</p>
+            <p class="text-xs font-bold text-slate-500">每個位置都可以「貼上雲端連結」或「直接上傳圖片」（已連接 GAS 時會自動上傳至 Google Drive 素材資料夾供所有設備共用）。</p>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-xs font-bold">
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div class="flex items-center justify-between gap-2">
@@ -969,7 +931,7 @@
                   </label>
                 </div>
                 <div id="adminPreviewMascotHome" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotHome" oninput="MascotManager.updatePreview('Home')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <input type="text" id="settingMascotHome" oninput="MascotManager.updatePreview('Home')" placeholder="貼上圖片網址或 Google Drive 連結" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
                 <p class="text-[11px] text-slate-400">只在首頁顯示；留空則沿用「遊戲待機圖片」</p>
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
@@ -981,7 +943,7 @@
                   </label>
                 </div>
                 <div id="adminPreviewMascotIdle" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotIdle" oninput="MascotManager.updatePreview('Idle')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <input type="text" id="settingMascotIdle" oninput="MascotManager.updatePreview('Idle')" placeholder="貼上圖片網址或 Google Drive 連結" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
                 <p class="text-[11px] text-slate-400">進入遊戲後才出現的待機人物</p>
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
@@ -993,7 +955,7 @@
                   </label>
                 </div>
                 <div id="adminPreviewMascotHappy" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotHappy" oninput="MascotManager.updatePreview('Happy')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <input type="text" id="settingMascotHappy" oninput="MascotManager.updatePreview('Happy')" placeholder="貼上圖片網址或 Google Drive 連結" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
                 <p class="text-[11px] text-slate-400">答對時顯示</p>
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
@@ -1005,7 +967,7 @@
                   </label>
                 </div>
                 <div id="adminPreviewMascotSad" class="h-32 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2"></div>
-                <input type="text" id="settingMascotSad" oninput="MascotManager.updatePreview('Sad')" placeholder="貼上圖片網址或 Google Drive 連結（或用上方上傳）" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+                <input type="text" id="settingMascotSad" oninput="MascotManager.updatePreview('Sad')" placeholder="貼上圖片網址或 Google Drive 連結" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
                 <p class="text-[11px] text-slate-400">答錯或時間到時顯示</p>
               </div>
             </div>
@@ -1015,16 +977,14 @@
           </div>
         </div>
 
-        <!-- ==================================================================
-             TAB 3: MP3 音樂與倒數音效替換管理
-             ================================================================== -->
+        <!-- TAB 3: MP3 音樂與倒數音效 -->
         <div id="adminTabAudio" class="hidden space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
                 <h2 class="text-lg font-black text-slate-800">MP3 音樂與音效替換中心（支援 Google Drive 音訊連結）</h2>
                 <p class="text-xs font-bold text-slate-500 mt-1">
-                  可貼上任何 MP3/WAV 網址、Google Drive 分享連結（系統自動轉換直連），或上傳本機 MP3 測試；留空則自動使用內建 Web Audio 合成音效。
+                  可貼上任何 MP3/WAV 網址、Google Drive 分享連結，或上傳本機音檔；留空則自動使用內建 Web Audio 合成音效。
                 </p>
               </div>
               <div class="flex items-center gap-3">
@@ -1037,7 +997,6 @@
               </div>
             </div>
 
-            <!-- 音量控制滑桿 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <div>
                 <div class="flex justify-between text-sm font-black text-slate-700 mb-1">
@@ -1055,10 +1014,7 @@
               </div>
             </div>
 
-            <!-- 8 大獨立可替換音訊槽位列表 -->
-            <div id="audioSlotsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- 由 SoundEngine.renderAdminSlots() 動態生成 -->
-            </div>
+            <div id="audioSlotsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
             <div class="flex justify-end gap-3 pt-2">
               <button onclick="SoundEngine.stopAllPreview()" class="px-5 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 font-black text-sm text-slate-700">
@@ -1071,9 +1027,7 @@
           </div>
         </div>
 
-        <!-- ==================================================================
-             TAB 4: 遊戲規則、展場雙機模式與資料備份
-             ================================================================== -->
+        <!-- TAB 4: 遊戲規則與備份 -->
         <div id="adminTabRules" class="hidden space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
@@ -1117,7 +1071,6 @@
               </button>
             </div>
 
-            <!-- 系統資料備份與還原 -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
               <h3 class="text-lg font-black text-slate-800 border-b border-slate-100 pb-3">完整設定與題庫備份還原</h3>
               <p class="text-xs font-bold text-slate-500 leading-relaxed">
@@ -1140,9 +1093,7 @@
           </div>
         </div>
 
-        <!-- ==================================================================
-             TAB 5: GAS 雲端資料庫串接設定（已移除匯入 GAS 程式碼區塊）
-             ================================================================== -->
+        <!-- TAB 5: GAS 雲端資料庫串接 -->
         <div id="adminTabGas" class="hidden space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
             <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
@@ -1151,16 +1102,21 @@
                   <i class="fa-brands fa-google text-emerald-600"></i> Google Apps Script (GAS) 雲端資料庫自動連線設定
                 </h2>
                 <p class="text-xs font-bold text-slate-500 mt-1">
-                  在此輸入並儲存 GAS Web App 網址後，系統會永久記憶連結；每次開啟網頁皆會自動連線同步 Google Sheet 題庫與 Drive 素材。
+                  系統已內建預設 GAS 網址，任何新設備點開 HTML 就會自動連線同步；若在此修改並儲存，則該設備會優先改用新網址。
                 </p>
               </div>
               <span id="gasAutoConnectBadge" class="px-3 py-1.5 rounded-full text-xs font-black bg-slate-100 text-slate-600">
-                尚未設定 GAS 連結
+                準備自動連線...
               </span>
             </div>
 
             <div class="space-y-3">
-              <label class="block text-sm font-black text-slate-700">GAS Web App 執行網址 (https://script.google.com/macros/s/.../exec)</label>
+              <div class="flex items-center justify-between gap-2">
+                <label class="block text-sm font-black text-slate-700">GAS Web App 執行網址 (https://script.google.com/macros/s/.../exec)</label>
+                <button type="button" onclick="GASConnector.restoreDefaultUrl()" class="text-xs font-black text-sky-600 hover:underline">
+                  恢復內建預設 GAS 網址
+                </button>
+              </div>
               <div class="flex flex-col sm:flex-row gap-3">
                 <input type="url" id="settingGasUrl" placeholder="貼上您的 Google Apps Script Web App URL..." class="flex-1 px-4 py-3 rounded-xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-none font-bold text-sm" />
                 <button onclick="GASConnector.saveUrlAndTest()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm shadow shrink-0">
@@ -1198,8 +1154,12 @@
        ========================================================================== -->
   <script>
     /* ========================================================================
-       輔助函式：Google Drive 分享網址自動轉換為可嵌入直連網址
+       ★ 內建預設 GAS Web App 網址：
+       任何新設備只要點開 HTML，就會自動使用此網址連線同步資料庫
+       （請替換為你的正式 /exec 部署網址）
        ======================================================================== */
+    const DEFAULT_GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx_REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec';
+
     function normalizeDriveMediaUrl(url, mediaType = 'image') {
       if (!url) return '';
       const trimmed = String(url).trim();
@@ -1210,9 +1170,6 @@
       return DriveAssets.resolve(id, mediaType);
     }
 
-    /* ========================================================================
-       Google Drive 素材管理：透過 GAS 代理讀取 Drive 檔案，並快取在瀏覽器 (IndexedDB)
-       ======================================================================== */
     const DriveAssets = {
       cache: {},
       loading: {},
@@ -1328,7 +1285,6 @@
       }
     };
 
-    /* 後台上傳：圖片 / MP3 → 自動存進 Drive 素材資料夾 */
     const AssetUploader = {
       readBase64(file) {
         return new Promise((resolve, reject) => {
@@ -1366,7 +1322,6 @@
       }
     };
 
-    /* 全螢幕輔助（iPad / Android 平板 / 桌機） */
     const FullscreenHelper = {
       isStandalone() {
         return window.matchMedia('(display-mode: fullscreen)').matches
@@ -1403,7 +1358,6 @@
       }
     };
 
-    /* 上傳圖片自動縮放壓縮 */
     function fileToCompressedDataUrl(file, maxSize = 800) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -1428,9 +1382,6 @@
       });
     }
 
-    /* ========================================================================
-       MODULE 1: 預設題庫與資料保存管理 (StorageManager)
-       ======================================================================== */
     const DEFAULT_QUESTIONS = [
       {
         id: 'q_cch_01',
@@ -1542,7 +1493,7 @@
         timePerQuestion: 15,
         controlMode: 'HYBRID',
         adminPasswordHash: 'cch8730',
-        gasWebAppUrl: '',
+        gasWebAppUrl: DEFAULT_GAS_WEB_APP_URL,
         logo1Url: '',
         logo1Title: '彰基智慧醫療創新展館',
         logo1Sub: 'CHANGHUA CHRISTIAN HOSPITAL',
@@ -1570,9 +1521,17 @@
           this.saveQuestions(DEFAULT_QUESTIONS);
         }
         if (!localStorage.getItem(this.KEYS.SETTINGS)) {
-          this.saveSettings(this.defaultSettings);
+          localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(this.defaultSettings));
+        } else {
+          // 若舊設備原本沒有填入 gasWebAppUrl，自動補上內建預設 GAS 網址
+          const current = this.getSettings();
+          if (!current.gasWebAppUrl && DEFAULT_GAS_WEB_APP_URL) {
+            current.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
+            localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(current));
+          }
         }
-        // 支援網址參數 ?gas=... 自動綁定並記憶 GAS 連結
+
+        // 支援網址參數 ?gas=... 自動套用並記憶該設備的 GAS 連結
         try {
           const params = new URLSearchParams(window.location.search);
           const urlParamGas = (params.get('gas') || '').trim();
@@ -1604,11 +1563,15 @@
         try {
           const raw = localStorage.getItem(this.KEYS.SETTINGS);
           const parsed = raw ? JSON.parse(raw) : {};
-          return {
+          const merged = {
             ...this.defaultSettings,
             ...parsed,
             audioUrls: { ...this.defaultSettings.audioUrls, ...(parsed.audioUrls || {}) }
           };
+          if (!merged.gasWebAppUrl && DEFAULT_GAS_WEB_APP_URL) {
+            merged.gasWebAppUrl = DEFAULT_GAS_WEB_APP_URL;
+          }
+          return merged;
         } catch (e) {
           return { ...this.defaultSettings };
         }
@@ -1696,9 +1659,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 2: 雙主要 LOGO 管理系統 (LogoManager)
-       ======================================================================== */
     const LogoManager = {
       renderAll() {
         const s = StorageManager.getSettings();
@@ -1796,9 +1756,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 3: Q 版 3D 醫療吉祥物系統 (MascotManager)
-       ======================================================================== */
     const MascotManager = {
       renderAll() {
         this.renderTo('homeMascotContainer', 'home');
@@ -1959,9 +1916,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 4: 雙引擎音效系統 (MP3 / Google Drive 直連 + Web Audio API 備援)
-       ======================================================================== */
     const SoundEngine = {
       ctx: null,
       bgmGain: null,
@@ -2232,7 +2186,7 @@
               <div class="flex items-center justify-between gap-2">
                 <span class="font-black text-slate-800 text-sm">${slot.label}</span>
                 <div class="flex items-center gap-1.5">
-                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer" title="上傳音檔（已連接 GAS 時會自動存入 Drive 資料夾並套用）">
+                  <label class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-xs cursor-pointer">
                     <i class="fa-solid fa-cloud-arrow-up"></i> 上傳
                     <input type="file" accept="audio/*" onchange="SoundEngine.handleLocalAudioUpload(event, '${slot.key}')" class="hidden" />
                   </label>
@@ -2322,17 +2276,21 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 5: Google Apps Script (GAS) 雲端資料庫橋接器
-       ======================================================================== */
     const GASConnector = {
       suppress: false,
       autoTimer: null,
       pendingParts: new Set(),
       lastStatus: null,
 
-      getUrl() { return (StorageManager.getSettings().gasWebAppUrl || '').trim(); },
-      isConfigured() { return !!this.getUrl(); },
+      getUrl() {
+        const saved = (StorageManager.getSettings().gasWebAppUrl || '').trim();
+        return saved || (DEFAULT_GAS_WEB_APP_URL || '').trim();
+      },
+
+      isConfigured() {
+        const u = this.getUrl();
+        return Boolean(u) && !u.includes('REPLACE_WITH_YOUR_DEPLOYMENT_ID');
+      },
 
       async fetchJson(url, options) {
         const res = await fetch(url, options);
@@ -2418,10 +2376,10 @@
 
         if (!configured) {
           if (badge) {
-            badge.className = 'px-3 py-1.5 rounded-full text-xs font-black bg-slate-100 text-slate-600';
-            badge.textContent = '尚未設定 GAS 連結';
+            badge.className = 'px-3 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-800';
+            badge.textContent = '請先填入正式 GAS /exec 網址';
           }
-          if (statEl) statEl.textContent = '本機模式 (未綁定 GAS)';
+          if (statEl) statEl.textContent = '本機模式 (尚未填入正式 GAS)';
           return;
         }
 
@@ -2441,7 +2399,7 @@
         } else {
           if (badge) {
             badge.className = 'px-3 py-1.5 rounded-full text-xs font-black bg-sky-100 text-sky-800';
-            badge.textContent = '● 已記憶連結（開機自動連線）';
+            badge.textContent = '● 已內建連結（開機自動連線）';
           }
           if (statEl) statEl.textContent = '已綁定 GAS 雲端試算表';
         }
@@ -2466,8 +2424,14 @@
         }
       },
 
+      restoreDefaultUrl() {
+        const input = document.getElementById('settingGasUrl');
+        if (input) input.value = DEFAULT_GAS_WEB_APP_URL || '';
+        this.saveUrlAndTest();
+      },
+
       saveUrlAndTest() {
-        const url = document.getElementById('settingGasUrl').value.trim();
+        const url = document.getElementById('settingGasUrl').value.trim() || DEFAULT_GAS_WEB_APP_URL;
         const s = StorageManager.getSettings();
         s.gasWebAppUrl = url;
         this.suppress = true;
@@ -2476,8 +2440,8 @@
         this.lastStatus = null;
         AdminModule.refreshAllViews();
 
-        if (!url) {
-          UI.showToast('已清除 GAS 網址，切換為本機儲存模式', 'info');
+        if (!this.isConfigured()) {
+          UI.showToast('請先填入有效的 GAS Web App（/exec）網址', 'info');
           return;
         }
         this.diagnose(true);
@@ -2485,7 +2449,7 @@
 
       async pullFromCloud() {
         if (!this.isConfigured()) {
-          UI.showToast('請先輸入 GAS Web App URL！', 'error');
+          UI.showToast('請先輸入有效的 GAS Web App URL！', 'error');
           return;
         }
         UI.showToast('正在從 Google Sheet 拉取最新資料...', 'info');
@@ -2524,7 +2488,7 @@
 
       async pushToCloud(mode = 'manual', parts = ['questions', 'config']) {
         if (!this.isConfigured()) {
-          if (mode !== 'boot') UI.showToast('請先輸入 GAS Web App URL！', 'error');
+          if (mode !== 'boot') UI.showToast('請先輸入有效的 GAS Web App URL！', 'error');
           return false;
         }
         if (mode === 'manual') UI.showToast('正在推送題庫與設定至 Google Sheet...', 'info');
@@ -2612,8 +2576,8 @@
         const url = this.getUrl();
         let info = null;
 
-        if (!url) {
-          add(false, '尚未填寫 GAS 網址', '請在上方欄位貼上以 /exec 結尾的 Web App 網址');
+        if (!this.isConfigured()) {
+          add(false, '尚未填入正式 GAS 網址', '請將 DEFAULT_GAS_WEB_APP_URL 或上方欄位替換為以 /exec 結尾的正式 Web App 網址');
           render();
           return;
         }
@@ -2629,7 +2593,7 @@
           if (r.status !== 'ok') {
             add(false, 'GAS 程式執行出錯', this.explainError(r.message));
           } else if (!r.version) {
-            add(false, '部署的還是舊版 Code.gs', '請將最新 Code.gs 貼上並部署為「新版本」。');
+            add(false, '部署的還是舊版 Code.gs', '請將最新 GAS 程式貼上並部署為「新版本」。');
           } else {
             info = r;
             add(true, `已連上 GAS（程式版本 ${r.version}）`);
@@ -2668,9 +2632,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 6: 展場雙螢幕即時同步引擎 (DualScreenSync)
-       ======================================================================== */
     const DualScreenSync = {
       channel: null,
       role: 'STANDALONE',
@@ -2715,9 +2676,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 7: 動態背景與粒子特效 (BackgroundAndFX)
-       ======================================================================== */
     const BackgroundAndFX = {
       bgCanvas: null,
       bgCtx: null,
@@ -2939,9 +2897,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 7.5: 答對慶祝動畫 (CelebrationFX)
-       ======================================================================== */
     const CelebrationFX = {
       hideTimer: null,
       outTimer: null,
@@ -3016,9 +2971,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 8: 核心三題驟死制遊戲引擎 (GameEngine)
-       ======================================================================== */
     const GameEngine = {
       currentScreen: 'HOME',
       sessionQuestions: [],
@@ -3477,9 +3429,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 9: 管理後台控制器與 Excel 匯入驗證 (AdminModule & ExcelManager)
-       ======================================================================== */
     const AdminModule = {
       selectedIds: new Set(),
       currentFilteredIds: [],
@@ -3566,7 +3515,7 @@
         document.getElementById('settingTimePerQuestion').value = settings.timePerQuestion;
         document.getElementById('settingControlMode').value = settings.controlMode;
         document.getElementById('settingDisplayRole').value = DualScreenSync.role;
-        document.getElementById('settingGasUrl').value = settings.gasWebAppUrl || '';
+        document.getElementById('settingGasUrl').value = GASConnector.getUrl();
 
         const lastDrawn = StorageManager.getLastDrawnRecord();
         document.getElementById('lastDrawnRecordLabel').textContent = lastDrawn ? lastDrawn.timestamp : '尚未進行遊戲';
@@ -3890,9 +3839,6 @@
       }
     };
 
-    /* ========================================================================
-       MODULE 10: UI 彈窗與鍵盤監聽
-       ======================================================================== */
     const UI = {
       showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
